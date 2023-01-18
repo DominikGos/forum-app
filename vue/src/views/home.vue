@@ -1,17 +1,18 @@
 <template>
-  <main>
-    <hello-world />
-  </main>
+  <home-hero />
 </template>
 
 <script>
-    import helloWorld from '../components/HelloWorld.vue'
+import homeHero from '../components/home-hero.vue'
 
-    export default {
-        name: 'home',
-        components: {
-            helloWorld
-        }
-    }
-
+export default {
+  name: "home",
+  components: {
+    homeHero
+  },
+};
 </script>
+
+<style lang="sass">
+
+</style>
