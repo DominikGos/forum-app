@@ -54,11 +54,8 @@
       </div>
     </div>
   </div>
-  <div class="q&a">
-
-  </div>
-
-  <div class="p-2 mt-5">
+  <questions-and-answers />
+  <!-- <div class="p-2 mt-5">
     <div class="container mt-5 bg-white shadow p-4 ps-5 pe-5 pb-5">
       <div class="row justify-content-center">
         <div class="col-1 d-flex justify-content-end">
@@ -72,18 +69,19 @@
           <div class="btn btn-primary">Create thread</div>
         </div>
       </div>
-
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script>
-import homeHero from "../components/home-hero.vue";
+import homeHero from "../components/home/home-hero.vue";
+import questionsAndAnswers from '../components/home/questions-and-answers.vue'
 
 export default {
   name: "home",
   components: {
     homeHero,
+    questionsAndAnswers,
   },
 };
 </script>
