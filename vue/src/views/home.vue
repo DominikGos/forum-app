@@ -88,10 +88,10 @@ export default {
 
 <style lang="sass" scoped>
 .home-header
-  margin-top: 725px
+  margin-top: 700px
 
 .categories
-  margin-top: 100px
+  margin-top: 80px
 
   .category
     transition: all .5s
