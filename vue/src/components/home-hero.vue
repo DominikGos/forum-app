@@ -1,13 +1,13 @@
 <template>
-  <div
+  <header
     class="
-      hero-section
+      hero
       d-flex
       flex-column
       justify-content-center
       align-items-center
       gap-3
-      p-2
+      p-3
     "
   >
     <h1 class="text-start">Hello, what are you looking for?</h1>
@@ -33,7 +33,7 @@
       <div class="border border-secondary rounded-3 p-1 ps-2 pe-2">sport</div>
       <div class="border border-secondary rounded-3 p-1 ps-2 pe-2">it</div>
     </div>
-  </div>
+  </header>
 </template>
 
 <script>
@@ -43,8 +43,8 @@ export default {
 };
 </script>
 
-<style lang="sass">
-.hero-section
+<style lang="sass" scoped>
+.hero
   background-image: url('../public/images/rm222-mind-16.jpg')
   background-repeat: no-repeat
   background-attachment: scroll

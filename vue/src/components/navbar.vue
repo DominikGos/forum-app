@@ -1,8 +1,8 @@
 <template>
   <nav class="app-navbar navbar navbar-expand-lg bg-body-tertiary p-2">
-    <div class="container container-fluid p-2">
+    <div class="container container-fluid p-3">
       <a class="navbar-brand" href="#">
-        <i class="fa-brands fa-laravel fs-2"></i>
+        <i class="fa-brands fa-laravel fs-1"></i>
       </a>
       <button
         class="navbar-toggler"

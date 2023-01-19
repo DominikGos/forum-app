@@ -1,8 +1,9 @@
 <template>
-  <app-navbar />
+  <div class="bg-light">
+    <app-navbar />
 
-
-  <router-view></router-view>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script >
