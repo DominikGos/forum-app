@@ -1,9 +1,9 @@
 <template>
   <nav class="app-navbar navbar navbar-expand-lg bg-body-tertiary p-2">
     <div class="container container-fluid p-3">
-      <a class="navbar-brand" href="#">
+      <router-link class="navbar-brand" to="/">
         <i class="fa-brands fa-laravel fs-1"></i>
-      </a>
+      </router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -28,10 +28,10 @@
           "
         >
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <router-link class="nav-link active" to="/"> Home </router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#">Link</a>
+            <router-link class="nav-link active" to="/thread/list"> Forum </router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link active" href="#">Link</a>
@@ -49,9 +49,9 @@
 </template>
 
 <script>
-  export default {
-    name: 'navbar'
-  }
+export default {
+  name: "navbar",
+};
 </script>
 
 <style scoped lang="sass">
@@ -63,7 +63,7 @@
     background-color: white !important
     margin-top: .5rem
     border-radius: .5rem
-    box-shadow:  0 .125rem .25rem rgba(0,0,0,.075) !important
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important
     padding: .5rem
 
     ul

@@ -2,6 +2,7 @@
   <header
     class="
       hero
+      home-hero
       d-flex
       flex-column
       justify-content-center
@@ -43,17 +44,7 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-.hero
-  background-image: url('../public/images/rm222-mind-16.jpg')
-  background-repeat: no-repeat
-  background-attachment: scroll
-  background-position: center
-  background-size: cover
-  position: absolute
-  top: 0
-  left: 0
-  right: 0
-  height: 700px
-  margin-bottom: 700px
+<style lang="sass">
+.home-hero
+  height: 700px !important
 </style>
