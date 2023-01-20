@@ -3,7 +3,7 @@
     class="
       container
       bg-white
-      shadow
+      shadow-sm
       gap-3
       d-flex
       flex-row

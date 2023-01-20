@@ -1,7 +1,7 @@
 <template>
   <nav class="app-navbar navbar navbar-expand-lg bg-body-tertiary p-2">
     <div class="container container-fluid p-3">
-      <router-link class="navbar-brand" to="/">
+      <router-link class="navbar-brand" :to="{ name: 'home' }">
         <i class="fa-brands fa-laravel fs-1"></i>
       </router-link>
       <button
@@ -28,10 +28,10 @@
           "
         >
           <li class="nav-item">
-            <router-link class="nav-link active" to="/"> Home </router-link>
+            <router-link class="nav-link active" :to="{ name: 'home' }"> Home </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link active" to="/thread/list"> Forum </router-link>
+            <router-link class="nav-link active" :to="{ name: 'forum'}"> Forum </router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link active" href="#">Link</a>

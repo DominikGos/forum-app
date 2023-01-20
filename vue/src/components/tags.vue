@@ -1,0 +1,104 @@
+<template>
+  <div class="d-flex flex-column gap-2">
+    <h3>Tags</h3>
+    <div class="d-flex gap-2 flex-wrap">
+      <div
+        class="
+          rounded-3
+          background-gray-300
+          ps-2
+          pe-2
+          p-1
+          d-flex
+          align-items-center
+        "
+      >
+        Games
+      </div>
+      <div
+        class="
+          rounded-3
+          background-gray-300
+          ps-2
+          pe-2
+          p-1
+          d-flex
+          align-items-center
+        "
+      >
+        Music
+      </div>
+      <div
+        class="
+          rounded-3
+          background-gray-300
+          ps-2
+          pe-2
+          p-1
+          d-flex
+          align-items-center
+        "
+      >
+        Programming
+      </div>
+      <div
+        class="
+          rounded-3
+          background-gray-300
+          ps-2
+          pe-2
+          p-1
+          d-flex
+          align-items-center
+        "
+      >
+        Games
+      </div>
+      <div
+        class="
+          rounded-3
+          background-gray-300
+          ps-2
+          pe-2
+          p-1
+          d-flex
+          align-items-center
+        "
+      >
+        Games
+      </div>
+      <div
+        class="
+          rounded-3
+          background-gray-300
+          ps-2
+          pe-2
+          p-1
+          d-flex
+          align-items-center
+        "
+      >
+        Music
+      </div>
+      <div
+        class="
+          rounded-3
+          background-gray-300
+          ps-2
+          pe-2
+          p-1
+          d-flex
+          align-items-center
+        "
+      >
+        Games
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "tags",
+};
+</script>

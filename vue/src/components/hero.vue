@@ -33,11 +33,11 @@ export default {
   background-image: url('../public/images/rm222-mind-16.jpg')
   background-repeat: no-repeat
   background-attachment: scroll
-  background-position: center
+  background-position: center bottom
   background-size: cover
   position: absolute
   top: 0
   left: 0
   right: 0
-  height: 400px
+  height: 350px
 </style>
