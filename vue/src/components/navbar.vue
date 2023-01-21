@@ -34,7 +34,7 @@
             <router-link class="nav-link active" :to="{ name: 'forum'}"> Forum </router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#">Link</a>
+            <router-link class="nav-link active" :to="{ name: 'threadList'}"> Threads </router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link active" href="#">Link</a>

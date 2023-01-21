@@ -13,7 +13,7 @@
   >
     <h1 class="text-start">Hello, what are you looking for?</h1>
     <p class="text-muted fs-5">Find what you want.</p>
-    <form class="d-flex p-3 bg-white gap-2 rounded-3 mt-3" role="search">
+    <form class="d-flex p-3 bg-white gap-2 rounded-3 mt-3 shadow-sm" role="search">
       <input
         class="form-control"
         type="search"

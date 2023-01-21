@@ -10,7 +10,7 @@
       p-3
     "
   >
-    <form class="d-flex p-3 bg-white gap-2 rounded-3 mt-3" role="search">
+    <form class="d-flex p-3 bg-white gap-2 rounded-3 mt-3 shadow-sm" role="search">
       <input
         class="form-control"
         type="search"
