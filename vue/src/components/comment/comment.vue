@@ -44,13 +44,16 @@
             </div>
           </div>
         </div>
+        <a v-if="this.isAccepted" href="#" class="text-decoration-none">
+          <p class="m-0 text-primary">View full answer<i class="fa-solid fa-arrow-down ms-2"></i></p>
+        </a>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import avatar from "./avatar.vue";
+import avatar from "../avatar.vue";
 export default {
   components: { avatar },
   name: "comment",

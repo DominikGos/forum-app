@@ -7,19 +7,19 @@
     <div class="row p-3 mt-3 gap-4 justify-content-center">
       <div class="col-lg-4 d-flex flex-column gap-3 bg-white shadow p-4">
         <h3>Questions</h3>
-        <div class="d-flex flex-row p-2 justify-content-between align-items-center border-bottom border-info border-bottom-1 text-info">
+        <div class="d-flex flex-row p-2 pb-3 justify-content-between align-items-center border-bottom border-info border-bottom-1 text-info">
           <p class="m-0">Lorem ipsum?</p>
           <i class="fa-solid fa-chevron-right"></i>
         </div>
-        <div class="d-flex flex-row p-2 justify-content-between align-items-center border-bottom border-info border-bottom-1 text-info">
+        <div class="d-flex flex-row p-2 pb-3 justify-content-between align-items-center border-bottom border-info border-bottom-1 text-info">
           <p class="m-0">Lorem ipsum?</p>
           <i class="fa-solid fa-chevron-right"></i>
         </div>
-        <div class="d-flex flex-row p-2 justify-content-between align-items-center border-bottom border-info border-bottom-1 text-info">
+        <div class="d-flex flex-row p-2 pb-3 justify-content-between align-items-center border-bottom border-info border-bottom-1 text-info">
           <p class="m-0">Lorem ipsum?</p>
           <i class="fa-solid fa-chevron-right"></i>
         </div>
-        <div class="d-flex flex-row p-2 justify-content-between align-items-center border-bottom border-info border-bottom-1 text-info">
+        <div class="d-flex flex-row p-2 pb-3 justify-content-between align-items-center border-bottom border-info border-bottom-1 text-info">
           <p class="m-0">Lorem ipsum?</p>
           <i class="fa-solid fa-chevron-right"></i>
         </div>
