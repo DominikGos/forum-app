@@ -40,7 +40,7 @@
             <router-link class="nav-link active" :to="{ name: 'thread', params: {id: 1} }"> Thread </router-link>
           </li>
           <li class="nav-item">
-            <a class="btn btn-primary" href="#">Login</a>
+            <router-link class="btn btn-primary" :to="{name: 'login'}">Login</router-link>
           </li>
         </ul>
       </div>
