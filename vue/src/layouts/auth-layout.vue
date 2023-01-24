@@ -24,7 +24,12 @@
           p-3
         "
       >
-        <router-view class="auth-form"></router-view>
+        <router-view  class="auth-form" v-slot="{ Component }">
+          <transition name="route" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
+
         <router-link class="text-decoration-none" :to="{ name: 'home' }"
           >Back to home <i class="fa-solid fa-arrow-left ms-2"></i
         ></router-link>
@@ -43,13 +48,13 @@ export default {
 .hero
   height: 200px !important
   position: static !important
-  background-image: url('../images/5559852.jpg') !important
+  background-image: url('/images/5559852.jpg') !important
 
 @media screen and (min-width: 992px)
   .hero
     height: 100vh !important
     background-position: start bottom !important
-    background-image: url('../images/5559852-vertical.jpg') !important
+    background-image: url('/images/5559852-vertical.jpg') !important
 
   .auth-form
     width: 600px !important

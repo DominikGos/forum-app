@@ -1,8 +1,13 @@
 <template>
   <div class="hero"></div>
-  <div class="container p-4" style="margin-top: 150px !important">
-    <div class="row gap-5 flex-lg-nowrap justify-content-center align-items-start">
-      <div class="p-3 w-auto bg-white shadow-sm rounded-3 d-flex flex-column gap-3" style="z-index: 1000">
+  <div class="container p-4" style="margin-top: 100px !important">
+    <div
+      class="row gap-5 flex-lg-nowrap justify-content-center align-items-start"
+    >
+      <div
+        class="p-3 w-auto bg-white shadow-sm rounded-3 d-flex flex-column gap-3"
+        style="z-index: 1000"
+      >
         <div
           class="
             profile-avatar
@@ -15,25 +20,51 @@
             rounded-3
           "
         >
-          <img src="/images/pexels-pixabay-220453.jpg" alt="avatar"/>
+          <img src="/images/pexels-pixabay-220453.jpg" alt="avatar" />
         </div>
         <div>
           <h4 class="m-0">User Name</h4>
           <p class="text-muted m-0">Short text</p>
         </div>
-        <router-link :to="{name: 'user' }" :class="[ $route.name == 'user' ? 'btn-primary' : 'btn-secondary', 'btn']">
+        <router-link
+          @click="animation()"
+          :to="{ name: 'user' }"
+          :class="[
+            $route.name == 'user' ? 'btn-primary' : 'btn-secondary',
+            'btn',
+          ]"
+        >
           Profile
         </router-link>
-        <router-link :to="{name: 'threads' }" :class="[ $route.name == 'threads' ? 'btn-primary' : 'btn-secondary', 'btn']">
+        <router-link
+          @click="animation()"
+          :to="{ name: 'threads' }"
+          :class="[
+            $route.name == 'threads' ? 'btn-primary' : 'btn-secondary',
+            'btn',
+          ]"
+        >
           Topics
         </router-link>
-        <router-link :to="{name: 'replies' }" :class="[ $route.name == 'replies' ? 'btn-primary' : 'btn-secondary', 'btn']">
+        <router-link
+          @click="animation()"
+          :to="{ name: 'replies' }"
+          :class="[
+            $route.name == 'replies' ? 'btn-primary' : 'btn-secondary',
+            'btn',
+          ]"
+        >
           Replies
         </router-link>
       </div>
 
-      <div class="col-lg-8 p-3 bg-white shadow-sm rounded-3 d-flex flex-column gap-4" style="z-index: 1000">
-        <router-view></router-view>
+      <div class="col-lg-8" style="z-index: 1000;">
+        <router-view v-slot="{ Component }">
+          <transition name="route" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
+
       </div>
     </div>
   </div>
@@ -46,6 +77,16 @@ export default {
 </script>
 
 <style lang="sass">
+.route-enter-active,
+.route-leave-active
+  transition: all .35s
+
+.route-enter-from
+  opacity: 0
+
+.route-leave-to
+  opacity: 0
+
 .profile-avatar
   min-width: 200px
   max-width: 200px

@@ -30,7 +30,7 @@ export default {
 
 <style lang="sass">
 .hero
-  background-image: url('../public/images/rm222-mind-16.jpg')
+  background-image: url('/images/rm222-mind-16.jpg')
   background-repeat: no-repeat
   background-attachment: scroll
   background-position: center bottom
