@@ -40,6 +40,9 @@
             <router-link class="nav-link active" :to="{ name: 'thread', params: {id: 1} }"> Thread </router-link>
           </li>
           <li class="nav-item">
+            <router-link class="nav-link active" :to="{ name: 'user', params: {id: 1} }"> User </router-link>
+          </li>
+          <li class="nav-item">
             <router-link class="btn btn-primary" :to="{name: 'login'}">Login</router-link>
           </li>
         </ul>
