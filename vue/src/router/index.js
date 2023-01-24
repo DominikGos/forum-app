@@ -8,6 +8,9 @@ import thread from '../views/thread/thread.vue'
 import login from '../views/auth/login.vue'
 import register from '../views/auth/register.vue'
 import user from '../views/user/user.vue'
+import userData from '../views/user/user-data.vue'
+import userReplies from '../views/user/user-replies.vue'
+import userThreads from '../views/user/user-threads.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,8 +42,24 @@ const router = createRouter({
         },
         {
           path: '/users/:id',
-          name: 'user',
-          component: user
+          component: user,
+          children: [
+            {
+              path: '',
+              name: 'user',
+              component: userData
+            },
+            {
+              path: 'replies',
+              name: 'replies',
+              component: userReplies
+            },
+            {
+              path: 'threads',
+              name: 'threads',
+              component: userThreads
+            },
+          ]
         },
       ]
     },
