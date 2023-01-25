@@ -1,11 +1,17 @@
 <template>
   <hero />
   <div class="content container p-3">
-    <div class="row gap-1 justify-content-evenly">
-      <div class="col-lg-2 d-none d-lg-flex">
+    <div class="row">
+      <div class="col-12 mb-4">
+        <h3>Category name</h3>
+        <p class="text-muted">Short description of category.</p>
+      </div>
+    </div>
+    <div class="row justify-content-between">
+      <div class="col-lg-3 col-xl-2 d-none d-lg-flex">
         <tags />
       </div>
-      <div class="col-lg-8 col-xl-6 d-flex flex-column gap-5">
+      <div class="col-lg-8 col-xl-7 d-flex flex-column gap-5">
         <threads-component />
         <nav aria-label="...">
           <ul class="pagination">

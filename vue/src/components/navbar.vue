@@ -28,19 +28,19 @@
           "
         >
           <li class="nav-item">
-            <router-link class="nav-link active" :to="{ name: 'home' }"> Home </router-link>
+            <router-link :class="[$route.name == 'home' ? 'text-primary' : '', 'nav-link active']" :to="{ name: 'home' }"> Home </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link active" :to="{ name: 'forum'}"> Forum </router-link>
+            <router-link :class="[$route.name == 'forum' ? 'text-primary' : '', 'nav-link active']" :to="{ name: 'forum'}"> Forum </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link active" :to="{ name: 'threads'}"> Threads </router-link>
+            <router-link :class="[$route.name == 'threads' ? 'text-primary' : '', 'nav-link active']" :to="{ name: 'threads'}"> Threads </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link active" :to="{ name: 'thread', params: {id: 1} }"> Thread </router-link>
+            <router-link :class="[$route.name == 'thread' ? 'text-primary' : '', 'nav-link active']" :to="{ name: 'thread', params: {id: 1} }"> Thread </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link active" :to="{ name: 'user', params: {id: 1} }"> User </router-link>
+            <router-link :class="[$route.name == 'user' ? 'text-primary' : '', 'nav-link active']" :to="{ name: 'user', params: {id: 1} }"> User </router-link>
           </li>
           <li class="nav-item">
             <router-link class="btn btn-primary" :to="{name: 'login'}">Login</router-link>

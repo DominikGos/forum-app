@@ -1,12 +1,21 @@
 <template>
   <div class="hero"></div>
-  <div class="container p-4" style="margin-top: 100px !important">
+  <div class="profile-content container p-4">
     <div
       class="row gap-5 flex-lg-nowrap justify-content-center align-items-start"
     >
       <div
-        class="p-3 w-auto bg-white shadow-sm rounded-3 d-flex flex-column gap-3"
-        style="z-index: 1000"
+        class="
+          profile-section
+          p-3
+          w-auto
+          bg-white
+          shadow-sm
+          rounded-3
+          d-flex
+          flex-column
+          gap-3
+        "
       >
         <div
           class="
@@ -55,13 +64,12 @@
         </router-link>
       </div>
 
-      <div class="col-lg-8" style="z-index: 1000;">
+      <div class="profile-section col-lg-8">
         <router-view v-slot="{ Component }">
           <transition name="route" mode="out-in">
             <component :is="Component" />
           </transition>
         </router-view>
-
       </div>
     </div>
   </div>
@@ -74,26 +82,22 @@ export default {
 </script>
 
 <style lang="sass">
-.route-enter-active,
-.route-leave-active
-  transition: all .35s
+.profile-content
+  margin-top: 100px !important
 
-.route-enter-from
-  opacity: 0
+  .profile-section
+    z-index: 1000
 
-.route-leave-to
-  opacity: 0
+  .profile-avatar
+    min-width: 200px
+    max-width: 200px
+    width: 200px !important
+    height: 200px
+    position: relative
+    z-index: 1000
 
-.profile-avatar
-  min-width: 200px
-  max-width: 200px
-  width: 200px !important
-  height: 200px
-  position: relative
-  z-index: 1000
-
-  img
-    min-width: 100%
-    min-height: 100%
+    img
+      min-width: 100%
+      min-height: 100%
 </style>
 
