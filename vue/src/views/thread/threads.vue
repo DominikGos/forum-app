@@ -1,8 +1,8 @@
 <template>
   <hero />
   <div class="mt-5 container p-3">
-    <div class="row">
-      <div class="col-12 mb-4">
+    <div class="row mb-4">
+      <div class="col-12">
         <h3>Category name</h3>
         <p class="text-muted">Short description of category.</p>
       </div>
@@ -12,6 +12,12 @@
         <tags />
       </div>
       <div class="col-lg-8 col-xl-7 d-flex flex-column gap-5">
+         <banner
+          :imagePath="'../../../public/images/conversation.png'"
+          :header="'You can not find an answer?'"
+          :paragraph="'Ask question!'"
+          :buttonText="'Create thread'"
+        />
         <threads-component />
         <nav aria-label="...">
           <ul class="pagination">
@@ -42,6 +48,7 @@ import avatar from "../../components/avatar.vue";
 import tags from "../../components/tags.vue";
 import mostHelpful from "../../components/most-helpful.vue";
 import threadsComponent from "../../components/thread/threads.vue"
+import Banner from '../../components/banner.vue';
 
 export default {
   name: "threads",
@@ -50,7 +57,8 @@ export default {
     avatar,
     tags,
     mostHelpful,
-    threadsComponent
+    threadsComponent,
+    Banner
   },
 };
 </script>

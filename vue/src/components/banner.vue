@@ -19,9 +19,17 @@
     <div class="col">
       <h3>{{this.header}}</h3>
       <p class="text-muted m-0">{{ this.paragraph }}</p>
+
     </div>
     <div class="d-none d-lg-flex">
-      <button class="btn btn-primary">{{ this.buttonText }}</button>
+      <button
+        class="btn btn-primary"
+        @click="function() {
+          $store.commit('openModal')
+        }"
+      >
+        {{ this.buttonText }}
+      </button>
     </div>
   </div>
 </template>

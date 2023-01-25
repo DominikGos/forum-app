@@ -1,5 +1,6 @@
 <template>
   <hero />
+  <modal />
   <div class="container p-3 mt-5">
     <div class="row gap-5">
       <div class="col-xl-8 d-flex flex-column gap-5">
@@ -142,6 +143,7 @@ import hero from "../components/hero.vue";
 import banner from "../components/banner.vue";
 import tags from "../components/tags.vue"
 import categories from '../components/categories.vue';
+import modal from '../components/modal.vue';
 
 export default {
   name: "forum",
@@ -150,6 +152,7 @@ export default {
     banner,
     tags,
     categories,
+    modal,
   },
 };
 </script>

@@ -1,4 +1,5 @@
 <template>
+  <modal />
   <div class="bg-light">
     <app-navbar />
     <router-view></router-view>
@@ -8,9 +9,10 @@
 
 <script>
 import appFooter from '../components/footer.vue'
+import modal from '../components/modal.vue'
 import appNavbar from '../components/navbar.vue'
 export default {
-  components: { appNavbar, appFooter },
+  components: { appNavbar, appFooter, modal },
   name: 'appLayout'
 }
 </script>
