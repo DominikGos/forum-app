@@ -1,6 +1,6 @@
 <template>
   <hero />
-  <div class="content container">
+  <div class="mt-5 container">
     <div class="row justify-content-center gap-3">
       <div class="col-lg-8 d-flex flex-column gap-4">
         <div class="d-flex align-items-center">

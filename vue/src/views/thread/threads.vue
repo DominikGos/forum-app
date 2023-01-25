@@ -1,6 +1,6 @@
 <template>
   <hero />
-  <div class="content container p-3">
+  <div class="mt-5 container p-3">
     <div class="row">
       <div class="col-12 mb-4">
         <h3>Category name</h3>

@@ -83,7 +83,7 @@ export default {
 
 <style lang="sass">
 .profile-content
-  margin-top: 100px !important
+  transform: translate(0, -150px)
 
   .profile-section
     z-index: 1000

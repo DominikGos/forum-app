@@ -35,9 +35,5 @@ export default {
   background-attachment: scroll
   background-position: center bottom
   background-size: cover
-  position: absolute
-  top: 0
-  left: 0
-  right: 0
   height: 350px
 </style>

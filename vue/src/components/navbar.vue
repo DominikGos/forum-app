@@ -1,5 +1,5 @@
 <template>
-  <nav class="app-navbar navbar navbar-expand-lg p-2">
+  <nav class="app-navbar navbar navbar-expand-lg p-2 position-absolute top-0 left-0 w-100">
     <div class="container container-fluid p-3">
       <router-link class="navbar-brand" :to="{ name: 'home' }">
         <i class="fa-brands fa-laravel fs-1"></i>

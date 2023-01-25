@@ -1,6 +1,6 @@
 <template>
   <hero />
-  <div class="content container p-3">
+  <div class="container p-3 mt-5">
     <div class="row gap-5">
       <div class="col-xl-8 d-flex flex-column gap-5">
         <banner
@@ -153,8 +153,3 @@ export default {
   },
 };
 </script>
-
-<style lang="sass">
-.content
-  margin-top: 350px !important
-</style>

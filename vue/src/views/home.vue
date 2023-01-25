@@ -1,6 +1,6 @@
 <template>
   <home-hero />
-  <header class="home-header">
+  <header class="mt-5">
     <h2 class="text-center">Share your thoughts with us.</h2>
     <p class="text-muted text-center mt-3">
       Write, share, subscribe in our community.
@@ -71,9 +71,6 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.home-header
-  margin-top: 700px
-
 .categories
   margin-top: 80px
 
