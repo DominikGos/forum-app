@@ -3,7 +3,7 @@ import appLayout from '../layouts/app-layout.vue'
 import authLayout from '../layouts/auth-layout.vue'
 import home from '../views/home.vue'
 import forum from '../views/forum.vue'
-import threadList from '../views/thread/thread-list.vue'
+import threads from '../views/thread/threads.vue'
 import thread from '../views/thread/thread.vue'
 import login from '../views/auth/login.vue'
 import register from '../views/auth/register.vue'
@@ -26,22 +26,22 @@ const router = createRouter({
 
         },
         {
-          path: '/forum',
+          path: 'forum',
           name: 'forum',
           component: forum
         },
         {
-          path: '/threads',
-          name: 'threadList',
-          component: threadList
+          path: 'threads',
+          name: 'threads',
+          component: threads
         },
         {
-          path: '/threads/:id',
+          path: 'threads/:id',
           name: 'thread',
           component: thread
         },
         {
-          path: '/users/:id',
+          path: 'users/:id',
           component: user,
           children: [
             {
@@ -51,12 +51,12 @@ const router = createRouter({
             },
             {
               path: 'replies',
-              name: 'replies',
+              name: 'userReplies',
               component: userReplies
             },
             {
               path: 'threads',
-              name: 'threads',
+              name: 'userThreads',
               component: userThreads
             },
           ]

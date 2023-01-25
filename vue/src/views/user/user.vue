@@ -27,7 +27,6 @@
           <p class="text-muted m-0">Short text</p>
         </div>
         <router-link
-          @click="animation()"
           :to="{ name: 'user' }"
           :class="[
             $route.name == 'user' ? 'btn-primary' : 'bg-body-secondary',
@@ -37,20 +36,18 @@
           Profile
         </router-link>
         <router-link
-          @click="animation()"
-          :to="{ name: 'threads' }"
+          :to="{ name: 'userThreads' }"
           :class="[
-            $route.name == 'threads' ? 'btn-primary' : 'bg-body-secondary',
+            $route.name == 'userThreads' ? 'btn-primary' : 'bg-body-secondary',
             'btn',
           ]"
         >
           Topics
         </router-link>
         <router-link
-          @click="animation()"
-          :to="{ name: 'replies' }"
+          :to="{ name: 'userReplies' }"
           :class="[
-            $route.name == 'replies' ? 'btn-primary' : 'bg-body-secondary',
+            $route.name == 'userReplies' ? 'btn-primary' : 'bg-body-secondary',
             'btn',
           ]"
         >

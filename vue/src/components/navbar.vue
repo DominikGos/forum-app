@@ -34,7 +34,7 @@
             <router-link class="nav-link active" :to="{ name: 'forum'}"> Forum </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link active" :to="{ name: 'threadList'}"> Threads </router-link>
+            <router-link class="nav-link active" :to="{ name: 'threads'}"> Threads </router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link active" :to="{ name: 'thread', params: {id: 1} }"> Thread </router-link>

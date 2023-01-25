@@ -8,7 +8,7 @@
         <option value="2">Newest</option>
       </select>
     </div>
-    <thread-list />
+    <threads />
     <nav aria-label="...">
       <ul class="pagination">
         <li class="page-item disabled">
@@ -26,9 +26,9 @@
 </template>
 
 <script>
-import threadList from "../../components/thread/thread-list.vue";
+import threads from "../../components/thread/threads.vue";
 export default {
-  components: { threadList },
+  components: { threads },
   name: "userThreads",
 };
 </script>

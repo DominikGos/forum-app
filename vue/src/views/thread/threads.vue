@@ -6,7 +6,7 @@
         <tags />
       </div>
       <div class="col-lg-8 col-xl-6 d-flex flex-column gap-5">
-        <thread-list-component />
+        <threads-component />
         <nav aria-label="...">
           <ul class="pagination">
             <li class="page-item disabled">
@@ -35,19 +35,16 @@ import hero from "../../components/hero.vue";
 import avatar from "../../components/avatar.vue";
 import tags from "../../components/tags.vue";
 import mostHelpful from "../../components/most-helpful.vue";
-import threadListComponent from "../../components/thread/thread-list.vue"
+import threadsComponent from "../../components/thread/threads.vue"
 
 export default {
-  name: "threadList",
+  name: "threads",
   components: {
     hero,
     avatar,
     tags,
     mostHelpful,
-    threadListComponent
+    threadsComponent
   },
 };
 </script>
-
-<style lang="sass">
-</style>
