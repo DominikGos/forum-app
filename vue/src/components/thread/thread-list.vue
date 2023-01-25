@@ -9,7 +9,7 @@
         align-items-center
         justify-content-between
         p-3
-        background-gray-300
+        bg-body-secondary
       "
       style="opacity: 0.75"
     >
@@ -70,7 +70,7 @@
         <div class="col-lg-7 d-flex gap-3">
           <div
             class="
-              background-gray-300
+              bg-body-secondary
               avatar
               rounded-circle
               overflow-hidden

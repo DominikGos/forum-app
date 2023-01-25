@@ -30,7 +30,7 @@
           @click="animation()"
           :to="{ name: 'user' }"
           :class="[
-            $route.name == 'user' ? 'btn-primary' : 'btn-secondary',
+            $route.name == 'user' ? 'btn-primary' : 'bg-body-secondary',
             'btn',
           ]"
         >
@@ -40,7 +40,7 @@
           @click="animation()"
           :to="{ name: 'threads' }"
           :class="[
-            $route.name == 'threads' ? 'btn-primary' : 'btn-secondary',
+            $route.name == 'threads' ? 'btn-primary' : 'bg-body-secondary',
             'btn',
           ]"
         >
@@ -50,7 +50,7 @@
           @click="animation()"
           :to="{ name: 'replies' }"
           :class="[
-            $route.name == 'replies' ? 'btn-primary' : 'btn-secondary',
+            $route.name == 'replies' ? 'btn-primary' : 'bg-body-secondary',
             'btn',
           ]"
         >

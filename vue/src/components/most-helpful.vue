@@ -9,9 +9,8 @@
         align-items-center
         justify-content-between
         p-3
-        background-gray-300
+        bg-body-secondary
       "
-      style="opacity: 0.75"
     >
       <h6 class="m-0">Most helpful</h6>
       <p class="text-muted m-0">Last 30 days.</p>

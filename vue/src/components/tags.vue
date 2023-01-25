@@ -5,7 +5,7 @@
       <div
         class="
           rounded-3
-          background-gray-300
+          bg-body-secondary
           ps-2
           pe-2
           p-1
@@ -18,7 +18,7 @@
       <div
         class="
           rounded-3
-          background-gray-300
+          bg-body-secondary
           ps-2
           pe-2
           p-1
@@ -31,7 +31,7 @@
       <div
         class="
           rounded-3
-          background-gray-300
+          bg-body-secondary
           ps-2
           pe-2
           p-1
@@ -44,7 +44,7 @@
       <div
         class="
           rounded-3
-          background-gray-300
+          bg-body-secondary
           ps-2
           pe-2
           p-1
@@ -57,7 +57,7 @@
       <div
         class="
           rounded-3
-          background-gray-300
+          bg-body-secondary
           ps-2
           pe-2
           p-1
@@ -70,7 +70,7 @@
       <div
         class="
           rounded-3
-          background-gray-300
+          bg-body-secondary
           ps-2
           pe-2
           p-1
@@ -83,7 +83,7 @@
       <div
         class="
           rounded-3
-          background-gray-300
+          bg-body-secondary
           ps-2
           pe-2
           p-1

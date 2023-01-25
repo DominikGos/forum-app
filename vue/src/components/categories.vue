@@ -13,7 +13,7 @@
     >
       <img src="/public/images/musical-notes.png" width="25" />
       <p class="m-0">music</p>
-      <div class="rounded-circle ps-2 pe-2 p-1 background-gray-300">24</div>
+      <div class="rounded-circle ps-2 pe-2 p-1 bg-body-secondary">24</div>
     </div>
     <div
       class="
@@ -27,7 +27,7 @@
     >
       <img src="/public/images/game-console.png" width="25" />
       <p class="m-0">games</p>
-      <div class="rounded-circle ps-2 pe-2 p-1 background-gray-300">14</div>
+      <div class="rounded-circle ps-2 pe-2 p-1 bg-body-secondary">14</div>
     </div>
     <div
       class="
@@ -41,7 +41,7 @@
     >
       <img src="/public/images/workplace.png" width="25" />
       <p class="m-0">programming</p>
-      <div class="rounded-circle ps-2 pe-2 p-1 background-gray-300">14</div>
+      <div class="rounded-circle ps-2 pe-2 p-1 bg-body-secondary">14</div>
     </div>
     <div
       class="
@@ -55,7 +55,7 @@
     >
       <img src="/public/images/game-console.png" width="25" />
       <p class="m-0">games</p>
-      <div class="rounded-circle ps-2 pe-2 p-1 background-gray-300">14</div>
+      <div class="rounded-circle ps-2 pe-2 p-1 bg-body-secondary">14</div>
     </div>
   </div>
 </template>

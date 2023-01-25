@@ -18,9 +18,8 @@
               align-items-center
               justify-content-between
               p-3
-              background-gray-300
+              bg-body-secondary
             "
-            style="opacity: .75"
           >
             <div class="col-2">Forum</div>
             <div class="d-none d-lg-block col-lg-5">Category</div>
@@ -158,9 +157,4 @@ export default {
 <style lang="sass">
 .content
   margin-top: 350px !important
-
-.background-gray-300 //create color object
-  background-color: #dee2e6
-.background-gray-200
-  background-color: #f8f9fa
 </style>
