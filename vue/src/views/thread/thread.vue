@@ -54,7 +54,7 @@
         <comment :isAccepted="false" />
       </div>
       <div class="col-lg-3 d-none d-lg-flex flex-column gap-5">
-        <categories />
+        <forums />
         <tags />
       </div>
     </div>
@@ -63,14 +63,14 @@
 
 <script>
 import avatar from "../../components/avatar.vue";
-import categories from "../../components/categories.vue";
+import forums from "../../components/forum/forums.vue";
 import CommentForm from '../../components/comment/comment-form.vue';
 import comment from "../../components/comment/comment.vue";
 import hero from "../../components/hero.vue";
 import tags from "../../components/tags.vue";
 
 export default {
-  components: { hero, avatar, tags, comment, categories, CommentForm },
+  components: { hero, avatar, tags, comment, forums, CommentForm },
   name: "thread",
 };
 </script>

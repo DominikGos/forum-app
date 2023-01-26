@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-column gap-2">
-    <h3>Categories</h3>
+    <h3>Forums</h3>
     <div
       class="
         d-flex
@@ -62,6 +62,6 @@
 
 <script>
 export default {
-  name: 'categories'
+  name: 'forums'
 }
 </script>

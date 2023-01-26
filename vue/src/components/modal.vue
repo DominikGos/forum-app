@@ -26,7 +26,8 @@
       ]"
     >
       <div class="w-100 d-flex justify-content-end">
-        <i @click="closeModal($event)" data-is-close-button="true" class="cursor-pointer fa-solid fa-xmark fs-3"></i>
+        <button class="btn-close" @click="closeModal($event)" data-is-close-button="true">
+        </button>
       </div>
       <create-thread-form v-if="$store.state.modal.componentName == 'createThreadForm'" />
     </div>
