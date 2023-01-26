@@ -17,6 +17,7 @@
           :header="'You can not find an answer?'"
           :paragraph="'Ask question!'"
           :buttonText="'Create thread'"
+          :modalComponentName="'createThreadForm'"
         />
         <threads-component />
         <nav aria-label="...">

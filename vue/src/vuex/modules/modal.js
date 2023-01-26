@@ -1,7 +1,8 @@
 const modal = {
   state: () => {
     return {
-      open: false
+      open: false,
+      componentName: ''
     }
   },
   mutations: {
@@ -11,6 +12,10 @@ const modal = {
     openModal(state) {
       state.open = true
     },
+    updateComponentName(state, componet) {
+      console.log(componet)
+      state.componentName = componet.name
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 <template>
   <div
-    @click="closeModal()"
+    @click="closeModal($event)"
+    data-is-close-button="true"
     :class="[
       $store.state.modal.open
         ? 'app-modal-visible bg-dark bg-opacity-75'
@@ -12,7 +13,8 @@
       left-0
       bottom-0
       w-100
-      vh-100`,
+      h-100
+      overflow-y-auto`
     ]"
   >
     <div
@@ -20,37 +22,47 @@
         $store.state.modal.open
           ? 'app-modal-body-visible'
           : 'app-modal-body-invisible',
-        'app-modal-body bg-white p-3 rounded-3 shadow m-auto',
+        'app-modal-body d-flex flex-column bg-white p-3 rounded-3 shadow m-auto',
       ]"
     >
-      x
+      <div class="w-100 d-flex justify-content-end">
+        <i @click="closeModal($event)" data-is-close-button="true" class="cursor-pointer fa-solid fa-xmark fs-3"></i>
+      </div>
+      <create-thread-form v-if="$store.state.modal.componentName == 'createThreadForm'" />
     </div>
   </div>
 </template>
 
 <script>
+import createThreadForm from './thread/create-thread-form.vue';
+
 export default {
+  components: { createThreadForm },
   name: "modal",
   methods: {
-    closeModal() {
-      this.$store.commit("closeModal");
+    closeModal(e) {
+      const isCloseButton = (e.target.dataset.isCloseButton && e.target.dataset.isCloseButton == 'true')
+
+      if(isCloseButton) {
+        this.$store.commit("closeModal");
+      }
     },
     openModal() {
       this.$store.commit("openModal");
     },
   },
   watch: {
-    '$store.state.modal.open'() {
-      const body = document.body
-      const isTheModalOpen = this.$store.state.modal.open
+    "$store.state.modal.open"() {
+      const body = document.body;
+      const isTheModalOpen = this.$store.state.modal.open;
 
-      if(isTheModalOpen) {
-        body.classList.add('overflow-hidden')
+      if (isTheModalOpen) {
+        body.classList.add("overflow-hidden");
       } else {
-        body.classList.remove('overflow-hidden')
+        body.classList.remove("overflow-hidden");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

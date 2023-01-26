@@ -18,15 +18,18 @@
     </div>
     <div class="col">
       <h3>{{this.header}}</h3>
-      <p class="text-muted m-0">{{ this.paragraph }}</p>
+      <p
+        class="text-muted m-0"
+        @click="openModal(modalComponentName)"
+      >
+        {{ this.paragraph }}
+      </p>
 
     </div>
     <div class="d-none d-lg-flex">
       <button
         class="btn btn-primary"
-        @click="function() {
-          $store.commit('openModal')
-        }"
+        @click="openModal(modalComponentName)"
       >
         {{ this.buttonText }}
       </button>
@@ -42,6 +45,13 @@ export default {
     header: String,
     paragraph: String,
     buttonText: String,
+    modalComponentName: String
+  },
+  methods: {
+    openModal(componentName) {
+      this.$store.commit('openModal')
+      this.$store.commit('updateComponentName', {name: componentName})
+    }
   },
 };
 </script>

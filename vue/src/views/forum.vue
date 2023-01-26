@@ -1,6 +1,5 @@
 <template>
   <hero />
-  <modal />
   <div class="container p-3 mt-5">
     <div class="row gap-5">
       <div class="col-xl-8 d-flex flex-column gap-5">
@@ -9,6 +8,7 @@
           :header="'You can not find an answer?'"
           :paragraph="'Ask question!'"
           :buttonText="'Create thread'"
+          :modalComponentName="'createThreadForm'"
         />
         <div class="d-flex flex-column border rounded-3">
           <div
