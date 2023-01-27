@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('replies', function (Blueprint $table) {
             $table->id();
             $table->text('content');
+            $table->integer('likes')->unsigned()->nullable();
+            $table->boolean('is_accepted')->nullable();
             $table->timestamps();
         });
     }
