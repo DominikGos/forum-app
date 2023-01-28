@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\Thread;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -14,10 +15,8 @@ class UserController extends Controller
     public function show(int $id): JsonResponse {
         $user = User::find($id);
 
-        dd(Thread::first()->tags);
-
         return new JsonResponse([
-            'user' => $user
+            'user' => new UserResource($user)
         ]);
     }
 }

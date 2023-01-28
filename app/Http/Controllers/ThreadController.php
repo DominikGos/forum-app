@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ThreadResource;
 use App\Models\Thread;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ class ThreadController extends Controller
         $thread = Thread::find($id);
 
         return new JsonResponse([
-            'thread' => $thread
+            'thread' => new ThreadResource($thread)
         ]);
     }
 }
