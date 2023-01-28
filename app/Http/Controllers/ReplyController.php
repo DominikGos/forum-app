@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 
 class ReplyController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(int $threadId): JsonResponse
     {
+        dd($threadId);
         $replies = Reply::all();
 
         return new JsonResponse([

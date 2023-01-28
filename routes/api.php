@@ -40,5 +40,5 @@ Route::group(['as' => 'forums', 'prefix' => '/forums'], function() {
 });
 
 Route::group(['as' => 'tags', 'prefix' => 'tags'], function() {
-    Route::get('', [TagController::class, 'index'])->name('index');
+    Route::get('', [TagController::class, 'index'])->name('.index');
 });

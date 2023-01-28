@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class ThreadController extends Controller
 {
-    public function show(): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        $thread = Thread::all();
+        $thread = Thread::find($id);
 
         return new JsonResponse([
             'thread' => $thread
