@@ -28,20 +28,27 @@ class DatabaseSeeder extends Seeder
         DB::table('replies')->truncate();
         DB::table('tags')->truncate();
         DB::table('threads')->truncate();
+        DB::table('thread_tag')->truncate();
         Schema::enableForeignKeyConstraints();
+
+        $this->call([
+            TagSeeder::class
+        ]);
+
+        $tags = Tag::all();
 
         $user = User::factory()->create();
 
-        $replies = Reply::factory()
-            ->count(3)
-            ->for($user);
+        $forum = Forum::factory()->create();
 
-        Thread::factory()
-            ->count(10)
+        $replies = Reply::factory()->for($user)->count(2);
+
+        $threads = Thread::factory()
+            ->count(3)
+            ->hasAttached($tags)
             ->for($user)
-            ->for(Forum::factory()->create())
+            ->for($forum)
             ->has($replies)
-            ->hasAttached(Tag::factory()->count(3))
             ->create();
     }
 }

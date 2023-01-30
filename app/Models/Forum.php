@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Forum extends Model
 {
     use HasFactory;
+
+    public function threads()
+    {
+        return $this->hasMany(Thread::class);
+    }
 }
