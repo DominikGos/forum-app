@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\ReplyController;
@@ -21,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('register', [RegisterController::class, 'register'])->name('register');
+
+Route::post('/login', [LoginController::class, 'login'])->name('login');
 
 Route::group(['as' => 'users', 'prefix' => '/users'], function() {
     Route::get('', [UserController::class, 'index'])->name('.index');

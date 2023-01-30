@@ -19,11 +19,12 @@ class RegisterController extends Controller
         $password = Hash::make($request->validated('password'));
         $userData = array_merge($request->validated(), ['password' => $password]);
         $user = User::create($userData);
-        $user->active_at = Carbon::now();
-        $user->save();
+        $user->active_at = Carbon::now(); //add to service method
+        $user->save();                    //
         $token = $user->createToken('app', ['user'])->plainTextToken;
 
         return new JsonResponse([
+            'message' => 'Successful registration.',
             'user' => new UserResource($user),
             'token' => $token,
         ], 201);
