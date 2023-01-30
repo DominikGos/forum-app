@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\TagController;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+Route::post('register', [RegisterController::class, 'register'])->name('register');
 
 Route::group(['as' => 'users', 'prefix' => '/users'], function() {
     Route::get('', [UserController::class, 'index'])->name('.index');
@@ -28,7 +29,7 @@ Route::group(['as' => 'users', 'prefix' => '/users'], function() {
 });
 
 Route::group(['as' => 'threads', 'prefix' => '/threads'], function() {
-    
+
     Route::group(['prefix' => '/{id}'], function() {
         Route::get('', [ThreadController::class, 'show'])->name('.show');
 
