@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     protected $stopOnFirstFailure = true;
 
@@ -25,12 +25,9 @@ class RegisterRequest extends FormRequest
      */
     public function rules()
     {
-        return [ //regex not working
-            'email' => 'email|max:255|required|unique:users,email',
-            'login' => 'string|required|max:255|regex:/^[a-zA-Z0-9 ]+$/|unique:users,login',
-            'first_name' => 'string|max:255|required',
-            'last_name' => 'string|max:255|required',
-            'password' => 'string|max:255|required|regex:/^[a-zA-Z0-9 ]+$/'
+        return [
+            'email' => 'email|required',
+            'password' => 'required',
         ];
     }
 }
