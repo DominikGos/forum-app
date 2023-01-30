@@ -19,4 +19,12 @@ class UserController extends Controller
             'user' => new UserResource($user)
         ]);
     }
+
+    public function index(): JsonResponse {
+        $users = User::all();
+
+        return new JsonResponse([
+            'users' => UserResource::collection($users)
+        ]);
+    }
 }

@@ -22,10 +22,13 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['as' => 'users', 'prefix' => '/users'], function() {
+    Route::get('', [UserController::class, 'index'])->name('.index');
+
     Route::get('/{id}', [UserController::class, 'show'])->name('.show');
 });
 
 Route::group(['as' => 'threads', 'prefix' => '/threads'], function() {
+    
     Route::group(['prefix' => '/{id}'], function() {
         Route::get('', [ThreadController::class, 'show'])->name('.show');
 
