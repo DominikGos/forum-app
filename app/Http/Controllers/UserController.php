@@ -37,4 +37,15 @@ class UserController extends Controller
             'message' => 'Updated successfully.'
         ]);
     }
+
+    public function destroy(int $id): JsonResponse //add authorization!
+    {
+        $user = User::findOrFail($id);
+
+        $user->delete();
+
+        return new JsonResponse([
+            'message' => 'The user has been successfully deleted.'
+        ]);
+    }
 }
