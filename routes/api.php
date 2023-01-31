@@ -25,6 +25,11 @@ Route::post('register', [RegisterController::class, 'register'])->name('register
 
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 
+
+Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+});
+
 Route::group(['as' => 'users', 'prefix' => '/users'], function() {
     Route::get('', [UserController::class, 'index'])->name('.index');
 

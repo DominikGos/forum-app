@@ -15,9 +15,7 @@ class LoginController extends Controller
     {
         if (Auth::attempt($request->validated())) {
             $user = Auth::user();
-
             $token = $user->createToken('app', ['user'])->plainTextToken;
-
             $user->active_at = Carbon::now();
             $user->save();
 
@@ -33,5 +31,17 @@ class LoginController extends Controller
                 'email' => 'These credentials do not match our records.'
             ],
         ], 422);
+    }
+
+    public function logout(): JsonResponse
+    {
+        $user = Auth::user();
+        $user->currentAccessToken()->delete();
+        $user->active_at = null;
+        $user->save();
+
+        return new JsonResponse([
+            'message' => 'Logout successful.'
+        ]);
     }
 }
