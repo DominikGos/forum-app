@@ -28,6 +28,11 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 
 Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::group(['as' => 'users', 'prefix' => '/users'], function() {
+        Route::put('/{id}', [UserController::class, 'update'])->name('.update');
+    });
+
 });
 
 Route::group(['as' => 'users', 'prefix' => '/users'], function() {
