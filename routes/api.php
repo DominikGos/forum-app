@@ -35,6 +35,11 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('.destroty');
     });
 
+    Route::group(['as' => 'forums', 'prefix' => '/forums'], function() {
+        Route::group(['as' => '.threads', 'prefix' => '/{id}/threads'], function() {
+            Route::post('', [ThreadController::class, 'store'])->name('.store');
+        });
+    });
 });
 
 Route::group(['as' => 'users', 'prefix' => '/users'], function() {
@@ -44,18 +49,17 @@ Route::group(['as' => 'users', 'prefix' => '/users'], function() {
 });
 
 Route::group(['as' => 'threads', 'prefix' => '/threads'], function() {
-
     Route::group(['prefix' => '/{id}'], function() {
         Route::get('', [ThreadController::class, 'show'])->name('.show');
 
-        Route::group(['as' => '.replies', 'prefix' => '/replies'], function() {
-            Route::get('', [ReplyController::class, 'index'])->name('.index');
-        });
+        Route::get('/replies', [ReplyController::class, 'index'])->name('.replies.index');
     });
 });
 
 Route::group(['as' => 'forums', 'prefix' => '/forums'], function() {
     Route::get('', [ForumController::class, 'index'])->name('.index');
+
+    Route::get('/{id}/threads', [ThreadController::class, 'index'])->name('.threads.index');
 });
 
 Route::group(['as' => 'tags', 'prefix' => 'tags'], function() {
