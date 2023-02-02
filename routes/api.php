@@ -43,6 +43,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::delete('/{id}', [ThreadController::class, 'destroy'])->name('.destroy');
 
         Route::put('/{id}', [ThreadController::class, 'update'])->name('.update');
+
+        Route::post('/{threadId}/replies', [ReplyController::class, 'store'])->name('.replies.store');
     });
 });
 

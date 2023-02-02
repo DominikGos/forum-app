@@ -38,8 +38,8 @@ class ThreadController extends Controller
     {
         $forum = Forum::findOrFail($forumId);
         $thread = new Thread($request->validated());
-        $thread->user_id = Auth::id();//check setRelation method
-        $thread->forum_id = $forum->id;
+        $thread->user()->associate(Auth::user());
+        $forum->threads()->save($thread);
         $thread->save();
 
         return new JsonResponse([

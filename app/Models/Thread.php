@@ -9,6 +9,11 @@ class Thread extends Model
 {
     use HasFactory;
 
+    protected $with = [
+        'user',
+        'forum'
+    ];
+    
     protected $fillable = [
         'title',
         'description'
