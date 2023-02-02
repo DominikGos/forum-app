@@ -22,7 +22,7 @@ class UserResource extends JsonResource
             'firstName' => $this->first_name,
             'lastName' => $this->last_name,
             'description' => $this->description,
-            'activeAt' => $this->active_at,
+            'loggedOutAt' => $this->logged_out_at,
             'timestamps' => new TimestampsResource($this),
         ];
     }
