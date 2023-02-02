@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ReplyStoreRequest;
+use App\Http\Requests\ReplyUpdateRequest;
 use App\Http\Resources\ReplyResource;
 use App\Models\Reply;
 use App\Models\Thread;
@@ -33,5 +34,27 @@ class ReplyController extends Controller
             'message' => 'The reply has been created successfully.',
             'reply' => new ReplyResource($reply)
         ], 201);
+    }
+
+    public function update(ReplyUpdateRequest $requet, int $id): JsonResponse
+    {
+        $reply = Reply::findOrFail($id);
+        $reply->update($requet->validated());
+        $reply->save();
+
+        return new JsonResponse([
+            'message' => 'The reply has been updated successfully.',
+            'reply' => new ReplyResource($reply)
+        ]);
+    }
+
+    public function destroy(int $id): JsonResponse
+    {
+        $reply = Reply::findOrFail($id);
+        $reply->delete();
+
+        return new JsonResponse([
+            'message' => 'The reply has been deleted successfully.',
+        ]);
     }
 }

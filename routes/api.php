@@ -46,6 +46,12 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 
         Route::post('/{threadId}/replies', [ReplyController::class, 'store'])->name('.replies.store');
     });
+
+    Route::group(['as' => 'replies', 'prefix' => '/replies'], function() {
+        Route::put('/{id}', [ReplyController::class, 'update'])->name('.update');
+
+        Route::delete('/{id}', [ReplyController::class, 'destroy'])->name('.destroy');
+    });
 });
 
 Route::group(['as' => 'users', 'prefix' => '/users'], function() {
