@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ThreadDestroyRequest;
 use App\Http\Requests\ThreadStoreRequest;
+use App\Http\Requests\ThreadUpdateRequest;
 use App\Http\Resources\ThreadResource;
 use App\Models\Forum;
 use App\Models\Thread;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +38,7 @@ class ThreadController extends Controller
     {
         $forum = Forum::findOrFail($forumId);
         $thread = new Thread($request->validated());
-        $thread->user_id = Auth::id();
+        $thread->user_id = Auth::id();//check setRelation method
         $thread->forum_id = $forum->id;
         $thread->save();
 
@@ -43,5 +46,27 @@ class ThreadController extends Controller
             'message' => 'Thread created successfully.',
             'thread' => new ThreadResource($thread)
         ], 201);
+    }
+
+    public function update(ThreadUpdateRequest $request, int $id): JsonResponse
+    {
+        $user = User::findOrFail($request->validated('user_id'));//add authoization!
+        $thread = Thread::findOrFail($id);
+        $thread->update($request->validated()); //user_id param from request does not override relationship
+
+        return new JsonResponse([
+            'message' => 'The thread has been successfully updated.'
+        ]);
+    }
+
+    public function destroy(ThreadDestroyRequest $request, int $id): JsonResponse
+    {
+        $user = User::findOrFail($request->validated('user_id'));//add authoization!
+        $thread = Thread::findOrFail($id);
+        $thread->delete();
+
+        return new JsonResponse([
+            'message' => 'The thread has been successfully deleted.'
+        ]);
     }
 }

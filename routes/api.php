@@ -29,16 +29,20 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::group(['as' => 'users', 'prefix' => '/users'], function() {
-        Route::put('/{id}', [UserController::class, 'update'])->name('.update');
+    Route::group(['as' => 'users', 'prefix' => '/users/{id}'], function() {
+        Route::put('', [UserController::class, 'update'])->name('.update');
 
-        Route::delete('/{id}', [UserController::class, 'destroy'])->name('.destroty');
+        Route::delete('', [UserController::class, 'destroy'])->name('.destroty');
     });
 
     Route::group(['as' => 'forums', 'prefix' => '/forums'], function() {
-        Route::group(['as' => '.threads', 'prefix' => '/{id}/threads'], function() {
-            Route::post('', [ThreadController::class, 'store'])->name('.store');
-        });
+        Route::post('/{forumId}/threads', [ThreadController::class, 'store'])->name('.threads.store');
+    });
+
+    Route::group(['as' => 'threads', 'prefix' => '/threads'], function() {
+        Route::delete('/{id}', [ThreadController::class, 'destroy'])->name('.destroy');
+
+        Route::put('/{id}', [ThreadController::class, 'update'])->name('.update');
     });
 });
 
@@ -49,17 +53,15 @@ Route::group(['as' => 'users', 'prefix' => '/users'], function() {
 });
 
 Route::group(['as' => 'threads', 'prefix' => '/threads'], function() {
-    Route::group(['prefix' => '/{id}'], function() {
-        Route::get('', [ThreadController::class, 'show'])->name('.show');
+    Route::get('/{id}', [ThreadController::class, 'show'])->name('.show');
 
-        Route::get('/replies', [ReplyController::class, 'index'])->name('.replies.index');
-    });
+    Route::get('/{threadId}/replies', [ReplyController::class, 'index'])->name('.replies.index');
 });
 
 Route::group(['as' => 'forums', 'prefix' => '/forums'], function() {
     Route::get('', [ForumController::class, 'index'])->name('.index');
 
-    Route::get('/{id}/threads', [ThreadController::class, 'index'])->name('.threads.index');
+    Route::get('/{forumId}/threads', [ThreadController::class, 'index'])->name('.threads.index');
 });
 
 Route::group(['as' => 'tags', 'prefix' => 'tags'], function() {
