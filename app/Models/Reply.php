@@ -12,10 +12,6 @@ class Reply extends Model
     protected $fillable = [
         'content'
     ];
-    
-    protected $with = [
-        'user'
-    ];
 
     public function user()
     {

@@ -20,7 +20,7 @@ class ReplyResource extends JsonResource
             'likes' => $this->likes,
             'isAccepted' => $this->is_accepted,
             'timestamps' => new TimestampsResource($this),
-            'user' => new UserResource($this->user),
+            'user' => new UserResource($this->whenLoaded('user')),
         ];
     }
 }

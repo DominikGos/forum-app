@@ -28,6 +28,8 @@ class ThreadStoreRequest extends FormRequest
         return [
             'title' => 'required|unique:threads,title|max:255',
             'description' => 'required',
+            'tagIds' => 'nullable|array|',
+            'tagIds.*' => 'integer',
         ];
     }
 }

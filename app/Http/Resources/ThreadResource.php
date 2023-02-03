@@ -20,8 +20,9 @@ class ThreadResource extends JsonResource
             'description' => $this->description,
             'likes' => $this->likes,
             'timestamps' => new TimestampsResource($this),
-            'user' => new UserResource($this->user),
-            'forum' => new ForumResource($this->forum),
+            'user' => new UserResource($this->whenLoaded('user')),
+            'forum' => new ForumResource($this->whenLoaded('forum')),
+            'tags' => TagResource::collection($this->whenLoaded('tags'))
         ];
     }
 }

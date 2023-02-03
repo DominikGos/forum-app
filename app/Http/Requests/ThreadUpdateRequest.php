@@ -30,6 +30,8 @@ class ThreadUpdateRequest extends FormRequest
                 'nullable', Rule::unique('threads')->ignore($this->route('id'))
             ],
             'description' => 'nullable',
+            'tagIds' => 'nullable|array|',
+            'tagIds.*' => 'integer',
         ];
     }
 }

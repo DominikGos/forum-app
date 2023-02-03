@@ -15,7 +15,7 @@ class ReplyController extends Controller
 {
     public function index(int $threadId): JsonResponse
     {
-        $thread = Thread::findOrFail($threadId);
+        $thread = Thread::with('replies.user')->findOrFail($threadId);
 
         return new JsonResponse([
             'replies' => ReplyResource::collection($thread->replies)

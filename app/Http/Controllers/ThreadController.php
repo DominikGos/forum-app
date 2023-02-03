@@ -17,7 +17,7 @@ class ThreadController extends Controller
 {
     public function show(int $id): JsonResponse
     {
-        $thread = Thread::findOrFail($id);
+        $thread = Thread::with(['tags', 'forum', 'user'])->findOrFail($id);
 
         return new JsonResponse([
             'thread' => new ThreadResource($thread)
@@ -26,7 +26,7 @@ class ThreadController extends Controller
 
     public function index(int $forumId): JsonResponse
     {
-        $forum = Forum::findOrFail($forumId);
+        $forum = Forum::with('threads.user')->findOrFail($forumId);
         $threads = $forum->threads;
 
         return new JsonResponse([
@@ -41,6 +41,7 @@ class ThreadController extends Controller
         $thread->user()->associate(Auth::user());
         $forum->threads()->save($thread);
         $thread->save();
+        $thread->tags()->attach($request->tagIds);
 
         return new JsonResponse([
             'message' => 'Thread created successfully.',
@@ -53,6 +54,7 @@ class ThreadController extends Controller
         $user = User::findOrFail($request->validated('user_id'));//add authoization!
         $thread = Thread::findOrFail($id);
         $thread->update($request->validated()); //user_id param from request does not override relationship
+        $thread->tags()->sync($request->tagIds);
 
         return new JsonResponse([
             'message' => 'The thread has been successfully updated.'
