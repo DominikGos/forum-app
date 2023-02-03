@@ -36,6 +36,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     });
 
     Route::group(['as' => 'forums', 'prefix' => '/forums'], function() {
+        Route::post('', [ForumController::class, 'store'])->name('.store');
+        
         Route::post('/{forumId}/threads', [ThreadController::class, 'store'])->name('.threads.store');
     });
 
@@ -68,6 +70,8 @@ Route::group(['as' => 'threads', 'prefix' => '/threads'], function() {
 
 Route::group(['as' => 'forums', 'prefix' => '/forums'], function() {
     Route::get('', [ForumController::class, 'index'])->name('.index');
+
+    Route::get('/{id}', [ForumController::class, 'show'])->name('.show');
 
     Route::get('/{forumId}/threads', [ThreadController::class, 'index'])->name('.threads.index');
 });
