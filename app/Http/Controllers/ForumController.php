@@ -11,7 +11,7 @@ class ForumController extends Controller
 {
     public function index(): JsonResponse
     {
-        $forums = Forum::all();
+        $forums = Forum::with('user')->get();
 
         return new JsonResponse([
             'forums' => ForumResource::collection($forums)

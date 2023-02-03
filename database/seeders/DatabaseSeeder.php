@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
 
         $user = User::factory()->create();
 
-        $forum = Forum::factory()->create();
+        $forum = Forum::factory()->for($user)->create();
 
         $replies = Reply::factory()->for($user)->count(2);
 

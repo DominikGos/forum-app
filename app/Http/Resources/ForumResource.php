@@ -20,6 +20,7 @@ class ForumResource extends JsonResource
             'description' => $this->description,
             'imagePath' => $this->image_path,
             'timestamps' => new TimestampsResource($this),
+            'user' => new UserResource($this->whenLoaded('user'))
         ];
     }
 }
