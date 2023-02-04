@@ -6,6 +6,7 @@ use App\Http\Requests\ForumStoreRequest;
 use App\Http\Requests\ForumUpdateRequest;
 use App\Http\Resources\ForumResource;
 use App\Models\Forum;
+use App\Services\ForumService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,12 @@ class ForumController extends Controller
 {
     private const DISK = 'public';
     private const FORUM_FILES_DIRECTORY = 'forum';
+    private ForumService $forumService;
+
+    public function __construct()
+    {
+        $this->forumService = new ForumService(self::FORUM_FILES_DIRECTORY, self::DISK);
+    }
 
     public function index(): JsonResponse
     {
@@ -40,8 +47,7 @@ class ForumController extends Controller
         $forum->user()->associate(Auth::user());
 
         if($request->file('image')) {
-            $path = $request->file('image')->store(self::FORUM_FILES_DIRECTORY, self::DISK);
-            $forum->image_path = $path;
+            $this->forumService->saveFile($forum, $request->file('image'));
         }
 
         $forum->save();
@@ -58,8 +64,7 @@ class ForumController extends Controller
         $forum->update($request->validated());
 
         if($request->file('image')) {
-            $path = $request->file('image')->store(self::FORUM_FILES_DIRECTORY, self::DISK);
-            $forum->image_path = $path;
+            $this->forumService->saveFile($forum, $request->file('image'));
         }
 
         $forum->save();
@@ -67,6 +72,16 @@ class ForumController extends Controller
         return new JsonResponse([
             'message' => 'The forum has been successfully updated.',
             'forum' => new ForumResource($forum)
+        ]);
+    }
+
+    public function destroy(int $id): JsonResponse
+    {
+        $forum = Forum::findOrFail($id);
+        $forum->delete();
+
+        return new JsonResponse([
+            'message' => 'The forum has been successfully deleted.'
         ]);
     }
 }

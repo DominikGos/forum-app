@@ -40,6 +40,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 
         Route::put('/{id}', [ForumController::class, 'update'])->name('.update');
 
+        Route::delete('/{id}', [ForumController::class, 'destroy'])->name('.destroy');
+
         Route::post('/{forumId}/threads', [ThreadController::class, 'store'])->name('.threads.store');
     });
 
