@@ -37,7 +37,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 
     Route::group(['as' => 'forums', 'prefix' => '/forums'], function() {
         Route::post('', [ForumController::class, 'store'])->name('.store');
-        
+
+        Route::put('/{id}', [ForumController::class, 'update'])->name('.update');
+
         Route::post('/{forumId}/threads', [ThreadController::class, 'store'])->name('.threads.store');
     });
 
