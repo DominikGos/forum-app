@@ -60,6 +60,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 
     Route::group(['as' => 'tags', 'prefix' => 'tags'], function() {
         Route::post('', [TagController::class, 'store'])->name('.store');
+
+        Route::put('/{id}', [TagController::class, 'update'])->name('.update');
+
+        Route::delete('/{id}', [TagController::class, 'destroy'])->name('.destroy');
     });
 });
 

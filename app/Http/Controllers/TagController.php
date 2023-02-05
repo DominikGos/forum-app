@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TagStoreRequest;
+use App\Http\Requests\TagUpdateRequest;
 use App\Http\Resources\TagResource;
 use App\Models\Tag;
 use Illuminate\Http\JsonResponse;
@@ -32,17 +33,25 @@ class TagController extends Controller
         ], 201);
     }
 
-   /*  public function update(): JsonResponse
+    public function update(TagUpdateRequest $request, int $id): JsonResponse
     {
+        $tag = Tag::findOrFail($id);
+        $tag->update($request->validated());
+        $tag->save();
+
         return new JsonResponse([
-            'tag' => TagResource::collection($tag)
+            'message' => 'The tag has been successfuly updated.',
+            'tag' => new TagResource($tag)
         ]);
     }
 
-    public function destroy(): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
+        $tag = Tag::findOrFail($id);
+        $tag->delete();
+
         return new JsonResponse([
-            'message' => 'The tag has been removed successfully.'
+            'message' => 'The tag has been successfully deleted .'
         ]);
-    } */
+    }
 }
