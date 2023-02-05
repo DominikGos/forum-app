@@ -9,8 +9,18 @@ class Tag extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'description'
+    ];
+
     public function threads()
     {
         return $this->belongsToMany(Thread::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

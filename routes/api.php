@@ -25,7 +25,6 @@ Route::post('register', [RegisterController::class, 'register'])->name('register
 
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 
-
 Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
@@ -57,6 +56,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::put('/{id}', [ReplyController::class, 'update'])->name('.update');
 
         Route::delete('/{id}', [ReplyController::class, 'destroy'])->name('.destroy');
+    });
+
+    Route::group(['as' => 'tags', 'prefix' => 'tags'], function() {
+        Route::post('', [TagController::class, 'store'])->name('.store');
     });
 });
 
