@@ -85,6 +85,8 @@ Route::group(['as' => 'forums', 'prefix' => '/forums'], function() {
     Route::get('/{id}', [ForumController::class, 'show'])->name('.show');
 
     Route::get('/{forumId}/threads', [ThreadController::class, 'index'])->name('.threads.index');
+
+    Route::get('/{forumId}/users', [ForumController::class, 'users'])->name('.users.index');
 });
 
 Route::group(['as' => 'tags', 'prefix' => 'tags'], function() {

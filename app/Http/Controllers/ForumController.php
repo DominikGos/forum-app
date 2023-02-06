@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ForumStoreRequest;
 use App\Http\Requests\ForumUpdateRequest;
 use App\Http\Resources\ForumResource;
+use App\Http\Resources\UserResource;
 use App\Models\Forum;
 use App\Services\ForumService;
 use Illuminate\Http\JsonResponse;
@@ -32,6 +33,15 @@ class ForumController extends Controller
         ]);
     }
 
+    public function users(int $forumId): JsonResponse
+    {
+        $forum = Forum::findOrFail($forumId);
+
+        return new JsonResponse([
+            'users' => UserResource::collection($forum->users)
+        ]);
+    }
+
     public function show(int $id): JsonResponse
     {
         $forum = Forum::with('user')->findOrFail($id);
@@ -51,6 +61,7 @@ class ForumController extends Controller
         }
 
         $forum->save();
+        $forum->users()->attach(Auth::user());
 
         return new JsonResponse([
             'message' => 'The forum has been successfully created.',

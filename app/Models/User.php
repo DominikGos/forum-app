@@ -49,4 +49,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Thread::class);
     }
+
+    public function forums()
+    {
+        return $this->belongsToMany(Forum::class, 'forum_user');
+    }
+
+    public function createdForums()
+    {
+        return $this->hasMany(Forum::class);
+    }
 }
