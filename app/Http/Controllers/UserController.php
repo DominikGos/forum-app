@@ -16,6 +16,7 @@ class UserController extends Controller
     public function show(int $id): JsonResponse {
         $user = User::findOrFail($id);
 
+        dd($user->getAllPermissions());
         return new JsonResponse([
             'user' => new UserResource($user)
         ]);
