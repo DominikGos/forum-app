@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ThreadDestroyRequest;
 use App\Http\Requests\ThreadStoreRequest;
 use App\Http\Requests\ThreadUpdateRequest;
 use App\Http\Resources\ThreadResource;
@@ -51,19 +50,18 @@ class ThreadController extends Controller
 
     public function update(ThreadUpdateRequest $request, int $id): JsonResponse
     {
-        $user = User::findOrFail($request->validated('user_id'));//add authoization!
         $thread = Thread::findOrFail($id);
-        $thread->update($request->validated()); //user_id param from request does not override relationship
+        $thread->update($request->validated());
         $thread->tags()->sync($request->tagIds);
 
         return new JsonResponse([
-            'message' => 'The thread has been successfully updated.'
+            'message' => 'The thread has been successfully updated.',
+            'thread' => new ThreadResource($thread)
         ]);
     }
 
-    public function destroy(ThreadDestroyRequest $request, int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-        $user = User::findOrFail($request->validated('user_id'));//add authoization!
         $thread = Thread::findOrFail($id);
         $thread->delete();
 

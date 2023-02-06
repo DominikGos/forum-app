@@ -25,7 +25,6 @@ class ThreadUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|integer',
             'title' => [
                 'nullable', Rule::unique('threads')->ignore($this->route('id'))
             ],
