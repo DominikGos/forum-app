@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ForumAddUserRequest;
 use App\Http\Requests\ForumStoreRequest;
 use App\Http\Requests\ForumUpdateRequest;
 use App\Http\Resources\ForumResource;
 use App\Http\Resources\UserResource;
 use App\Models\Forum;
+use App\Models\User;
 use App\Services\ForumService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -30,15 +32,6 @@ class ForumController extends Controller
 
         return new JsonResponse([
             'forums' => ForumResource::collection($forums)
-        ]);
-    }
-
-    public function users(int $forumId): JsonResponse
-    {
-        $forum = Forum::findOrFail($forumId);
-
-        return new JsonResponse([
-            'users' => UserResource::collection($forum->users)
         ]);
     }
 
@@ -94,5 +87,25 @@ class ForumController extends Controller
         return new JsonResponse([
             'message' => 'The forum has been successfully deleted.'
         ]);
+    }
+
+    public function users(int $forumId): JsonResponse
+    {
+        $forum = Forum::findOrFail($forumId);
+
+        return new JsonResponse([
+            'users' => UserResource::collection($forum->users)
+        ]);
+    }
+
+    public function addUser(ForumAddUserRequest $request, int $forumId): JsonResponse
+    {
+        $forum = Forum::findOrFail($forumId);
+        $user = User::findOrFail($request->user_id);
+        $forum->users()->attach($user);
+
+        return new JsonResponse([
+            'message' => 'User with id equal ' . $user->id . ' has been successfully added to the forum.'
+        ], 201);
     }
 }

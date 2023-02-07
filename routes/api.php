@@ -42,6 +42,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::delete('/{id}', [ForumController::class, 'destroy'])->name('.destroy');
 
         Route::post('/{forumId}/threads', [ThreadController::class, 'store'])->name('.threads.store');
+
+        Route::post('/{forumId}/users', [ForumController::class, 'addUser'])->name('.users.store');
     });
 
     Route::group(['as' => 'threads', 'prefix' => '/threads'], function() {
