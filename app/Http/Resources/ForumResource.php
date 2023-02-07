@@ -19,6 +19,7 @@ class ForumResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'image' => asset('storage/' . $this->image_path),
+            'publishedAt' => $this->published_at,
             'timestamps' => new TimestampsResource($this),
             'user' => new UserResource($this->whenLoaded('user'))
         ];

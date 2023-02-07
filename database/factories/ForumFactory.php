@@ -20,6 +20,7 @@ class ForumFactory extends Factory
             'name' => fake()->randomElement(['sport', 'programming', 'music', 'painting']),
             'description' => fake()->text(100),
             'image_path' => fake()->filePath(),
+            'published_at' => fake()->randomElement([null, now()]),
         ];
     }
 }

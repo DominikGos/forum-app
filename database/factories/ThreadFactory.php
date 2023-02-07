@@ -20,6 +20,7 @@ class ThreadFactory extends Factory
             'title' => fake()->text(50),
             'description' => fake()->text(100),
             'likes' => fake()->randomDigit(),
+            'published_at' => fake()->randomElement([null, now()]),
         ];
     }
 }
