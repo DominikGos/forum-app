@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ForumAddUserRequest;
 use App\Http\Requests\ForumStoreRequest;
 use App\Http\Requests\ForumUpdateRequest;
 use App\Http\Resources\ForumResource;
@@ -98,14 +97,25 @@ class ForumController extends Controller
         ]);
     }
 
-    public function addUser(ForumAddUserRequest $request, int $forumId): JsonResponse
+    public function addUser(int $forumId, int $id): JsonResponse
     {
         $forum = Forum::findOrFail($forumId);
-        $user = User::findOrFail($request->user_id);
+        $user = User::findOrFail($id);
         $forum->users()->attach($user);
 
         return new JsonResponse([
             'message' => 'User with id equal ' . $user->id . ' has been successfully added to the forum.'
         ], 201);
+    }
+
+    public function removeUser(int $forumId, int $id): JsonResponse
+    {
+        $forum = Forum::findOrFail($forumId);
+        $user = User::findOrFail($id);
+        $forum->users()->detach($user);
+
+        return new JsonResponse([
+            'message' => 'User with id equal ' . $user->id . ' has been successfully remove from the forum.'
+        ]);
     }
 }
