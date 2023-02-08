@@ -11,25 +11,38 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ThreadController extends Controller
 {
-    public function show(int $id): JsonResponse
-    {
-        $thread = Thread::with(['tags', 'forum', 'user'])->findOrFail($id);
-
-        return new JsonResponse([
-            'thread' => new ThreadResource($thread)
-        ]);
-    }
-
     public function index(int $forumId): JsonResponse
     {
+        $user = Auth::guard('sanctum')->user();
         $forum = Forum::with('threads.user')->findOrFail($forumId);
-        $threads = $forum->threads;
+
+        if($user?->can('view all threads')) {
+            $threads = $forum->threads;
+        } else {
+            $threads = $forum->threads()->whereNotNull('published_at')->get();
+        }
 
         return new JsonResponse([
             'threads' => ThreadResource::collection($threads)
+        ]);
+    }
+
+    public function show(int $id): JsonResponse
+    {
+        $user = Auth::guard('sanctum')->user();
+        $with = ['tags', 'forum', 'user'];
+        $thread = Thread::with($with)->findOrFail($id);
+
+        if($user?->cannot('view', $thread)) {
+            $thread = Thread::with($with)->whereNotNull('published_at')->findOrFail($id);
+        }
+
+        return new JsonResponse([
+            'thread' => new ThreadResource($thread)
         ]);
     }
 
