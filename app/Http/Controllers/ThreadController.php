@@ -18,12 +18,21 @@ class ThreadController extends Controller
     public function index(int $forumId): JsonResponse
     {
         $user = Auth::guard('sanctum')->user();
-        $forum = Forum::with('threads.user')->findOrFail($forumId);
+        $relations = ['threads.user'];
 
         if($user?->can('view all threads')) {
+            $forum = Forum::with($relations)->findOrFail($forumId);
             $threads = $forum->threads;
         } else {
-            $threads = $forum->threads()->whereNotNull('published_at')->get();
+            $relations = implode(', ', $relations);
+
+            $forum = Forum::with([
+                $relations, 'threads' => function($query) use ($user) {
+                    $query->where('user_id', $user->id)->orWhereNotNull('published_at');
+                }
+            ])->findOrFail($forumId);
+
+            $threads = $forum->threads;
         }
 
         return new JsonResponse([
@@ -34,11 +43,11 @@ class ThreadController extends Controller
     public function show(int $id): JsonResponse
     {
         $user = Auth::guard('sanctum')->user();
-        $with = ['tags', 'forum', 'user'];
-        $thread = Thread::with($with)->findOrFail($id);
+        $relations = ['tags', 'forum', 'user'];
+        $thread = Thread::with($relations)->findOrFail($id);
 
         if($user?->cannot('view', $thread)) {
-            $thread = Thread::with($with)->whereNotNull('published_at')->findOrFail($id);
+            $thread = Thread::with($relations)->whereNotNull('published_at')->findOrFail($id);
         }
 
         return new JsonResponse([
@@ -48,6 +57,8 @@ class ThreadController extends Controller
 
     public function store(ThreadStoreRequest $request, int $forumId): JsonResponse
     {
+        $this->authorize('create own threads');
+
         $forum = Forum::findOrFail($forumId);
         $thread = new Thread($request->validated());
         $thread->user()->associate(Auth::user());

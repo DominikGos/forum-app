@@ -51,14 +51,17 @@ class DatabaseSeeder extends Seeder
         $admin->assignRole('forum admin');
         $admin->assignRole('author');
 
-        $user = User::factory()->create();
+        $users = User::factory()->count(2)->create();
+        $users[0]->assignRole('author');
+        $users[1]->assignRole('author');
+
         $tags = Tag::all();
-        $forum = Forum::factory()->for($user)->create();
-        $replies = Reply::factory()->for($user)->count(2);
+        $forum = Forum::factory()->for($users[0])->create();
+        $replies = Reply::factory()->for($users[0])->count(2);
         $threads = Thread::factory()
             ->count(3)
             ->hasAttached($tags)
-            ->for($user)
+            ->for($users[0])
             ->for($forum)
             ->has($replies)
             ->create();
