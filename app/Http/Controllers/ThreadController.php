@@ -75,6 +75,9 @@ class ThreadController extends Controller
     public function update(ThreadUpdateRequest $request, int $id): JsonResponse
     {
         $thread = Thread::findOrFail($id);
+
+        $this->authorize('update', $thread);
+
         $thread->update($request->validated());
         $thread->tags()->sync($request->tagIds);
 
@@ -87,6 +90,9 @@ class ThreadController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $thread = Thread::findOrFail($id);
+
+        $this->authorize('destroy', $thread);
+
         $thread->delete();
 
         return new JsonResponse([
