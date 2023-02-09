@@ -28,7 +28,11 @@ class ThreadController extends Controller
 
             $forum = Forum::with([
                 $relations, 'threads' => function($query) use ($user) {
-                    $query->where('user_id', $user->id)->orWhereNotNull('published_at');
+                    if($user) {
+                        $query->where('user_id', $user->id)->orWhereNotNull('published_at');
+                    } else {
+                        $query->whereNotNull('published_at');
+                    }
                 }
             ])->findOrFail($forumId);
 

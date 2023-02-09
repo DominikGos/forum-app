@@ -48,12 +48,11 @@ class DatabaseSeeder extends Seeder
             'last_name' => 'admin'
         ])->create();
         $admin->assignRole('admin');
-        $admin->assignRole('forum admin');
-        $admin->assignRole('author');
 
-        $users = User::factory()->count(2)->create();
-        $users[0]->assignRole('author');
-        $users[1]->assignRole('author');
+        $users = User::factory()->count(3)->create();
+        $users[0]->assignRole('contributor');
+        $users[1]->assignRole('contributor');
+        $users[2]->assignRole('editor');
 
         $tags = Tag::all();
         $forum = Forum::factory()->for($users[0])->create();

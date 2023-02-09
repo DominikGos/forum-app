@@ -39,12 +39,6 @@ class ThreadPolicy
             return true;
         }
 
-        $userBelongsToThreadForum = (bool) $user->forums()->where('id', $thread->forum_id)->exists();
-
-        if($user->can('edit forum threads') && $userBelongsToThreadForum) {
-            return true;
-        }
-
         if($user->can('edit all threads')) {
             return true;
         }
@@ -55,12 +49,6 @@ class ThreadPolicy
     public function destroy(User $user, Thread $thread): bool
     {
         if($user->can('delete own threads') && $user->id == $thread->user_id) {
-            return true;
-        }
-
-        $userBelongsToThreadForum = (bool) $user->forums()->where('id', $thread->forum_id)->exists();
-
-        if($user->can('delete forum threads') && $userBelongsToThreadForum) {
             return true;
         }
 
