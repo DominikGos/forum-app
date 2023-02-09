@@ -111,6 +111,8 @@ class ThreadController extends Controller
 
     public function publish(int $id): JsonResponse
     {
+        $this->authorize('publish all threads');
+        
         $thread = $this->threadService->setPublishedAt($id, Carbon::now());
 
         return new JsonResponse([
@@ -121,6 +123,8 @@ class ThreadController extends Controller
 
     public function unpublish(int $id): JsonResponse
     {
+        $this->authorize('publish all threads');
+
         $thread = $this->threadService->setPublishedAt($id, null);
 
         return new JsonResponse([
