@@ -54,6 +54,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){ // middleware:guard
         Route::put('/{id}', [ThreadController::class, 'update'])->name('.update');
 
         Route::post('/{threadId}/replies', [ReplyController::class, 'store'])->name('.replies.store');
+
+        Route::put('/{id}/publish', [ThreadController::class, 'publish'])->name('.publish');
+
+        Route::put('/{id}/unpublish', [ThreadController::class, 'unpublish'])->name('.unpublish');
     });
 
     Route::group(['as' => 'replies', 'prefix' => '/replies'], function() {

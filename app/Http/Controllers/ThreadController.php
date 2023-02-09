@@ -8,6 +8,8 @@ use App\Http\Resources\ThreadResource;
 use App\Models\Forum;
 use App\Models\Thread;
 use App\Models\User;
+use App\Services\ThreadService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +17,10 @@ use Illuminate\Support\Facades\Gate;
 
 class ThreadController extends Controller
 {
-    public function index(int $forumId): JsonResponse
+    public function __construct(private ThreadService $threadService)
+    {}
+
+    public function index(int $forumId): JsonResponse //refactore!
     {
         $user = Auth::guard('sanctum')->user();
         $relations = ['threads.user'];
@@ -101,6 +106,26 @@ class ThreadController extends Controller
 
         return new JsonResponse([
             'message' => 'The thread has been successfully deleted.'
+        ]);
+    }
+
+    public function publish(int $id): JsonResponse
+    {
+        $thread = $this->threadService->setPublishedAt($id, Carbon::now());
+
+        return new JsonResponse([
+            'message' => 'The thread has been successfully published.',
+            'thread' => new ThreadResource($thread)
+        ]);
+    }
+
+    public function unpublish(int $id): JsonResponse
+    {
+        $thread = $this->threadService->setPublishedAt($id, null);
+
+        return new JsonResponse([
+            'message' => 'The thread has been successfully unpublished.',
+            'thread' => new ThreadResource($thread)
         ]);
     }
 }
