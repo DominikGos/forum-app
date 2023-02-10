@@ -63,6 +63,6 @@ class DatabaseSeeder extends Seeder
             ->for($users[0])
             ->for($forum)
             ->has($replies)
-            ->create();
+            ->create(['published_at' => null]);
     }
 }
