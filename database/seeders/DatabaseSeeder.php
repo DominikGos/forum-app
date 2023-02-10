@@ -37,32 +37,22 @@ class DatabaseSeeder extends Seeder
         Schema::enableForeignKeyConstraints();
 
         $this->call([
-            PermissionsSeeder::class,
+            PermissionSeeder::class,
+            UserSeeder::class,
             TagSeeder::class
         ]);
 
-        $admin = User::factory([
-            'login' => 'admin',
-            'email' => 'admin@mail.com',
-            'first_name' => 'admin',
-            'last_name' => 'admin'
-        ])->create();
-        $admin->assignRole('admin');
-
-        $users = User::factory()->count(3)->create();
-        $users[0]->assignRole('contributor');
-        $users[1]->assignRole('contributor');
-        $users[2]->assignRole('editor');
-
+        $users = User::all();
+        $author = $users[4];
         $tags = Tag::all();
-        $forum = Forum::factory()->for($users[0])->create();
-        $replies = Reply::factory()->for($users[0])->count(2);
+        $forum = Forum::factory()->for($author)->create();
+        $replies = Reply::factory()->for($author)->count(2);
         $threads = Thread::factory()
             ->count(3)
             ->hasAttached($tags)
-            ->for($users[0])
+            ->for($author)
             ->for($forum)
             ->has($replies)
-            ->create(['published_at' => null]);
+            ->create();
     }
 }
