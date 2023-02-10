@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
         $users[1]->assignRole('editor');
         $users[2]->assignRole('contributor');
         $users[3]->assignRole('contributor');
-        $users[4]->assignRole('contributor'); 
+        $users[4]->assignRole('contributor'); //author of all forum resources like threads, comments, forums
 
         $users[0]->update([
             'login' => 'admin',
