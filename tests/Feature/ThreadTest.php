@@ -213,7 +213,7 @@ class ThreadTest extends TestCase
         $user = User::role('contributor')->where('id', 5)->first();
         $updatedThread = Thread::factory()->make();
         $thread = Thread::first();
-        
+
         Sanctum::actingAs($user);
 
         $response = $this->put(route('threads.update', ['id' => $thread->id]), [
@@ -222,6 +222,42 @@ class ThreadTest extends TestCase
         ]);
 
         $response->assertOk()->assertJsonPath('thread.title', $updatedThread->title);
+    }
+
+    public function test_authorized_user_can_delete_someone_thread()
+    {
+        $user = User::role('editor')->first();
+        $thread = Thread::first();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->delete(route('threads.destroy', ['id' => $thread->id]));
+
+        $response->assertOk();
+    }
+
+    public function test_unauthorized_user_cannot_delete_someone_thread()
+    {
+        $user = User::role('contributor')->first();
+        $thread = Thread::first();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->delete(route('threads.destroy', ['id' => $thread->id]));
+
+        $response->assertForbidden();
+    }
+
+    public function test_author_can_delete_own_thread()
+    {
+        $user = User::find(5);
+        $thread = Thread::first();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->delete(route('threads.destroy', ['id' => $thread->id]));
+
+        $response->assertOk();
     }
 
     private function getUnpublishedThreads(?User $user, TestResponse $response): array

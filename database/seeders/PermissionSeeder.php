@@ -42,7 +42,7 @@ class PermissionSeeder extends Seeder
         $editorPermissions = [
             Permission::create(['name' => 'view all threads']),
             Permission::create(['name' => 'edit all threads']),
-            Permission::create(['name' => 'destroy all threads']),
+            Permission::create(['name' => 'delete all threads']),
             Permission::create(['name' => 'publish all threads']),
             Permission::create(['name' => 'unpublish all threads']),
             Permission::create(['name' => 'publish all forums']),
@@ -51,7 +51,7 @@ class PermissionSeeder extends Seeder
             Permission::create(['name' => 'edit questions and answers']),
             Permission::create(['name' => 'delete questions and answers']),
             Permission::create(['name' => 'create all tags']),
-            Permission::create(['name' => 'update all tags']),
+            Permission::create(['name' => 'edit all tags']),
             Permission::create(['name' => 'delete all tags']),
         ];
 
