@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 
 class UserUpdateRequest extends FormRequest
 {
@@ -35,7 +36,11 @@ class UserUpdateRequest extends FormRequest
             ],
             'first_name' => 'string|max:255',
             'last_name' => 'string|max:255',
-            'description' => 'string|max:255'
+            'description' => 'string|max:255',
+            'deletePath' => 'boolean',
+            'avatar' => [
+                File::image()->types(['image/jpeg', 'image/png'])
+            ]
         ];
     }
 }

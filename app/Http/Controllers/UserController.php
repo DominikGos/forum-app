@@ -10,9 +10,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    private const DISK = 'public';
+    private const USER_FILES_DIRECTORY = 'user';
+
     public function show(int $id): JsonResponse {
         $user = User::findOrFail($id);
 
@@ -29,10 +33,21 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(UserUpdateRequest $request, int $id): JsonResponse //add authorization!
+    public function update(UserUpdateRequest $request, int $id): JsonResponse
     {
         $user = User::findOrFail($id);
         $user->update($request->validated());
+
+        if($request->file('avatar')) {
+            $avatarPath = $request->file('avatar')->store(self::USER_FILES_DIRECTORY, self::DISK);
+            $user->avatar_path = $avatarPath;
+        }
+
+        if($request->deleteAvatar) {
+            Storage::disk('public')->delete($user->avatar_path);
+        }
+
+        $user->save();
 
         return new JsonResponse([
             'message' => 'Updated successfully.',
