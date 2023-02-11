@@ -31,10 +31,12 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, int $id): JsonResponse //add authorization!
     {
-        User::findOrFail($id)->update($request->validated());
+        $user = User::findOrFail($id);
+        $user->update($request->validated());
 
         return new JsonResponse([
-            'message' => 'Updated successfully.'
+            'message' => 'Updated successfully.',
+            'user' => new UserResource($user),
         ]);
     }
 

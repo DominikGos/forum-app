@@ -19,6 +19,7 @@ class RegisterController extends Controller
         $password = Hash::make($request->validated('password'));
         $userData = array_merge($request->validated(), ['password' => $password]);
         $user = User::create($userData);
+        $user->assignRole('contributor');
         $token = $user->createToken('app', ['user'])->plainTextToken;
 
         return new JsonResponse([
