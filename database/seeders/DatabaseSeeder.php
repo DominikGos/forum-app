@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use PhpParser\Node\Stmt\For_;
 
 class DatabaseSeeder extends Seeder
 {
@@ -45,14 +46,23 @@ class DatabaseSeeder extends Seeder
         $users = User::all();
         $author = $users[4];
         $tags = Tag::all();
-        $forum = Forum::factory()->for($author)->create();
-        $replies = Reply::factory()->for($author)->count(2);
-        $threads = Thread::factory()
-            ->count(3)
-            ->hasAttached($tags)
+
+        $publishedForum = Forum::factory()
             ->for($author)
-            ->for($forum)
-            ->has($replies)
-            ->create();
-    }
+            ->create(['published_at' => now()]);
+        $unpublishedForum = Forum::factory()
+            ->for($author)
+            ->create(['published_at' => null]);
+
+        $replies = Reply::factory()->for($author)->count(2);
+
+        $unpublishedThread = Thread::factory()
+            ->for($author)
+            ->for($publishedForum)
+            ->create(['published_at' => null]);
+        $publishedThread = Thread::factory()
+            ->for($author)
+            ->for($publishedForum)
+            ->create(['published_at' => now()]);
+        }
 }
