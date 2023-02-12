@@ -36,6 +36,9 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, int $id): JsonResponse
     {
         $user = User::findOrFail($id);
+
+        $this->authorize('update', $user);
+        
         $user->update($request->validated());
 
         if($request->file('avatar')) {
@@ -55,9 +58,11 @@ class UserController extends Controller
         ]);
     }
 
-    public function destroy(int $id): JsonResponse //add authorization!
+    public function destroy(int $id): JsonResponse
     {
         $user = User::findOrFail($id);
+
+        $this->authorize('destroy', $user);
 
         $user->delete();
 

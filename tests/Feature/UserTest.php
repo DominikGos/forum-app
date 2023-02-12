@@ -57,16 +57,21 @@ class UserTest extends TestCase
             'avatar' => $avatar,
         ]);
 
+        $responseContent = $response->content();
+        $responseContent = json_decode($responseContent);
+
         $response->assertOk()
             ->assertJsonPath('user.firstName', $updatedUser->first_name);
 
-        Storage::disk('public')->assertExists($avatar->hashName());
+        Storage::disk('public')->assertExists('user/' . $avatar->hashName());
     }
 
     public function test_user_cannot_update_someone_profile()
     {
-        $user = User::role('contributor')->first();
-        $secondUser = User::role('contributor')->latest()->first();
+        $users = User::role('contributor')->get();
+        $user = $users[0];
+        $secondUser = $users[1];
+
         $updatedUser = User::factory()->make();
 
         Sanctum::actingAs($user);
@@ -93,8 +98,9 @@ class UserTest extends TestCase
 
     public function test_user_cannot_delete_someone_profile()
     {
-        $user = User::role('contributor')->first();
-        $secondUser = User::role('contributor')->latest()->first();
+        $users = User::role('contributor')->get();
+        $user = $users[0];
+        $secondUser = $users[1];
 
         Sanctum::actingAs($user);
 
