@@ -20,31 +20,34 @@ class PermissionSeeder extends Seeder
         // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        //Admin can do everything.
         $adminRole = Role::create(['name' => 'admin']);
 
         $editorRole = Role::create(['name' => 'editor']);
 
-        //Contributor can manage his own resources like threads, forums, comments, but can not publish it.
         $contributorRole = Role::create(['name' => 'contributor']);
 
-        //contributor
         $contributorPermissions = [
             Permission::create(['name' => 'create own threads']),
             Permission::create(['name' => 'view own threads']),
             Permission::create(['name' => 'edit own threads']),
             Permission::create(['name' => 'delete own threads']),
+            Permission::create(['name' => 'create own forums']),
+            Permission::create(['name' => 'view own forums']),
+            Permission::create(['name' => 'edit own forums']),
+            Permission::create(['name' => 'delete own forums']),
         ];
 
         $contributorRole->syncPermissions($contributorPermissions);
 
-        //editor
         $editorPermissions = [
             Permission::create(['name' => 'view all threads']),
             Permission::create(['name' => 'edit all threads']),
             Permission::create(['name' => 'delete all threads']),
             Permission::create(['name' => 'publish all threads']),
             Permission::create(['name' => 'unpublish all threads']),
+            Permission::create(['name' => 'view all forums']),
+            Permission::create(['name' => 'edit all forums']),
+            Permission::create(['name' => 'delete all forums']),
             Permission::create(['name' => 'publish all forums']),
             Permission::create(['name' => 'unpublish all forums']),
             Permission::create(['name' => 'create questions and answers']),
@@ -58,7 +61,6 @@ class PermissionSeeder extends Seeder
         $editorRole->syncPermissions($contributorPermissions);
         $editorRole->syncPermissions($editorPermissions);
 
-        //admin
         $adminPermissions = [
             Permission::create(['name' => 'create users']),
             Permission::create(['name' => 'delete all users']),

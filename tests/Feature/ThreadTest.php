@@ -81,6 +81,24 @@ class ThreadTest extends TestCase
         $response->assertOk()->assertJsonFragment(['publishedAt' => null]);
     }
 
+    public function test_visitor_can_view_published_thread()
+    {
+        $thread = Thread::where('published_at', '!=', null)->first();
+
+        $response = $this->getJson(route('threads.show', ['id' => $thread->id]));
+
+        $response->assertOk()->assertJsonPath('thread.title', $thread->title);
+    }
+
+    public function test_visitor_cannot_view_unpublished_thread()
+    {
+        $thread = Thread::where('published_at', null)->first();
+
+        $response = $this->getJson(route('threads.show', ['id' => $thread->id]));
+
+        $response->assertNotFound();
+    }
+
     public function test_authorized_user_can_view_unpublished_thread()
     {
         $user = User::role('editor')->first();
