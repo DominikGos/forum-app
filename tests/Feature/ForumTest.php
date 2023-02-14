@@ -6,6 +6,8 @@ use App\Models\Forum;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -72,7 +74,7 @@ class ForumTest extends TestCase
         $response = $this->getJson(route('forums.show', ['id' => $forum->id]));
 
         $response->assertOk()
-            ->assertJsonFragment(['name' => $forum->name]);
+            ->assertJsonPath('forum.name', $forum->name);
     }
 
     public function test_visitor_cannot_view_unpublished_forum()
@@ -95,10 +97,10 @@ class ForumTest extends TestCase
         $response = $this->getJson(route('forums.show', ['id' => $forum->id]));
 
         $response->assertOk()
-            ->assertJsonFragment(['name' => $forum->name]);
+            ->assertJsonPath('forum.name', $forum->name);
     }
 
-    public function test_unauthorized_user_can_view_unpublished_forum()
+    public function test_unauthorized_user_cannot_view_unpublished_forum()
     {
         $user = User::role('contributor')->first();
 
@@ -122,6 +124,130 @@ class ForumTest extends TestCase
         $response = $this->getJson(route('forums.show', ['id' => $forum->id]));
 
         $response->assertOk()
-            ->assertJsonFragment(['name' => $forum->name]);
+            ->assertJsonPath('forum.name', $forum->name);
+    }
+
+    public function test_authorized_user_can_store_forum()
+    {
+        $user = User::role('contributor')->first();
+        $forum = Forum::factory()->make(['name' => 'original forum name']);
+
+        Sanctum::actingAs($user);
+        Storage::fake('public');
+
+        $file = UploadedFile::fake()->image('file.jpg');
+
+        $response = $this->postJson(route('forums.store'), [
+            'name' => $forum->name,
+            'description' => $forum->description,
+            'image' => $file,
+        ]);
+
+        $response->assertCreated()
+            ->assertJsonPath('forum.name', $forum->name);
+
+        Storage::disk('public')->assertExists('/forum/' . $file->hashName());
+    }
+
+    public function test_unauthorized_user_cannot_store_forum()
+    {
+        $user = User::factory()->create();
+        $forum = Forum::factory()->make(['name' => 'original forum name']);
+
+        Sanctum::actingAs($user);
+        Storage::fake('public');
+
+        $file = UploadedFile::fake()->image('file.jpg');
+
+        $response = $this->postJson(route('forums.store'), [
+            'name' => $forum->name,
+            'description' => $forum->description,
+            'image' => $file,
+        ]);
+
+        $response->assertForbidden();
+    }
+
+    public function test_authorized_user_can_update_someone_forum()
+    {
+        $user = User::role('editor')->first();
+        $forum = Forum::first();
+        $updatedForumName = 'original forum name';
+
+        Sanctum::actingAs($user);
+
+        $response = $this->putJson(route('forums.update', ['id' => $forum->id]), [
+            'name' => $updatedForumName,
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('forum.name', $updatedForumName);
+    }
+
+    public function test_unauthorized_user_cannot_update_someone_forum()
+    {
+        $user = User::role('contributor')->first();
+        $forum = Forum::first();
+        $updatedForumName = 'original forum name';
+
+        Sanctum::actingAs($user);
+
+        $response = $this->putJson(route('forums.update', ['id' => $forum->id]), [
+            'name' => $updatedForumName,
+        ]);
+
+        $response->assertForbidden();
+    }
+
+    public function test_author_can_update_own_forum()
+    {
+        $user = User::has('createdForums', '>', 0)->first();
+        $forum = $user->createdForums()->first();
+        $updatedForumName = 'original forum name';
+
+        Sanctum::actingAs($user);
+
+        $response = $this->putJson(route('forums.update', ['id' => $forum->id]), [
+            'name' => $updatedForumName,
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('forum.name', $updatedForumName);
+    }
+
+    public function test_authorized_user_can_delete_someone_forum()
+    {
+        $user = User::role('editor')->first();
+        $forum = Forum::first();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->deleteJson(route('forums.destroy', ['id' => $forum->id]));
+
+        $response->assertOk();
+    }
+
+    public function test_unauthorized_user_cannot_delete_someone_forum()
+    {
+        $user = User::role('contributor')->first();
+        $forum = Forum::first();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->deleteJson(route('forums.destroy', ['id' => $forum->id]));
+
+        $response->assertForbidden();
+    }
+
+    public function test_author_can_delete_own_forum()
+    {
+        $user = User::has('createdForums', '>', 0)->first();
+        $forum = $user->createdForums()->first();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->deleteJson(route('forums.destroy', ['id' => $forum->id]));
+
+        $response->assertOk();
     }
 }
