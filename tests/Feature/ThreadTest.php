@@ -251,4 +251,54 @@ class ThreadTest extends TestCase
 
         $response->assertOk();
     }
+
+    public function test_authorized_user_can_publish_thread()
+    {
+        $user = User::role('editor')->first();
+        $thread = Thread::first();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->putJson(route('threads.publish', ['id' => $thread->id]));
+
+        $response->assertOk()
+            ->assertJsonMissingExact(['publishedAt' => null]);
+    }
+
+    public function test_unauthorized_user_cannot_publish_thread()
+    {
+        $user = User::role('contributor')->first();
+        $thread = Thread::first();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->putJson(route('threads.publish', ['id' => $thread->id]));
+
+        $response->assertForbidden();
+    }
+
+    public function test_authorized_user_can_unpublish_thread()
+    {
+        $user = User::role('editor')->first();
+        $thread = Thread::first();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->putJson(route('threads.unpublish', ['id' => $thread->id]));
+
+        $response->assertOk()
+            ->assertJsonPath('thread.publishedAt', null);
+    }
+
+    public function test_unauthorized_user_cannot_unpublish_thread()
+    {
+        $user = User::role('contributor')->first();
+        $thread = Thread::first();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->putJson(route('threads.unpublish', ['id' => $thread->id]));
+
+        $response->assertForbidden();
+    }
 }
