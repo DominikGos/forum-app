@@ -7,6 +7,7 @@ use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\UserController;
+use App\Models\Forum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +41,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){ // middleware:guard
         Route::put('/{id}', [ForumController::class, 'update'])->name('.update');
 
         Route::delete('/{id}', [ForumController::class, 'destroy'])->name('.destroy');
+
+        Route::put('/{id}/publish', [ForumController::class, 'publish'])->name('.publish');
+
+        Route::put('/{id}/unpublish', [ForumController::class, 'unpublish'])->name('.unpublish');
 
         Route::post('/{forumId}/threads', [ThreadController::class, 'store'])->name('.threads.store');
 
