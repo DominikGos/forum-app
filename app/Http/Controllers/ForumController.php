@@ -9,6 +9,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Forum;
 use App\Models\User;
 use App\Services\ForumService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -85,6 +86,26 @@ class ForumController extends Controller
 
         return new JsonResponse([
             'message' => 'The forum has been successfully deleted.'
+        ]);
+    }
+
+    public function publish(int $id): JsonResponse
+    {
+        $forum = $this->forumService->setPublishedAt($id, Carbon::now());
+
+        return new JsonResponse([
+            'message' => 'The forum has been successfully published.',
+            'forum' => new ForumResource($forum)
+        ]);
+    }
+
+    public function unpublish(int $id): JsonResponse
+    {
+        $forum = $this->forumService->setPublishedAt($id, null);
+
+        return new JsonResponse([
+            'message' => 'The forum has been successfully published.',
+            'forum' => new ForumResource($forum)
         ]);
     }
 

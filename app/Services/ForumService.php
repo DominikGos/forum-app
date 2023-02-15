@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Forum;
+use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 
 class ForumService
@@ -16,5 +17,14 @@ class ForumService
         $forum->image_path = $path;
 
         return $path;
+    }
+
+    public function setPublishedAt(int $id, ?Carbon $date): Forum
+    {
+        $forum = Forum::with('user')->findOrFail($id);
+        $forum->published_at = $date;
+        $forum->save();
+
+        return $forum;
     }
 }

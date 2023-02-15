@@ -55,7 +55,7 @@ class ThreadController extends Controller
         $relations = ['tags', 'forum', 'user'];
         $thread = Thread::with($relations)->findOrFail($id);
 
-        if($user?->cannot('view', $thread)) {
+        if( ! $user || $user?->cannot('view', $thread)) {
             $thread = Thread::with($relations)->whereNotNull('published_at')->findOrFail($id);
         }
 
@@ -112,7 +112,7 @@ class ThreadController extends Controller
     public function publish(int $id): JsonResponse
     {
         $this->authorize('publish all threads');
-        
+
         $thread = $this->threadService->setPublishedAt($id, Carbon::now());
 
         return new JsonResponse([
