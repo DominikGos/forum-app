@@ -22,18 +22,18 @@ class ThreadTest extends TestCase
 
     protected $seed = true;
 
-    public function test_visitor_can_view_published_threads()
+    public function test_visitor_can_view_published_threads_from_the_published_forum()
     {
-        $forum = Forum::first();
+        $forum = Forum::where('pubished_at', '!=', null)->first();
 
         $response = $this->getJson(route('forums.threads.index', ['forumId' => $forum->id]));
 
         $response->assertOk();
     }
 
-    public function test_visitor_cannot_view_unpublished_threads()
+    public function test_visitor_cannot_view_unpublished_threads_from_the_published_forum()
     {
-        $forum = Forum::first();
+        $forum = Forum::where('pubished_at', '!=', null)->first();
 
         $response = $this->getJson(route('forums.threads.index', ['forumId' => $forum->id]));
 
@@ -41,10 +41,19 @@ class ThreadTest extends TestCase
             ->assertJsonMissingExact(['publishedAt' => null]);
     }
 
-    public function test_authorized_user_can_view_unpublished_threads()
+    public function test_visitor_cannot_view_published_threads_from_the_unpublished_forum()
+    {
+        $forum = Forum::where('pubished_at', null)->first();
+
+        $response = $this->getJson(route('forums.threads.index', ['forumId' => $forum->id]));
+
+        $response->assertNotFound();
+    }
+
+    public function test_authorized_user_can_view_unpublished_threads_from_the_published_forum()
     {
         $user = User::role('editor')->first();
-        $forum = Forum::first();
+        $forum = Forum::where('pubished_at', '!=', null)->first();
 
         Sanctum::actingAs($user);
 
@@ -53,10 +62,10 @@ class ThreadTest extends TestCase
         $response->assertOk()->assertJsonFragment(['publishedAt' => null]);
     }
 
-    public function test_unauthorized_user_cannot_view_unpublished_threads()
+    public function test_unauthorized_user_cannot_view_unpublished_threads_from_the_published_forum()
     {
         $unauthorizedUser = User::role('contributor')->first();
-        $forum = Forum::first();
+        $forum = Forum::where('pubished_at', '!=', null)->first();
 
         Sanctum::actingAs($unauthorizedUser);
 
@@ -66,7 +75,7 @@ class ThreadTest extends TestCase
             ->assertJsonMissingExact(['publishedAt' => null]);
     }
 
-    public function test_author_can_view_his_own_unpublished_threads()
+    public function test_user_can_view_his_own_unpublished_threads_from_the_published_forum()
     {
         $user = User::role('contributor')->first();
         $unpublishedThread = Thread::factory()
@@ -81,7 +90,7 @@ class ThreadTest extends TestCase
         $response->assertOk()->assertJsonFragment(['publishedAt' => null]);
     }
 
-    public function test_visitor_can_view_published_thread()
+    public function test_visitor_can_view_published_thread_from_the_published_forum()
     {
         $thread = Thread::where('published_at', '!=', null)->first();
 
@@ -90,7 +99,7 @@ class ThreadTest extends TestCase
         $response->assertOk()->assertJsonPath('thread.title', $thread->title);
     }
 
-    public function test_visitor_cannot_view_unpublished_thread()
+    public function test_visitor_cannot_view_unpublished_thread_from_the_published_forum()
     {
         $thread = Thread::where('published_at', null)->first();
 
@@ -99,7 +108,22 @@ class ThreadTest extends TestCase
         $response->assertNotFound();
     }
 
-    public function test_authorized_user_can_view_unpublished_thread()
+    public function test_visitor_cannot_view_published_thread_from_the_unpublished_forum()
+    {
+        $forum = Forum::where('pubished_at', null)->first();
+        $thread = Thread::factory()
+            ->for($forum)
+            ->for(User::factory()->create())
+            ->create(['published_at' => null]);
+
+        $forum->threads()->save($thread);
+
+        $response = $this->getJson(route('threads.show', ['id' => $thread->id]));
+
+        $response->assertNotFound();
+    }
+
+    public function test_authorized_user_can_view_unpublished_thread_from_the_published_forum()
     {
         $user = User::role('editor')->first();
         $thread = Thread::where('published_at', null)->first();
@@ -108,10 +132,30 @@ class ThreadTest extends TestCase
 
         $response = $this->getJson(route('threads.show', ['id' => $thread->id]));
 
-        $response->assertOk()->assertJsonPath('thread.title', $thread->title);
+        $response->assertOk()
+            ->assertJsonPath('thread.title', $thread->title);
     }
 
-    public function test_unauthorized_user_cannot_view_unpublished_thread()
+    public function test_authorized_user_can_view_unpublished_thread_from_the_unpublished_forum()
+    {
+        $user = User::role('editor')->first();
+        $forum = Forum::where('pubished_at', null)->first();
+        $thread = Thread::factory()
+            ->for($forum)
+            ->for(User::factory()->create())
+            ->create(['published_at' => null]);
+
+        $forum->threads()->save($thread);
+
+        Sanctum::actingAs($user);
+
+        $response = $this->getJson(route('threads.show', ['id' => $thread->id]));
+
+        $response->assertOk()
+            ->assertJsonPath('thread.title', $thread->title);
+    }
+
+    public function test_unauthorized_user_cannot_view_unpublished_thread_from_the_published_forum()
     {
         $user = User::role('contributor')->first();
         $thread = Thread::where('published_at', null)->first();
@@ -122,7 +166,7 @@ class ThreadTest extends TestCase
         $response->assertNotFound();
     }
 
-    public function test_author_can_view_his_own_unpublished_thread()
+    public function test_user_can_view_his_own_unpublished_thread_from_the_published_forum()
     {
         $user = User::role('contributor')->first();
         $thread = Thread::factory()
@@ -136,10 +180,28 @@ class ThreadTest extends TestCase
         $response->assertOk()->assertJsonPath('thread.title', $thread->title);
     }
 
-    public function test_authorized_user_can_store_thread()
+    public function test_user_can_view_his_own_published_thread_from_the_unpublished_forum()
+    {
+        $user = User::role('contributor')->first();
+        $forum = Forum::where('published_at', null)->first();
+        $thread = Thread::factory()
+            ->for($user)
+            ->for($forum)
+            ->create(['published_at' => null]);
+
+        Sanctum::actingAs($user);
+
+        $response = $this->getJson(route('threads.show', ['id' => $thread->id]));
+        $response->assertOk()->assertJsonPath('thread.title', $thread->title);
+    }
+
+    public function test_authorized_member_of_a_published_forum_can_store_thread()
     {
         $user = User::role('contributor')->first();
         $forum = Forum::first();
+        $forum->published_at = now();
+        $forum->save();
+        $forum->users()->save($user);
         $thread = Thread::factory()->make();
 
         Sanctum::actingAs($user);
@@ -152,11 +214,14 @@ class ThreadTest extends TestCase
         $response->assertCreated()->assertJsonPath('thread.title', $thread->title);
     }
 
-    public function test_unauthorized_user_cannot_store_thread()
+    public function test_unauthorized_member_of_a_published_forum_cannot_store_thread()
     {
         $user = User::factory()->create();
         $thread = Thread::factory()->make();
         $forum = Forum::first();
+        $forum->published_at = now();
+        $forum->save();
+        $forum->users()->save($user);
 
         Sanctum::actingAs($user);
 
@@ -168,6 +233,38 @@ class ThreadTest extends TestCase
         $response->assertForbidden();
     }
 
+    public function test_user_cannot_store_thread_in_the_forum_he_does_not_belong_to()
+    {
+        $user = User::role('contributor')->first();
+        $forum = Forum::first();
+        $thread = Thread::factory()->make();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->postJson(route('forums.threads.store', ['forumId' => $forum->id]), [
+            'title' => $thread->title,
+            'description' => $thread->description,
+        ]);
+
+        $response->assertForbidden();
+    }
+
+    public function test_user_can_update_own_thread()
+    {
+        $user = User::has('threads', '>', 0)->first();
+        $updatedThread = Thread::factory()->make();
+        $thread = $user->threads()->first();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->putJson(route('threads.update', ['id' => $thread->id]), [
+            'title' => $updatedThread->title,
+            'description' => $updatedThread->description,
+        ]);
+
+        $response->assertOk()->assertJsonPath('thread.title', $updatedThread->title);
+    }
+    
     public function test_authorized_user_can_update_someone_thread()
     {
         $user = User::role('editor')->first();
@@ -200,22 +297,6 @@ class ThreadTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_author_can_update_own_thread()
-    {
-        $user = User::has('threads', '>', 0)->first();
-        $updatedThread = Thread::factory()->make();
-        $thread = $user->threads()->first();
-
-        Sanctum::actingAs($user);
-
-        $response = $this->putJson(route('threads.update', ['id' => $thread->id]), [
-            'title' => $updatedThread->title,
-            'description' => $updatedThread->description,
-        ]);
-
-        $response->assertOk()->assertJsonPath('thread.title', $updatedThread->title);
-    }
-
     public function test_authorized_user_can_delete_someone_thread()
     {
         $user = User::role('editor')->first();
@@ -240,7 +321,7 @@ class ThreadTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_author_can_delete_own_thread()
+    public function test_user_can_delete_own_thread()
     {
         $user = User::has('threads', '>', 0)->first();
         $thread = $user->threads()->first();
