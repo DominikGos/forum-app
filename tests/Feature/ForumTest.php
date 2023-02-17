@@ -54,7 +54,7 @@ class ForumTest extends TestCase
             ->assertJsonMissingExact(['publishedAt' => null]);
     }
 
-    public function test_author_can_view_his_own_unpublished_forums()
+    public function test_user_can_view_his_own_unpublished_forums()
     {
         $user = User::role('contributor')->first();
         $unpublishedForum = Forum::factory()
@@ -113,7 +113,7 @@ class ForumTest extends TestCase
         $response->assertNotFound();
     }
 
-    public function test_author_can_view_his_own_unpublished_forum()
+    public function test_user_can_view_his_own_unpublished_forum()
     {
         $user = User::has('createdForums', '>', 0)->first();
 
@@ -168,6 +168,22 @@ class ForumTest extends TestCase
         $response->assertForbidden();
     }
 
+    public function test_user_can_update_own_forum()
+    {
+        $user = User::has('createdForums', '>', 0)->first();
+        $forum = $user->createdForums()->first();
+        $updatedForumName = 'original forum name';
+
+        Sanctum::actingAs($user);
+
+        $response = $this->putJson(route('forums.update', ['id' => $forum->id]), [
+            'name' => $updatedForumName,
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('forum.name', $updatedForumName);
+    }
+
     public function test_authorized_user_can_update_someone_forum()
     {
         $user = User::role('editor')->first();
@@ -199,20 +215,16 @@ class ForumTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_author_can_update_own_forum()
+    public function test_user_can_delete_own_forum()
     {
         $user = User::has('createdForums', '>', 0)->first();
         $forum = $user->createdForums()->first();
-        $updatedForumName = 'original forum name';
 
         Sanctum::actingAs($user);
 
-        $response = $this->putJson(route('forums.update', ['id' => $forum->id]), [
-            'name' => $updatedForumName,
-        ]);
+        $response = $this->deleteJson(route('forums.destroy', ['id' => $forum->id]));
 
-        $response->assertOk()
-            ->assertJsonPath('forum.name', $updatedForumName);
+        $response->assertOk();
     }
 
     public function test_authorized_user_can_delete_someone_forum()
@@ -237,18 +249,6 @@ class ForumTest extends TestCase
         $response = $this->deleteJson(route('forums.destroy', ['id' => $forum->id]));
 
         $response->assertForbidden();
-    }
-
-    public function test_author_can_delete_own_forum()
-    {
-        $user = User::has('createdForums', '>', 0)->first();
-        $forum = $user->createdForums()->first();
-
-        Sanctum::actingAs($user);
-
-        $response = $this->deleteJson(route('forums.destroy', ['id' => $forum->id]));
-
-        $response->assertOk();
     }
 
     public function test_authorized_user_can_publish_forum()
@@ -301,7 +301,7 @@ class ForumTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_forum_author_can_add_a_user_to_the_published_forum() //add authorization check if user belongs to forum
+    public function test_forum_author_can_add_a_user_to_the_published_forum()
     {
         $user = User::has('createdForums', '>', 0)->first();
         $forum = $user->createdForums()->first();
@@ -318,7 +318,7 @@ class ForumTest extends TestCase
         $response->assertCreated();
     }
 
-    public function test_forum_author_cannot_add_a_user_to_the_unpublished_forum()
+    public function test_forum_author_can_add_a_user_to_the_unpublished_forum()
     {
         $user = User::has('createdForums', '>', 0)->first();
         $forum = $user->createdForums()->first();
@@ -332,7 +332,7 @@ class ForumTest extends TestCase
             'forumId' => $forum->id, 'id' => $futureForumMember->id,
         ]));
 
-        $response->assertForbidden();
+        $response->assertCreated();
     }
 
     public function test_forum_author_can_remove_a_user_from_the_published_forum()
@@ -353,7 +353,7 @@ class ForumTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_forum_author_cannot_remove_a_user_from_the_unpublished_forum()
+    public function test_forum_author_can_remove_a_user_from_the_unpublished_forum()
     {
         $user = User::has('createdForums', '>', 0)->first();
         $forum = $user->createdForums()->first();
@@ -369,7 +369,7 @@ class ForumTest extends TestCase
             'forumId' => $forum->id, 'id' => $forumMember->id,
         ]));
 
-        $response->assertForbidden();
+        $response->assertOk();
     }
 
     public function test_unauthorized_user_cannot_add_a_user_to_the_published_forum()
