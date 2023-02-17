@@ -87,8 +87,6 @@ Route::group(['as' => 'users', 'prefix' => '/users'], function() {
 });
 
 Route::group(['as' => 'threads', 'prefix' => '/threads'], function() {
-    Route::get('/{id}', [ThreadController::class, 'show'])->name('.show');
-
     Route::get('/{threadId}/replies', [ReplyController::class, 'index'])->name('.replies.index');
 });
 
@@ -98,6 +96,8 @@ Route::group(['as' => 'forums', 'prefix' => '/forums'], function() {
     Route::get('/{id}', [ForumController::class, 'show'])->name('.show');
 
     Route::get('/{forumId}/threads', [ThreadController::class, 'index'])->name('.threads.index');
+
+    Route::get('/{forumId}/threads/{id}', [ThreadController::class, 'show'])->name('.threads.show');
 
     Route::get('/{forumId}/users', [ForumController::class, 'users'])->name('.users.index');
 });

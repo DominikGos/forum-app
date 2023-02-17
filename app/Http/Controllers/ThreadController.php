@@ -10,6 +10,7 @@ use App\Models\Thread;
 use App\Models\User;
 use App\Services\ThreadService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,7 @@ class ThreadController extends Controller
     public function __construct(private ThreadService $threadService)
     {}
 
-    public function index(int $forumId): JsonResponse //refactore!
+    public function index(int $forumId): JsonResponse
     {
         $user = Auth::guard('sanctum')->user();
         $relations = ['threads.user'];
@@ -39,7 +40,9 @@ class ThreadController extends Controller
                         $query->whereNotNull('published_at');
                     }
                 }
-            ])->findOrFail($forumId);
+            ])
+            ->where('published_at', '!=', null)
+            ->findOrFail($forumId);
 
             $threads = $forum->threads;
         }
@@ -49,20 +52,26 @@ class ThreadController extends Controller
         ]);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(int $forumId, int $threadId): JsonResponse
     {
         $user = Auth::guard('sanctum')->user();
         $relations = ['tags', 'forum', 'user'];
-        $thread = Thread::with($relations)->findOrFail($id);
+        $forum = Forum::findOrFail($forumId);
+        $thread = Thread::with($relations)->findOrFail($threadId);
+
+        if($thread->forum->id != $forum->id) {
+            return new JsonResponse(null, 404);
+        }
 
         if( ! $user || $user?->cannot('view', $thread)) {
-            $thread = Thread::with($relations)->whereNotNull('published_at')->findOrFail($id);
+            $thread = Thread::with($relations)->whereNotNull('published_at')->findOrFail($threadId);
         }
 
         return new JsonResponse([
             'thread' => new ThreadResource($thread)
         ]);
     }
+
 
     public function store(ThreadStoreRequest $request, int $forumId): JsonResponse
     {
