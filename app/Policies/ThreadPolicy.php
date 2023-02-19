@@ -10,16 +10,6 @@ class ThreadPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-
-    }
-
     public function view(?User $user, Thread $thread): bool
     {
         if(optional($user)->can('view own threads') && optional($user)->id == $thread->user->id) {

@@ -75,9 +75,10 @@ class ThreadController extends Controller
 
     public function store(ThreadStoreRequest $request, int $forumId): JsonResponse
     {
-        $this->authorize('create own threads');
-
         $forum = Forum::findOrFail($forumId);
+
+        $this->authorize('storeThread', $forum);
+
         $thread = new Thread($request->validated());
         $thread->user()->associate(Auth::user());
         $forum->threads()->save($thread);
