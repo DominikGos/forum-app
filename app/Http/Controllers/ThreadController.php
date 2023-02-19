@@ -64,7 +64,9 @@ class ThreadController extends Controller
         }
 
         if( ! $user || $user?->cannot('view', $thread)) {
-            $thread = Thread::with($relations)->whereNotNull('published_at')->findOrFail($threadId);
+            $thread = Thread::with($relations)
+                ->whereNotNull('published_at')
+                ->findOrFail($threadId);
         }
 
         return new JsonResponse([

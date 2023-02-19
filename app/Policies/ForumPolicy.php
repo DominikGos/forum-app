@@ -10,13 +10,74 @@ class ForumPolicy
 {
     use HandlesAuthorization;
 
+    public function view(?User $user, Forum $forum): bool
+    {
+        if(optional($user)->can('view own forums') && optional($user)->id == $forum->user->id) {
+            return true;
+        }
+
+        if(optional($user)->can('view all forums')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function update(User $user, Forum $forum): bool
+    {
+        if($user->can('edit own forums') && $user->id == $forum->user_id) {
+            return true;
+        }
+
+        if($user->can('edit all forums')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function destroy(User $user, Forum $forum): bool
+    {
+        if($user->can('delete own forums') && $user->id == $forum->user_id) {
+            return true;
+        }
+
+        if($user->can('delete all forums')) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function storeThread(User $user, Forum $forum): bool
     {
-        $userForumIds = array_map(function(array $userForum) {
-            return $userForum['id'];
-        }, $user->forums->toArray());
+        if($user->can('create own threads') && $user->forums->contains($forum)) {
+            return true;
+        }
 
-        if($user->can('create own threads') && in_array($forum->id, $userForumIds)) {
+        return false;
+    }
+
+    public function addUser(User $user, Forum $forum): bool
+    {
+        if($user->can('add users to own forum') && $user->id == $forum->user->id) {
+            return true;
+        }
+
+        if($user->can('add users to all forums')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function removeUser(User $user, Forum $forum): bool
+    {
+        if($user->can('remove users from own forum') && $user->id == $forum->user->id) {
+            return true;
+        }
+
+        if($user->can('remove users from all forums')) {
             return true;
         }
 

@@ -57,14 +57,16 @@ class ForumTest extends TestCase
     public function test_user_can_view_his_own_unpublished_forums()
     {
         $user = User::role('contributor')->first();
-        $unpublishedForum = Forum::factory()
+        $forum = Forum::factory()
             ->for($user)
-            ->create(['published_at' => null]);
+            ->create(['published_at' => null, 'name' => 'original forum name']);
+
+        Sanctum::actingAs($user);
 
         $response = $this->getJson(route('forums.index'));
 
         $response->assertOk()
-            ->assertJsonFragment(['name' => $unpublishedForum->name]);
+            ->assertJsonFragment(['name' => $forum->name]);
     }
 
     public function test_visitor_can_view_published_forum()
@@ -115,11 +117,13 @@ class ForumTest extends TestCase
 
     public function test_user_can_view_his_own_unpublished_forum()
     {
-        $user = User::has('createdForums', '>', 0)->first();
+        $user = User::role('contributor')->first();
 
         Sanctum::actingAs($user);
 
-        $forum = Forum::where('published_at', null)->first();
+        $forum = Forum::factory()
+            ->for($user)
+            ->create(['published_at' => null]);
 
         $response = $this->getJson(route('forums.show', ['id' => $forum->id]));
 
@@ -130,7 +134,7 @@ class ForumTest extends TestCase
     public function test_authorized_user_can_store_forum()
     {
         $user = User::role('contributor')->first();
-        $forum = Forum::factory()->make(['name' => 'original forum name']);
+        $forum = Forum::factory()->make(['name' => 'updated forum name']);
 
         Sanctum::actingAs($user);
         Storage::fake('public');
@@ -152,7 +156,7 @@ class ForumTest extends TestCase
     public function test_unauthorized_user_cannot_store_forum()
     {
         $user = User::factory()->create();
-        $forum = Forum::factory()->make(['name' => 'original forum name']);
+        $forum = Forum::factory()->make(['name' => 'updated forum name']);
 
         Sanctum::actingAs($user);
         Storage::fake('public');
@@ -172,7 +176,7 @@ class ForumTest extends TestCase
     {
         $user = User::has('createdForums', '>', 0)->first();
         $forum = $user->createdForums()->first();
-        $updatedForumName = 'original forum name';
+        $updatedForumName = 'updated forum name';
 
         Sanctum::actingAs($user);
 
@@ -188,7 +192,7 @@ class ForumTest extends TestCase
     {
         $user = User::role('editor')->first();
         $forum = Forum::first();
-        $updatedForumName = 'original forum name';
+        $updatedForumName = 'updated forum name';
 
         Sanctum::actingAs($user);
 
@@ -204,7 +208,7 @@ class ForumTest extends TestCase
     {
         $user = User::role('contributor')->first();
         $forum = Forum::first();
-        $updatedForumName = 'original forum name';
+        $updatedForumName = 'updated forum name';
 
         Sanctum::actingAs($user);
 
@@ -362,10 +366,9 @@ class ForumTest extends TestCase
         $forumMember = User::factory()->create();
         $forum->users()->save($forumMember);
 
-
         Sanctum::actingAs($user);
 
-        $response = $this->postJson(route('forums.users.destroy', [
+        $response = $this->deleteJson(route('forums.users.destroy', [
             'forumId' => $forum->id, 'id' => $forumMember->id,
         ]));
 

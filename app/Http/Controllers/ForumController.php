@@ -28,7 +28,24 @@ class ForumController extends Controller
 
     public function index(): JsonResponse
     {
-        $forums = Forum::with('user')->get();
+        $user = Auth::guard('sanctum')->user();
+        $relations = ['user'];
+        $forums = [];
+
+        if($user?->can('view all forums')) {
+            $forums = Forum::with($relations)->get();
+        } else {
+            if($user) {
+                $forums = Forum::with($relations)
+                    ->where('user_id', $user->id)
+                    ->orWhereNotNull('published_at')
+                    ->get();
+            } else {
+                $forums = Forum::with($relations)
+                    ->whereNotNull('published_at')
+                    ->get();
+            }
+        }
 
         return new JsonResponse([
             'forums' => ForumResource::collection($forums)
@@ -37,15 +54,25 @@ class ForumController extends Controller
 
     public function show(int $id): JsonResponse
     {
-        $forum = Forum::with('user')->findOrFail($id);
+        $user = Auth::guard('sanctum')->user();
+        $relations = ['user'];
+        $forum = Forum::with($relations)->findOrFail($id);
+
+        if( ! $user || $user->cannot('view', $forum)) {
+            $forum = Forum::with($relations)
+                ->whereNotNull('published_at')
+                ->findOrFail($id);
+        }
 
         return new JsonResponse([
             'forum' => new ForumResource($forum)
         ]);
     }
 
-    public function store(ForumStoreRequest $request): JsonResponse
+    public function store(ForumStoreRequest $request): JsonResponse //add author forum to forum users table
     {
+        $this->authorize('create own forums');
+
         $forum = new Forum($request->validated());
         $forum->user()->associate(Auth::user());
 
@@ -65,6 +92,9 @@ class ForumController extends Controller
     public function update(ForumUpdateRequest $request, int $id): JsonResponse
     {
         $forum = Forum::findOrFail($id);
+
+        $this->authorize('update', $forum);
+
         $forum->update($request->validated());
 
         if($request->file('image')) {
@@ -82,6 +112,9 @@ class ForumController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $forum = Forum::findOrFail($id);
+
+        $this->authorize('destroy', $forum);
+
         $forum->delete();
 
         return new JsonResponse([
@@ -91,6 +124,8 @@ class ForumController extends Controller
 
     public function publish(int $id): JsonResponse
     {
+        $this->authorize('publish all forums');
+
         $forum = $this->forumService->setPublishedAt($id, Carbon::now());
 
         return new JsonResponse([
@@ -101,6 +136,8 @@ class ForumController extends Controller
 
     public function unpublish(int $id): JsonResponse
     {
+        $this->authorize('unpublish all forums');
+
         $forum = $this->forumService->setPublishedAt($id, null);
 
         return new JsonResponse([
@@ -121,6 +158,9 @@ class ForumController extends Controller
     public function addUser(int $forumId, int $id): JsonResponse
     {
         $forum = Forum::findOrFail($forumId);
+
+        $this->authorize('addUser', $forum);
+
         $user = User::findOrFail($id);
         $forum->users()->attach($user);
 
@@ -132,11 +172,14 @@ class ForumController extends Controller
     public function removeUser(int $forumId, int $id): JsonResponse
     {
         $forum = Forum::findOrFail($forumId);
+
+        $this->authorize('removeUser', $forum);
+
         $user = User::findOrFail($id);
         $forum->users()->detach($user);
 
         return new JsonResponse([
-            'message' => 'User with id equal ' . $user->id . ' has been successfully remove from the forum.'
+            'message' => 'User with id equal ' . $user->id . ' has been successfully removed from the forum.'
         ]);
     }
 }
