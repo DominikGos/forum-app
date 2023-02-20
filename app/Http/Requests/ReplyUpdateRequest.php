@@ -24,7 +24,7 @@ class ReplyUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'content' => 'nullable',
+            'content' => 'nullable|string',
             'likes' => 'nullable|integer'
         ];
     }
