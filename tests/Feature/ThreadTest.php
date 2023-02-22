@@ -18,13 +18,9 @@ use Tests\TestCase;
 
 class ThreadTest extends TestCase
 {
-    use RefreshDatabase;
-
-    protected $seed = true;
-
     public function test_visitor_can_view_published_threads_from_the_published_forum()
     {
-        $forum = Forum::where('published_at', '!=', null)->first();
+        $forum = $this->publishedForum;
 
         $response = $this->getJson(route('forums.threads.index', ['forumId' => $forum->id]));
 
@@ -33,7 +29,7 @@ class ThreadTest extends TestCase
 
     public function test_visitor_cannot_view_unpublished_threads_from_the_published_forum()
     {
-        $forum = Forum::where('published_at', '!=', null)->first();
+        $forum = $this->publishedForum;
 
         $response = $this->getJson(route('forums.threads.index', ['forumId' => $forum->id]));
 
@@ -43,7 +39,7 @@ class ThreadTest extends TestCase
 
     public function test_visitor_cannot_view_published_threads_from_the_unpublished_forum()
     {
-        $forum = Forum::where('published_at', null)->first();
+        $forum = $this->unpublishedForum;
 
         $response = $this->getJson(route('forums.threads.index', ['forumId' => $forum->id]));
 
@@ -52,8 +48,8 @@ class ThreadTest extends TestCase
 
     public function test_authorized_user_can_view_unpublished_threads_from_the_published_forum()
     {
-        $user = User::role('editor')->first();
-        $forum = Forum::where('published_at', '!=', null)->first();
+        $user = $this->editor;
+        $forum = $this->publishedForum;
 
         Sanctum::actingAs($user);
 
@@ -64,10 +60,10 @@ class ThreadTest extends TestCase
 
     public function test_unauthorized_user_cannot_view_unpublished_threads_from_the_published_forum()
     {
-        $unauthorizedUser = User::role('contributor')->first();
-        $forum = Forum::where('published_at', '!=', null)->first();
+        $user = $this->contributor;
+        $forum = $this->publishedForum;
 
-        Sanctum::actingAs($unauthorizedUser);
+        Sanctum::actingAs($user);
 
         $response = $this->getJson(route('forums.threads.index', ['forumId' => $forum->id]));
 
@@ -77,7 +73,8 @@ class ThreadTest extends TestCase
 
     public function test_user_can_view_his_own_unpublished_threads_from_the_published_forum()
     {
-        $user = User::role('contributor')->first();
+        $user = $this->contributor;
+        $forum = $this->publishedForum;
         $unpublishedThread = Thread::factory()
             ->for(Forum::first())
             ->for($user)
@@ -85,14 +82,14 @@ class ThreadTest extends TestCase
 
         Sanctum::actingAs($user);
 
-        $response = $this->getJson(route('forums.threads.index', ['forumId' => 1]));
+        $response = $this->getJson(route('forums.threads.index', ['forumId' => $forum->id]));
 
         $response->assertOk()->assertJsonFragment(['publishedAt' => null]);
     }
 
     public function test_visitor_can_view_published_thread_from_the_published_forum()
     {
-        $thread = Thread::where('published_at', '!=', null)->first();
+        $thread = $this->publishedThread;
 
         $response = $this->getJson(
             route('forums.threads.show', ['forumId' => $thread->forum->id, 'id' => $thread->id])
@@ -103,7 +100,7 @@ class ThreadTest extends TestCase
 
     public function test_visitor_cannot_view_unpublished_thread_from_the_published_forum()
     {
-        $thread = Thread::where('published_at', null)->first();
+        $thread = $this->unpublishedThread;
 
         $response = $this->getJson(
             route('forums.threads.show', ['forumId' => $thread->forum->id, 'id' => $thread->id])
@@ -114,7 +111,7 @@ class ThreadTest extends TestCase
 
     public function test_visitor_cannot_view_published_thread_from_the_unpublished_forum()
     {
-        $forum = Forum::where('published_at', null)->first();
+        $forum = $this->unpublishedForum;
         $thread = Thread::factory()
             ->for($forum)
             ->for(User::factory()->create())
@@ -129,8 +126,8 @@ class ThreadTest extends TestCase
 
     public function test_authorized_user_can_view_unpublished_thread_from_the_published_forum()
     {
-        $user = User::role('editor')->first();
-        $thread = Thread::where('published_at', null)->first();
+        $user = $this->editor;
+        $thread = $this->unpublishedThread;
 
         Sanctum::actingAs($user);
 
@@ -144,8 +141,8 @@ class ThreadTest extends TestCase
 
     public function test_authorized_user_can_view_unpublished_thread_from_the_unpublished_forum()
     {
-        $user = User::role('editor')->first();
-        $forum = Forum::where('published_at', null)->first();
+        $user = $this->editor;
+        $forum = $this->unpublishedForum;
         $thread = Thread::factory()
             ->for($forum)
             ->for(User::factory()->create())
@@ -163,8 +160,8 @@ class ThreadTest extends TestCase
 
     public function test_unauthorized_user_cannot_view_unpublished_thread_from_the_published_forum()
     {
-        $user = User::role('contributor')->first();
-        $thread = Thread::where('published_at', null)->first();
+        $user = $this->contributor;
+        $thread = $this->unpublishedThread;
 
         Sanctum::actingAs($user);
 
@@ -177,7 +174,7 @@ class ThreadTest extends TestCase
 
     public function test_user_can_view_his_own_unpublished_thread_from_the_published_forum()
     {
-        $user = User::role('contributor')->first();
+        $user = $this->contributor;
         $thread = Thread::factory()
             ->for($user)
             ->for(Forum::first())
@@ -194,8 +191,8 @@ class ThreadTest extends TestCase
 
     public function test_user_can_view_his_own_published_thread_from_the_unpublished_forum()
     {
-        $user = User::role('contributor')->first();
-        $forum = Forum::where('published_at', null)->first();
+        $user = $this->contributor;
+        $forum = $this->unpublishedForum;
         $thread = Thread::factory()
             ->for($user)
             ->for($forum)
@@ -212,10 +209,8 @@ class ThreadTest extends TestCase
 
     public function test_authorized_member_of_a_published_forum_can_store_thread()
     {
-        $user = User::role('contributor')->first();
-        $forum = Forum::first();
-        $forum->published_at = now();
-        $forum->save();
+        $user = $this->contributor;
+        $forum = $this->publishedForum;
         $forum->users()->save($user);
         $thread = Thread::factory()->make();
 
@@ -233,9 +228,7 @@ class ThreadTest extends TestCase
     {
         $user = User::factory()->create();
         $thread = Thread::factory()->make();
-        $forum = Forum::first();
-        $forum->published_at = now();
-        $forum->save();
+        $forum = $this->publishedForum;
         $forum->users()->save($user);
 
         Sanctum::actingAs($user);
@@ -250,8 +243,8 @@ class ThreadTest extends TestCase
 
     public function test_user_cannot_store_thread_in_the_forum_he_does_not_belong_to()
     {
-        $user = User::role('contributor')->first();
-        $forum = Forum::first();
+        $user = User::factory()->create();
+        $forum = $this->publishedForum;
         $thread = Thread::factory()->make();
 
         Sanctum::actingAs($user);
@@ -282,8 +275,8 @@ class ThreadTest extends TestCase
 
     public function test_authorized_user_can_update_someone_thread()
     {
-        $user = User::role('editor')->first();
-        $thread = Thread::first();
+        $user = $this->editor;
+        $thread = $this->publishedThread;
         $updatedThread = Thread::factory()->make();
 
         Sanctum::actingAs($user);
@@ -298,11 +291,11 @@ class ThreadTest extends TestCase
 
     public function test_unauthorized_user_cannot_update_someone_thread()
     {
-        $unauthorizedUser = User::role('contributor')->first();
-        $thread = Thread::first();
+        $user = $this->contributor;
+        $thread = $this->publishedThread;
         $updatedThread = Thread::factory()->make();
 
-        Sanctum::actingAs($unauthorizedUser);
+        Sanctum::actingAs($user);
 
         $response = $this->putJson(route('threads.update', ['id' => $thread->id]), [
             'title' => $updatedThread->title,
@@ -314,8 +307,8 @@ class ThreadTest extends TestCase
 
     public function test_authorized_user_can_delete_someone_thread()
     {
-        $user = User::role('editor')->first();
-        $thread = Thread::first();
+        $user = $this->editor;
+        $thread = $this->publishedThread;
 
         Sanctum::actingAs($user);
 
@@ -326,8 +319,8 @@ class ThreadTest extends TestCase
 
     public function test_unauthorized_user_cannot_delete_someone_thread()
     {
-        $user = User::role('contributor')->first();
-        $thread = Thread::first();
+        $user = $this->contributor;
+        $thread = $this->publishedThread;
 
         Sanctum::actingAs($user);
 
@@ -350,12 +343,9 @@ class ThreadTest extends TestCase
 
     public function test_authorized_user_can_publish_thread()
     {
-        $user = User::role('editor')->first();
-        $thread = Thread::first();
+        $user = $this->editor;
 
-        Sanctum::actingAs($user);
-
-        $response = $this->putJson(route('threads.publish', ['id' => $thread->id]));
+        $response = $this->setPublishedAtStatus($user, 'publish');
 
         $response->assertOk()
             ->assertJsonMissingExact(['publishedAt' => null]);
@@ -363,24 +353,18 @@ class ThreadTest extends TestCase
 
     public function test_unauthorized_user_cannot_publish_thread()
     {
-        $user = User::role('contributor')->first();
-        $thread = Thread::first();
+        $user = $this->contributor;
 
-        Sanctum::actingAs($user);
-
-        $response = $this->putJson(route('threads.publish', ['id' => $thread->id]));
+        $response = $this->setPublishedAtStatus($user, 'publish');
 
         $response->assertForbidden();
     }
 
     public function test_authorized_user_can_unpublish_thread()
     {
-        $user = User::role('editor')->first();
-        $thread = Thread::first();
+        $user = $this->editor;
 
-        Sanctum::actingAs($user);
-
-        $response = $this->putJson(route('threads.unpublish', ['id' => $thread->id]));
+        $response = $this->setPublishedAtStatus($user, 'unpublish');
 
         $response->assertOk()
             ->assertJsonPath('thread.publishedAt', null);
@@ -388,13 +372,21 @@ class ThreadTest extends TestCase
 
     public function test_unauthorized_user_cannot_unpublish_thread()
     {
-        $user = User::role('contributor')->first();
-        $thread = Thread::first();
+        $user = $this->contributor;
+
+        $response = $this->setPublishedAtStatus($user, 'unpublish');
+
+        $response->assertForbidden();
+    }
+
+    private function setPublishedAtStatus(User $user, string $operation): TestResponse
+    {
+        $thread = $this->unpublishedThread;
 
         Sanctum::actingAs($user);
 
-        $response = $this->putJson(route('threads.unpublish', ['id' => $thread->id]));
+        $response = $this->putJson(route("threads.$operation", ['id' => $thread->id]));
 
-        $response->assertForbidden();
+        return $response;
     }
 }

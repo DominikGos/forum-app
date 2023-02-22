@@ -12,13 +12,9 @@ use Tests\TestCase;
 
 class ReplyTest extends TestCase
 {
-    use RefreshDatabase;
-
-    protected $seed = true;
-
     public function test_visitor_can_view_replies_from_the_published_thread()
     {
-        $thread = Thread::whereNotNull('published_at')->first();
+        $thread = $this->publishedThread;
 
         $response = $this->getJson(route('threads.replies.index', ['threadId' => $thread->id]));
 
@@ -27,7 +23,7 @@ class ReplyTest extends TestCase
 
     public function test_visitor_cannot_view_replies_from_the_unpublished_thread()
     {
-        $thread = Thread::whereNull('published_at')->first();
+        $thread = $this->unpublishedThread;
 
         $response = $this->getJson(route('threads.replies.index', ['threadId' => $thread->id]));
 
@@ -36,8 +32,8 @@ class ReplyTest extends TestCase
 
     public function test_authorized_user_can_store_a_reply_in_the_published_thread()
     {
-        $user = User::role('contributor')->first();
-        $thread = Thread::whereNotNull('published_at')->first();
+        $user = $this->contributor;
+        $thread = $this->publishedThread;
         $reply = Reply::factory()->make();
 
         Sanctum::actingAs($user);
@@ -52,8 +48,8 @@ class ReplyTest extends TestCase
 
     public function test_unauthorized_user_cannot_store_a_reply_in_the_unpublished_thread()
     {
-        $user = User::factory('contributor')->create();
-        $thread = Thread::whereNull('published_at')->first();
+        $user = $this->userWithoutRole;
+        $thread = $this->unpublishedThread;
         $reply = Reply::factory()->make();
 
         Sanctum::actingAs($user);
@@ -67,8 +63,8 @@ class ReplyTest extends TestCase
 
     public function test_authorized_user_can_update_his_own_reply()
     {
-        $user = User::role('contributor')->first();
-        $thread = Thread::whereNotNull('published_at')->first();
+        $user = $this->contributor;
+        $thread = $this->publishedThread;
         $reply = Reply::factory()
             ->for($user)
             ->for($thread)
@@ -87,9 +83,9 @@ class ReplyTest extends TestCase
 
     public function test_unauthorized_user_cannot_update_someone_reply()
     {
-        $user = User::role('contributor')->first();
+        $user = $this->contributor;
         $secondUser = User::factory()->create();
-        $thread = Thread::whereNotNull('published_at')->first();
+        $thread = $this->publishedThread;
         $reply = Reply::factory()
             ->for($secondUser)
             ->for($thread)
@@ -107,9 +103,9 @@ class ReplyTest extends TestCase
 
     public function test_authorized_user_can_update_someone_reply()
     {
-        $user = User::role('editor')->first();
+        $user = $this->editor;
         $secondUser = User::factory()->create();
-        $thread = Thread::whereNotNull('published_at')->first();
+        $thread = $this->publishedThread;
         $reply = Reply::factory()
             ->for($secondUser)
             ->for($thread)
@@ -128,8 +124,8 @@ class ReplyTest extends TestCase
 
     public function test_authorized_user_can_delete_his_own_reply()
     {
-        $user = User::role('contributor')->first();
-        $thread = Thread::whereNotNull('published_at')->first();
+        $user = $this->contributor;
+        $thread = $this->publishedThread;
         $reply = Reply::factory()
             ->for($user)
             ->for($thread)
@@ -144,9 +140,9 @@ class ReplyTest extends TestCase
 
     public function test_unauthorized_user_cannot_delete_someone_reply()
     {
-        $user = User::role('contributor')->first();
+        $user = $this->contributor;
         $secondUser = User::factory()->create();
-        $thread = Thread::whereNotNull('published_at')->first();
+        $thread = $this->publishedThread;
         $reply = Reply::factory()
             ->for($secondUser)
             ->for($thread)
@@ -161,9 +157,9 @@ class ReplyTest extends TestCase
 
     public function test_authorized_user_can_delete_someone_reply()
     {
-        $user = User::role('editor')->first();
+        $user = $this->editor;
         $secondUser = User::factory()->create();
-        $thread = Thread::whereNotNull('published_at')->first();
+        $thread = $this->publishedThread;
         $reply = Reply::factory()
             ->for($secondUser)
             ->for($thread)
@@ -180,7 +176,7 @@ class ReplyTest extends TestCase
     {
         $user = User::has('threads', '>', 0)->first();
         $secondUser = User::factory()->create();
-        $thread = $user->threads()->whereNotNull('published_at')->first();
+        $thread = $this->publishedThread;
         $reply = Reply::factory()
             ->for($secondUser)
             ->for($thread)

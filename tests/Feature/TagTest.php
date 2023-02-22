@@ -11,10 +11,6 @@ use Tests\TestCase;
 
 class TagTest extends TestCase
 {
-    use RefreshDatabase;
-
-    protected $seed = true;
-
     public function test_visitor_can_view_all_tags()
     {
         $response = $this->getJson(route('tags.index'));
@@ -24,8 +20,8 @@ class TagTest extends TestCase
 
     public function test_authorized_user_can_store_tag()
     {
-        $user = User::role('editor')->first();
-        $tag = Tag::factory()->make();
+        $user = $this->editor;
+        $tag = Tag::factory()->make(['name' => 'original tag name']);
 
         Sanctum::actingAs($user);
 
@@ -40,8 +36,8 @@ class TagTest extends TestCase
 
     public function test_unauthorized_user_cannot_store_tag()
     {
-        $user = User::role('contributor')->first();
-        $tag = Tag::factory()->make();
+        $user = $this->contributor;
+        $tag = Tag::factory()->make(['name' => 'original tag name']);
 
         Sanctum::actingAs($user);
 
@@ -55,9 +51,9 @@ class TagTest extends TestCase
 
     public function test_authorized_user_can_update_tag()
     {
-        $user = User::role('editor')->first();
+        $user = $this->editor;
         $tag = Tag::first();
-        $updatedTag = Tag::factory()->make();
+        $updatedTag = Tag::factory()->make(['name' => 'original tag name']);
 
         Sanctum::actingAs($user);
 
@@ -72,9 +68,9 @@ class TagTest extends TestCase
 
     public function test_unauthorized_user_cannot_update_tag()
     {
-        $user = User::role('contributor')->first();
+        $user = $this->contributor;
         $tag = Tag::first();
-        $updatedTag = Tag::factory()->make();
+        $updatedTag = Tag::factory()->make(['name' => 'original tag name']);
 
         Sanctum::actingAs($user);
 
@@ -88,7 +84,7 @@ class TagTest extends TestCase
 
     public function test_authorized_user_can_delete_tag()
     {
-        $user = User::role('editor')->first();
+        $user = $this->editor;
         $tag = Tag::first();
 
         Sanctum::actingAs($user);
@@ -100,7 +96,7 @@ class TagTest extends TestCase
 
     public function test_unauthorized_user_cannot_delete_tag()
     {
-        $user = User::role('editor')->first();
+        $user = $this->editor;
         $tag = Tag::first();
 
         Sanctum::actingAs($user);
