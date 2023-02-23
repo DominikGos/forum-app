@@ -13,10 +13,6 @@ use Tests\TestCase;
 
 class ForumTest extends TestCase
 {
-    use RefreshDatabase;
-
-    protected $seed = true;
-
     public function test_visitor_can_view_published_forums()
     {
         $response = $this->getJson(route('forums.index'));
@@ -34,7 +30,7 @@ class ForumTest extends TestCase
 
     public function test_authorized_user_can_view_unpublished_forums()
     {
-        $user = User::role('editor')->first();
+        $user = $this->editor;
 
         Sanctum::actingAs($user);
 
@@ -46,7 +42,7 @@ class ForumTest extends TestCase
 
     public function test_unauthorized_user_cannot_view_unpublished_forums()
     {
-        $user = User::role('contributor')->first();
+        $user = $this->contributor;
 
         $response = $this->getJson(route('forums.index'));
 
@@ -56,7 +52,7 @@ class ForumTest extends TestCase
 
     public function test_user_can_view_his_own_unpublished_forums()
     {
-        $user = User::role('contributor')->first();
+        $user = $this->contributor;
         $forum = Forum::factory()
             ->for($user)
             ->create(['published_at' => null, 'name' => 'original forum name']);
@@ -71,7 +67,7 @@ class ForumTest extends TestCase
 
     public function test_visitor_can_view_published_forum()
     {
-        $forum = Forum::where('published_at', '!=', null)->first();
+        $forum = $this->publishedForum;
 
         $response = $this->getJson(route('forums.show', ['id' => $forum->id]));
 
@@ -81,8 +77,7 @@ class ForumTest extends TestCase
 
     public function test_visitor_cannot_view_unpublished_forum()
     {
-        $forum = Forum::where('published_at', null)->first();
-
+        $forum = $this->unpublishedForum;
         $response = $this->getJson(route('forums.show', ['id' => $forum->id]));
 
         $response->assertNotFound();
@@ -90,11 +85,10 @@ class ForumTest extends TestCase
 
     public function test_authorized_user_can_view_unpublished_forum()
     {
-        $user = User::role('editor')->first();
+        $user = $this->editor;
+        $forum = $this->unpublishedForum;
 
         Sanctum::actingAs($user);
-
-        $forum = Forum::where('published_at', null)->first();
 
         $response = $this->getJson(route('forums.show', ['id' => $forum->id]));
 
@@ -104,11 +98,10 @@ class ForumTest extends TestCase
 
     public function test_unauthorized_user_cannot_view_unpublished_forum()
     {
-        $user = User::role('contributor')->first();
+        $user = $this->contributor;
+        $forum = $this->unpublishedForum;
 
         Sanctum::actingAs($user);
-
-        $forum = Forum::where('published_at', null)->first();
 
         $response = $this->getJson(route('forums.show', ['id' => $forum->id]));
 
@@ -117,7 +110,7 @@ class ForumTest extends TestCase
 
     public function test_user_can_view_his_own_unpublished_forum()
     {
-        $user = User::role('contributor')->first();
+        $user = $this->contributor;
 
         Sanctum::actingAs($user);
 
@@ -133,7 +126,7 @@ class ForumTest extends TestCase
 
     public function test_authorized_user_can_store_forum()
     {
-        $user = User::role('contributor')->first();
+        $user = $this->contributor;
         $forum = Forum::factory()->make(['name' => 'updated forum name']);
 
         Sanctum::actingAs($user);
@@ -155,7 +148,7 @@ class ForumTest extends TestCase
 
     public function test_unauthorized_user_cannot_store_forum()
     {
-        $user = User::factory()->create();
+        $user = $this->userWithoutRole;
         $forum = Forum::factory()->make(['name' => 'updated forum name']);
 
         Sanctum::actingAs($user);
@@ -190,8 +183,8 @@ class ForumTest extends TestCase
 
     public function test_authorized_user_can_update_someone_forum()
     {
-        $user = User::role('editor')->first();
-        $forum = Forum::first();
+        $user = $this->editor;
+        $forum = $this->publishedForum;
         $updatedForumName = 'updated forum name';
 
         Sanctum::actingAs($user);
@@ -206,8 +199,8 @@ class ForumTest extends TestCase
 
     public function test_unauthorized_user_cannot_update_someone_forum()
     {
-        $user = User::role('contributor')->first();
-        $forum = Forum::first();
+        $user = $this->contributor;
+        $forum = $this->publishedForum;
         $updatedForumName = 'updated forum name';
 
         Sanctum::actingAs($user);
@@ -233,8 +226,8 @@ class ForumTest extends TestCase
 
     public function test_authorized_user_can_delete_someone_forum()
     {
-        $user = User::role('editor')->first();
-        $forum = Forum::first();
+        $user = $this->editor;
+        $forum = $this->publishedForum;
 
         Sanctum::actingAs($user);
 
@@ -245,8 +238,8 @@ class ForumTest extends TestCase
 
     public function test_unauthorized_user_cannot_delete_someone_forum()
     {
-        $user = User::role('contributor')->first();
-        $forum = Forum::first();
+        $user = $this->contributor;
+        $forum = $this->publishedForum;
 
         Sanctum::actingAs($user);
 
@@ -257,8 +250,8 @@ class ForumTest extends TestCase
 
     public function test_authorized_user_can_publish_forum()
     {
-        $user = User::role('editor')->first();
-        $forum = Forum::first();
+        $user = $this->editor;
+        $forum = $this->unpublishedForum;
 
         Sanctum::actingAs($user);
 
@@ -270,8 +263,8 @@ class ForumTest extends TestCase
 
     public function test_unauthorized_user_cannot_publish_forum()
     {
-        $user = User::role('contributor')->first();
-        $forum = Forum::first();
+        $user = $this->contributor;
+        $forum = $this->unpublishedForum;
 
         Sanctum::actingAs($user);
 
@@ -282,8 +275,8 @@ class ForumTest extends TestCase
 
     public function test_authorized_user_can_unpublish_forum()
     {
-        $user = User::role('editor')->first();
-        $forum = Forum::first();
+        $user = $this->editor;
+        $forum = $this->publishedForum;
 
         Sanctum::actingAs($user);
 
@@ -295,8 +288,8 @@ class ForumTest extends TestCase
 
     public function test_unauthorized_user_cannot_unpublish_forum()
     {
-        $user = User::role('contributor')->first();
-        $forum = Forum::first();
+        $user = $this->contributor;
+        $forum = $this->publishedForum;
 
         Sanctum::actingAs($user);
 
@@ -377,10 +370,8 @@ class ForumTest extends TestCase
 
     public function test_unauthorized_user_cannot_add_a_user_to_the_published_forum()
     {
-        $user = User::role('contributor')->first();
-        $forum = Forum::first();
-        $forum->published_at = now();
-        $forum->save();
+        $user = $this->contributor;
+        $forum = $this->publishedForum;
         $futureForumMember = User::factory()->create();
 
         Sanctum::actingAs($user);
@@ -394,10 +385,8 @@ class ForumTest extends TestCase
 
     public function test_unauthorized_user_cannot_remove_a_user_from_the_published_forum()
     {
-        $user = User::role('contributor')->first();
-        $forum = Forum::first();
-        $forum->published_at = now();
-        $forum->save();
+        $user = $this->contributor;
+        $forum = $this->publishedForum;
         $forumMember = User::factory()->create();
         $forum->users()->save($forumMember);
 
