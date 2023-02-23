@@ -224,6 +224,23 @@ class ThreadTest extends TestCase
         $response->assertCreated()->assertJsonPath('thread.title', $thread->title);
     }
 
+    public function test_authorized_member_of_a_unpublished_forum_cannot_store_thread()
+    {
+        $user = $this->contributor;
+        $forum = $this->unpublishedForum;
+        $forum->users()->save($user);
+        $thread = Thread::factory()->make();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->postJson(route('forums.threads.store', ['forumId' => $forum->id]), [
+            'title' => $thread->title,
+            'description' => $thread->description,
+        ]);
+
+        $response->assertForbidden();
+    }
+
     public function test_unauthorized_member_of_a_published_forum_cannot_store_thread()
     {
         $user = User::factory()->create();

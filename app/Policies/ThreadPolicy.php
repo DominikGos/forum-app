@@ -56,6 +56,10 @@ class ThreadPolicy
             return true;
         }
 
+        if($user->hasAllRoles(['admin', 'editor'])) {
+            return true;
+        }
+
         return false;
     }
 }

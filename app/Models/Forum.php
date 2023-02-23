@@ -14,6 +14,11 @@ class Forum extends Model
         'description'
     ];
 
+    public function isPublished(): bool
+    {
+        return (bool) $this->published_at;
+    }
+
     public function threads()
     {
         return $this->hasMany(Thread::class);

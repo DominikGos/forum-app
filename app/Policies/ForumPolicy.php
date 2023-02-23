@@ -51,7 +51,11 @@ class ForumPolicy
 
     public function storeThread(User $user, Forum $forum): bool
     {
-        if($user->can('create own threads') && $user->forums->contains($forum)) {
+        if($user->can('create own threads') && $user->forums->contains($forum) && $forum->isPublished()) {
+            return true;
+        }
+
+        if($user->hasAllRoles(['admin', 'editor'])) {
             return true;
         }
 
