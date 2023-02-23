@@ -58,7 +58,7 @@ class ReplyTest extends TestCase
             'content' => $reply->content,
         ]);
 
-        $response->assertNotFound();
+        $response->assertForbidden();
     }
 
     public function test_authorized_user_can_update_his_own_reply()

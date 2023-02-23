@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Reply;
 use App\Models\Thread;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -43,6 +44,15 @@ class ThreadPolicy
         }
 
         if($user->can('delete all threads')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function storeReply(User $user, Thread $thread): bool
+    {
+        if($user->can('create own replies') && $thread->isPublished()) {
             return true;
         }
 

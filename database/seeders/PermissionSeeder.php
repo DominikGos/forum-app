@@ -37,6 +37,11 @@ class PermissionSeeder extends Seeder
             Permission::create(['name' => 'delete own forums']),
             Permission::create(['name' => 'add users to own forum']),
             Permission::create(['name' => 'remove users from own forum']),
+
+            Permission::create(['name' => 'view own replies']),
+            Permission::create(['name' => 'create own replies']),
+            Permission::create(['name' => 'edit own replies']),
+            Permission::create(['name' => 'delete own replies']),
         ];
 
         $contributorRole->syncPermissions($contributorPermissions);
@@ -60,6 +65,9 @@ class PermissionSeeder extends Seeder
             Permission::create(['name' => 'delete all tags']),
             Permission::create(['name' => 'add users to all forums']),
             Permission::create(['name' => 'remove users from all forums']),
+            Permission::create(['name' => 'view all replies']),
+            Permission::create(['name' => 'edit all replies']),
+            Permission::create(['name' => 'delete all replies']),
         ];
 
         $editorRole->syncPermissions($contributorPermissions);
