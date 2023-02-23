@@ -23,6 +23,8 @@ class TagController extends Controller
 
     public function store(TagStoreRequest $request): JsonResponse
     {
+        $this->authorize('create all tags');
+
         $tag = new Tag($request->validated());
         $tag->user()->associate(Auth::user());
         $tag->save();
@@ -35,6 +37,8 @@ class TagController extends Controller
 
     public function update(TagUpdateRequest $request, int $id): JsonResponse
     {
+        $this->authorize('edit all tags');
+
         $tag = Tag::findOrFail($id);
         $tag->update($request->validated());
         $tag->save();
@@ -47,11 +51,13 @@ class TagController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
+        $this->authorize('delete all tags');
+
         $tag = Tag::findOrFail($id);
         $tag->delete();
 
         return new JsonResponse([
-            'message' => 'The tag has been successfully deleted .'
+            'message' => 'The tag has been successfully deleted.'
         ]);
     }
 }

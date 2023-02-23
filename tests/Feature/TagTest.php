@@ -96,7 +96,7 @@ class TagTest extends TestCase
 
     public function test_unauthorized_user_cannot_delete_tag()
     {
-        $user = $this->editor;
+        $user = $this->contributor;
         $tag = Tag::first();
 
         Sanctum::actingAs($user);
