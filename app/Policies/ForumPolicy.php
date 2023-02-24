@@ -64,10 +64,6 @@ class ForumPolicy
 
     public function addUser(User $user, Forum $forum): bool
     {
-        if($user->can('add users to own forum') && $user->id == $forum->user->id && $forum->isPublished()) {
-            return true;
-        }
-
         if($user->can('add users to all forums')) {
             return true;
         }

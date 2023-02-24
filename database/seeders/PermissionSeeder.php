@@ -35,7 +35,6 @@ class PermissionSeeder extends Seeder
             Permission::create(['name' => 'view own forums']),
             Permission::create(['name' => 'edit own forums']),
             Permission::create(['name' => 'delete own forums']),
-            Permission::create(['name' => 'add users to own forum']),
             Permission::create(['name' => 'remove users from own forum']),
             Permission::create(['name' => 'view own replies']),
             Permission::create(['name' => 'create own replies']),

@@ -81,7 +81,7 @@ class ForumController extends Controller
         }
 
         $forum->save();
-        $forum->users()->attach(Auth::user());
+        $forum->users()->save(Auth::user());
 
         return new JsonResponse([
             'message' => 'The forum has been successfully created.',

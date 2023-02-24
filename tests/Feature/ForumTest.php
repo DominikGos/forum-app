@@ -298,36 +298,28 @@ class ForumTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_forum_author_can_add_a_user_to_the_published_forum()
+    public function test_authorized_user_can_add_a_user_to_forum()
     {
-        $user = User::has('createdForums', '>', 0)->first();
-        $forum = $user->createdForums()->first();
-        $forum->published_at = now();
-        $forum->save();
+        $user = $this->editor;
+        $forum = $this->publishedForum;
         $futureForumMember = User::factory()->create();
 
         Sanctum::actingAs($user);
 
-        $response = $this->postJson(route('forums.users.store', [
-            'forumId' => $forum->id, 'id' => $futureForumMember->id,
-        ]));
+        $response = $this->postJson(route('forums.users.store', ['forumId' => $forum->id, 'id' => $futureForumMember->id]));
 
         $response->assertCreated();
     }
 
-    public function test_forum_author_cannot_add_a_user_to_the_unpublished_forum()
+    public function test_unauthorized_user_cannot_add_a_user_to_forum()
     {
-        $user = User::has('createdForums', '>', 0)->first();
-        $forum = $user->createdForums()->first();
-        $forum->published_at = null;
-        $forum->save();
+        $user = $this->contributor;
+        $forum = $this->publishedForum;
         $futureForumMember = User::factory()->create();
 
         Sanctum::actingAs($user);
 
-        $response = $this->postJson(route('forums.users.store', [
-            'forumId' => $forum->id, 'id' => $futureForumMember->id,
-        ]));
+        $response = $this->postJson(route('forums.users.store', ['forumId' => $forum->id, 'id' => $futureForumMember->id]));
 
         $response->assertForbidden();
     }
