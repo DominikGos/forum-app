@@ -89,6 +89,10 @@ Route::group(['as' => 'users', 'prefix' => '/users'], function() {
     Route::get('', [UserController::class, 'index'])->name('.index');
 
     Route::get('/{id}', [UserController::class, 'show'])->name('.show');
+
+    Route::get('/{id}/threads', [UserController::class, 'threads'])->name('.threads.index');
+
+    Route::get('/{id}/replies', [UserController::class, 'replies'])->name('.threads.replies');
 });
 
 Route::group(['as' => 'threads', 'prefix' => '/threads'], function() {

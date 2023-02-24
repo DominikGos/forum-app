@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Resources\ThreadResource;
 use App\Http\Resources\UserResource;
 use App\Models\Forum;
 use App\Models\Thread;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -23,6 +25,39 @@ class UserController extends Controller
 
         return new JsonResponse([
             'user' => new UserResource($user)
+        ]);
+    }
+
+    public function threads(int $userId): JsonResponse
+    {
+        $user = User::findOrFail($userId);
+        $authUser = Auth::guard('sanctum')->user();
+
+        $threads = $user->threads()
+            ->whereHas('forum', function(Builder $query) use ($authUser) {
+                $query->published($authUser);
+            })
+            ->published($authUser)
+            ->get();
+
+        return new JsonResponse([
+            'threads' => ThreadResource::collection($threads)
+        ]);
+    }
+
+    public function replies(int $userId): JsonResponse
+    {
+        $user = User::findOrFail($userId);
+        $authUser = Auth::guard('sanctum')->user();
+
+        $replies = $user->replies()
+            ->whereHas('thread', function(Builder $query) use ($authUser) {
+                $query->published($authUser);
+            })
+            ->get();
+
+        return new JsonResponse([
+            'replies' => ThreadResource::collection($replies)
         ]);
     }
 
