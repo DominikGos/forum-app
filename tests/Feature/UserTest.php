@@ -120,4 +120,52 @@ class UserTest extends TestCase
 
         $response->assertOk();
     }
+
+    public function test_authorized_user_can_join_to_the_published_forum()
+    {
+        $user = $this->contributor;
+        $forum = $this->publishedForum;
+
+        Sanctum::actingAs($user);
+
+        $response = $this->postJson(route('users.forum.join', ['id' => $forum->id]));
+
+        $response->assertCreated();
+    }
+
+    public function test_unauthorized_user_cannot_join_to_the_unpublished_forum()
+    {
+        $user = $this->contributor;
+        $forum = $this->unpublishedForum;
+
+        Sanctum::actingAs($user);
+
+        $response = $this->postJson(route('users.forum.join', ['id' => $forum->id]));
+
+        $response->assertForbidden();
+    }
+
+    public function test_authorized_user_can_leave_the_published_forum()
+    {
+        $user = $this->contributor;
+        $forum = $this->publishedForum;
+
+        Sanctum::actingAs($user);
+
+        $response = $this->postJson(route('users.forum.leave', ['id' => $forum->id]));
+
+        $response->assertOk();
+    }
+
+    public function test_unauthorized_user_cannot_leave_the_unpublished_forum()
+    {
+        $user = $this->contributor;
+        $forum = $this->publishedForum;
+
+        Sanctum::actingAs($user);
+
+        $response = $this->postJson(route('users.forum.leave', ['id' => $forum->id]));
+
+        $response->assertForbidden();
+    }
 }

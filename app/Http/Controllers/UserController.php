@@ -75,6 +75,13 @@ class UserController extends Controller
     public function joinForum(int $id): JsonResponse
     {
         $forum = Forum::findOrFail($id);
+
+        if(Auth::user()->forums->contains($forum)) {
+            return new JsonResponse([
+                'message' => 'You already belong to the forum.'
+            ]);
+        }
+
         $forum->users()->attach(Auth::user());
 
         return new JsonResponse([
@@ -85,10 +92,17 @@ class UserController extends Controller
     public function leaveForum(int $id): JsonResponse
     {
         $forum = Forum::findOrFail($id);
+
+        if( ! Auth::user()->forums->contains($forum)) {
+            return new JsonResponse([
+                'message' => "You don't belong to the forum."
+            ]);
+        }
+
         $forum->users()->detach(Auth::user());
 
         return new JsonResponse([
             'message' => 'You have successfully leaved the forum.'
-        ], 201);
+        ]);
     }
 }
