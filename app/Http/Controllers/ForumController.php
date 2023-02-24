@@ -69,7 +69,7 @@ class ForumController extends Controller
         ]);
     }
 
-    public function store(ForumStoreRequest $request): JsonResponse //add author forum to forum users table
+    public function store(ForumStoreRequest $request): JsonResponse
     {
         $this->authorize('create own forums');
 

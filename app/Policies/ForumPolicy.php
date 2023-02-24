@@ -64,7 +64,7 @@ class ForumPolicy
 
     public function addUser(User $user, Forum $forum): bool
     {
-        if($user->can('add users to own forum') && $user->id == $forum->user->id) {
+        if($user->can('add users to own forum') && $user->id == $forum->user->id && $forum->isPublished()) {
             return true;
         }
 
@@ -77,7 +77,7 @@ class ForumPolicy
 
     public function removeUser(User $user, Forum $forum): bool
     {
-        if($user->can('remove users from own forum') && $user->id == $forum->user->id) {
+        if($user->can('remove users from own forum') && $user->id == $forum->user->id && $forum->isPublished()) {
             return true;
         }
 

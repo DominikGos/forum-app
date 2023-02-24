@@ -43,6 +43,10 @@ class ThreadPolicy
             return true;
         }
 
+        if($user->createdForums->contains($thread->forum)) {
+            return true;
+        }
+
         if($user->can('delete all threads')) {
             return true;
         }
