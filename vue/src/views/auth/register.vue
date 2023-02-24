@@ -7,28 +7,34 @@
       </router-link>
     </div>
     <div class="mt-3">
-      <label for="exampleInputText1" class="form-label">Username</label>
-      <input type="text" class="form-control" id="exampleInputText1" />
+      <label for="userName" class="form-label">User Name</label>
+      <input type="text" class="form-control" id="userName" />
     </div>
     <div class="">
-      <label for="exampleInputEmail1" class="form-label">Email address</label>
+      <label for="email" class="form-label">Email address</label>
       <input
         type="email"
         class="form-control"
-        id="exampleInputEmail1"
+        id="email"
         aria-describedby="emailHelp"
       />
       <div id="emailHelp" class="form-text">
         We'll never share your email with anyone else.
       </div>
     </div>
-    <div class="">
-      <label for="exampleInputPassword1" class="form-label">Password</label>
-      <input type="password" class="form-control" id="exampleInputPassword1" />
+    <div class="d-flex gap-2">
+      <div class="w-50">
+        <label for="firstName" class="form-label">First name</label>
+        <input type="text" class="form-control" id="firstName" />
+      </div>
+      <div class="w-50">
+        <label for="lastName" class="form-label">Last name</label>
+        <input type="text" class="form-control" id="lastName" />
+      </div>
     </div>
-    <div class="form-check">
-      <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-      <label class="form-check-label" for="exampleCheck1">Check me out</label>
+    <div class="">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" />
     </div>
     <div>
       <button type="submit" class="btn btn-primary">Submit</button>
@@ -37,6 +43,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: "register",
 };
