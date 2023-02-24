@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,14 @@ class Thread extends Model
     public function isPublished(): bool
     {
         return (bool) $this->published_at;
+    }
+
+    public function scopePublished(Builder $query, ?User $threadAuthor): Builder
+    {
+        return $query->whereNotNull('published_at')
+            ->when($threadAuthor, function($q) use ($threadAuthor) {
+                $q->orWhere('user_id', $threadAuthor->id);
+            });
     }
 
     public function user()

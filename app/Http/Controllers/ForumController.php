@@ -35,16 +35,9 @@ class ForumController extends Controller
         if($user?->can('view all forums')) {
             $forums = Forum::with($relations)->get();
         } else {
-            if($user) {
-                $forums = Forum::with($relations)
-                    ->where('user_id', $user->id)
-                    ->orWhereNotNull('published_at')
-                    ->get();
-            } else {
-                $forums = Forum::with($relations)
-                    ->whereNotNull('published_at')
-                    ->get();
-            }
+            $forums = Forum::with($relations)
+                ->published($user)
+                ->get();
         }
 
         return new JsonResponse([

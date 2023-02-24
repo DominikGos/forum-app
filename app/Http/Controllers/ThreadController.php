@@ -32,17 +32,11 @@ class ThreadController extends Controller
         } else {
             $relations = implode(', ', $relations);
 
-            $forum = Forum::with([
-                $relations, 'threads' => function($query) use ($user) {
-                    if($user) {
-                        $query->where('user_id', $user->id)->orWhereNotNull('published_at');
-                    } else {
-                        $query->whereNotNull('published_at');
-                    }
-                }
-            ])
-            ->where('published_at', '!=', null)
-            ->findOrFail($forumId);
+            $forum = Forum::with([$relations, 'threads' => function($query) use ($user) {
+                $query->published($user); 
+            }])
+                ->whereNotNull('published_at')
+                ->findOrFail($forumId);
 
             $threads = $forum->threads;
         }

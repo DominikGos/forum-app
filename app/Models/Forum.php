@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,14 @@ class Forum extends Model
     public function isPublished(): bool
     {
         return (bool) $this->published_at;
+    }
+
+    public function scopePublished(Builder $query, ?User $forumAuthor): Builder
+    {
+        return $query->whereNotNull('published_at')
+            ->when($forumAuthor, function($q) use ($forumAuthor) {
+                $q->orWhere('user_id', $forumAuthor->id);
+            });
     }
 
     public function threads()
