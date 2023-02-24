@@ -315,7 +315,7 @@ class ForumTest extends TestCase
         $response->assertCreated();
     }
 
-    public function test_forum_author_can_add_a_user_to_the_unpublished_forum()
+    public function test_forum_author_cannot_add_a_user_to_the_unpublished_forum()
     {
         $user = User::has('createdForums', '>', 0)->first();
         $forum = $user->createdForums()->first();
@@ -329,7 +329,7 @@ class ForumTest extends TestCase
             'forumId' => $forum->id, 'id' => $futureForumMember->id,
         ]));
 
-        $response->assertCreated();
+        $response->assertForbidden();
     }
 
     public function test_forum_author_can_remove_a_user_from_the_published_forum()
@@ -350,7 +350,7 @@ class ForumTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_forum_author_can_remove_a_user_from_the_unpublished_forum()
+    public function test_forum_author_cannot_remove_a_user_from_the_unpublished_forum()
     {
         $user = User::has('createdForums', '>', 0)->first();
         $forum = $user->createdForums()->first();
@@ -365,7 +365,7 @@ class ForumTest extends TestCase
             'forumId' => $forum->id, 'id' => $forumMember->id,
         ]));
 
-        $response->assertOk();
+        $response->assertForbidden();
     }
 
     public function test_unauthorized_user_cannot_add_a_user_to_the_published_forum()

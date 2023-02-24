@@ -334,6 +334,22 @@ class ThreadTest extends TestCase
         $response->assertOk();
     }
 
+    public function test_forum_author_can_delete_someone_thread()
+    {
+        $user = User::has('createdForums', '>', 0)->first();
+        $forum = $user->createdForums()->first();
+        $thread = Thread::factory()
+            ->for($forum)
+            ->for(User::factory()->create())
+            ->create();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->deleteJson(route('threads.destroy', ['id' => $thread->id]));
+
+        $response->assertOk();
+    }
+
     public function test_unauthorized_user_cannot_delete_someone_thread()
     {
         $user = $this->contributor;
