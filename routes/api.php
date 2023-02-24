@@ -8,6 +8,7 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\UserController;
 use App\Models\Forum;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,10 +30,14 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::group(['middleware' => 'auth:sanctum'], function(){ // middleware:guard
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::group(['as' => 'users', 'prefix' => '/users/{id}'], function() {
-        Route::put('', [UserController::class, 'update'])->name('.update');
+    Route::group(['as' => 'users', 'prefix' => '/users'], function() {
+        Route::put('/{id}', [UserController::class, 'update'])->name('.update');
 
-        Route::delete('', [UserController::class, 'destroy'])->name('.destroty');
+        Route::post('/forum/{id}/join', [UserController::class, 'joinForum'])->name('.forum.join');
+
+        Route::delete('/forum/{id}/leave', [UserController::class, 'leaveForum'])->name('.forum.leave');
+
+        Route::delete('/{id}', [UserController::class, 'destroy'])->name('.destroty');
     });
 
     Route::group(['as' => 'forums', 'prefix' => '/forums'], function() {

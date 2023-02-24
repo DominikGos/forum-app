@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserResource;
+use App\Models\Forum;
 use App\Models\Thread;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -38,7 +39,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $this->authorize('update', $user);
-        
+
         $user->update($request->validated());
 
         if($request->file('avatar')) {
@@ -69,5 +70,25 @@ class UserController extends Controller
         return new JsonResponse([
             'message' => 'The user has been successfully deleted.'
         ]);
+    }
+
+    public function joinForum(int $id): JsonResponse
+    {
+        $forum = Forum::findOrFail($id);
+        $forum->users()->attach(Auth::user());
+
+        return new JsonResponse([
+            'message' => 'You have successfully joined to the forum.'
+        ], 201);
+    }
+
+    public function leaveForum(int $id): JsonResponse
+    {
+        $forum = Forum::findOrFail($id);
+        $forum->users()->detach(Auth::user());
+
+        return new JsonResponse([
+            'message' => 'You have successfully leaved the forum.'
+        ], 201);
     }
 }
