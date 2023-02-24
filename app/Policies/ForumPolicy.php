@@ -83,4 +83,30 @@ class ForumPolicy
 
         return false;
     }
+
+    public function joinForum(User $user, Forum $forum): bool
+    {
+        if($user->can('join to forums') && $forum->isPublished()) {
+            return true;
+        }
+
+        if($user->can('join to all forums')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function leaveForum(User $user, Forum $forum): bool
+    {
+        if($user->can('leave forums') && $forum->isPublished()) {
+            return true;
+        }
+
+        if($user->can('leave all forums')) {
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -76,6 +76,8 @@ class UserController extends Controller
     {
         $forum = Forum::findOrFail($id);
 
+        $this->authorize('joinForum', $forum);
+
         if(Auth::user()->forums->contains($forum)) {
             return new JsonResponse([
                 'message' => 'You already belong to the forum.'
@@ -92,6 +94,8 @@ class UserController extends Controller
     public function leaveForum(int $id): JsonResponse
     {
         $forum = Forum::findOrFail($id);
+
+        $this->authorize('leaveForum', $forum);
 
         if( ! Auth::user()->forums->contains($forum)) {
             return new JsonResponse([

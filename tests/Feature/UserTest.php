@@ -152,7 +152,7 @@ class UserTest extends TestCase
 
         Sanctum::actingAs($user);
 
-        $response = $this->postJson(route('users.forum.leave', ['id' => $forum->id]));
+        $response = $this->deleteJson(route('users.forum.leave', ['id' => $forum->id]));
 
         $response->assertOk();
     }
@@ -160,11 +160,11 @@ class UserTest extends TestCase
     public function test_unauthorized_user_cannot_leave_the_unpublished_forum()
     {
         $user = $this->contributor;
-        $forum = $this->publishedForum;
+        $forum = $this->unpublishedForum;
 
         Sanctum::actingAs($user);
 
-        $response = $this->postJson(route('users.forum.leave', ['id' => $forum->id]));
+        $response = $this->deleteJson(route('users.forum.leave', ['id' => $forum->id]));
 
         $response->assertForbidden();
     }
