@@ -11,24 +11,41 @@
     <div class="mt-3">
       <label for="userName" class="form-label">User Name</label>
       <input
-        v-model="userName"
+        v-model="user.userName"
         type="text"
-        class="form-control"
+        :class="[
+          errors.userName.length > 0 ? 'is-invalid' : '',
+          'form-control',
+        ]"
         id="userName"
         required
       />
+      <div
+        v-if="errors.userName.length > 0"
+        id="userName"
+        class="invalid-feedback"
+      >
+        <p v-for="error in errors.userName" key="error" class="m-0">
+          {{ error }}
+        </p>
+      </div>
     </div>
     <div class="">
       <label for="email" class="form-label">Email address</label>
       <input
-        v-model="email"
+        v-model="user.email"
         type="email"
-        class="form-control"
+        :class="[errors.email.length > 0 ? 'is-invalid' : '', 'form-control']"
         id="email"
         aria-describedby="emailHelp"
         required
       />
-      <div id="emailHelp" class="form-text">
+      <div v-if="errors.email.length > 0" id="email" class="invalid-feedback">
+        <p v-for="error in errors.email" key="error" class="m-0">
+          {{ error }}
+        </p>
+      </div>
+      <div v-if="errors.email.length == 0" id="emailHelp" class="form-text">
         We'll never share your email with anyone else.
       </div>
     </div>
@@ -36,33 +53,69 @@
       <div class="w-50">
         <label for="firstName" class="form-label">First name</label>
         <input
-          v-model="firstName"
+          v-model="user.firstName"
           type="text"
-          class="form-control"
+          :class="[
+            errors.firstName.length > 0 ? 'is-invalid' : '',
+            'form-control',
+          ]"
           id="firstName"
           required
         />
+        <div
+          v-if="errors.firstName.length > 0"
+          id="firstName"
+          class="invalid-feedback"
+        >
+          <p v-for="error in errors.firstName" key="error" class="m-0">
+            {{ error }}
+          </p>
+        </div>
       </div>
       <div class="w-50">
         <label for="lastName" class="form-label">Last name</label>
         <input
-          v-model="lastName"
+          v-model="user.lastName"
           type="text"
-          class="form-control"
+          :class="[
+            errors.lastName.length > 0 ? 'is-invalid' : '',
+            'form-control',
+          ]"
           id="lastName"
           required
         />
+        <div
+          v-if="errors.lastName.length > 0"
+          id="lastName"
+          class="invalid-feedback"
+        >
+          <p v-for="error in errors.lastName" key="error" class="m-0">
+            {{ error }}
+          </p>
+        </div>
       </div>
     </div>
     <div class="">
       <label for="password" class="form-label">Password</label>
       <input
-        v-model="password"
+        v-model="user.password"
         type="password"
-        class="form-control"
+        :class="[
+          errors.password.length > 0 ? 'is-invalid' : '',
+          'form-control',
+        ]"
         id="password"
         required
       />
+      <div
+        v-if="errors.password.length > 0"
+        id="lastName"
+        class="invalid-feedback"
+      >
+        <p v-for="error in errors.password" key="error" class="m-0">
+          {{ error }}
+        </p>
+      </div>
     </div>
     <div>
       <button type="submit" class="btn btn-primary">Submit</button>
@@ -77,42 +130,81 @@ export default {
   name: "register",
   data() {
     return {
-      userName: null,
-      firstName: null,
-      lastName: null,
-      email: null,
-      password: null,
+      user: {
+        userName: null,
+        firstName: null,
+        lastName: null,
+        email: null,
+        password: null,
+      },
+      errors: {
+        userName: [],
+        email: [],
+        firstName: [],
+        lastName: [],
+        password: [],
+      },
     };
-  },
-  mounted() {
   },
   methods: {
     register(e) {
       e.preventDefault();
 
       const user = {
-        login: this.userName,
-        first_name: this.firstName,
-        last_name: this.firstName,
-        email: this.email,
-        password: this.password,
+        login: this.user.userName,
+        first_name: this.user.firstName,
+        last_name: this.user.firstName,
+        email: this.user.email,
+        password: this.user.password,
       };
 
       axios
         .post("register", user)
         .then((response) => {
-          if(response.request.status == 201) {
-            this.$store.commit('updateUser', {
+          if (response.request.status == 201) {
+            this.$store.commit("updateUser", {
               ...this.$store.state.user,
-              userName: this.userName,
-              firstName: this.firstName,
-              lastName: this.lastName,
-              email: this.email,
-              password: this.password,
-              token: response.data.token
-            })
+              userName: this.user.userName,
+              firstName: this.user.firstName,
+              lastName: this.user.lastName,
+              email: this.user.email,
+              password: this.user.password,
+              token: response.data.token,
+            });
           }
+        })
+        .catch((e) => {
+          this.setErrors(e.response.data.errors);
         });
+    },
+
+    setErrors(errors) {
+      this.errors = {
+        userName: [],
+        email: [],
+        firstName: [],
+        lastName: [],
+        password: [],
+      };
+
+      for (const field in errors) {
+        switch (field) {
+          case "login":
+            this.errors.userName = this.errors.userName.concat(errors[field]);
+            break;
+          case "email":
+            this.errors.email = this.errors.email.concat(errors[field]);
+            break;
+          case "first_name":
+            this.errors.firstName = this.errors.firstName.concat(errors[field]);
+            break;
+          case "last_name":
+            this.errors.lastName = this.errors.lastName.concat(errors[field]);
+          case "password":
+            this.errors.password = this.errors.password.concat(errors[field]);
+            break;
+        }
+      }
     },
   },
 };
