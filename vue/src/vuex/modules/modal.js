@@ -13,7 +13,6 @@ const modal = {
       state.open = true
     },
     updateComponentName(state, componet) {
-      console.log(componet)
       state.componentName = componet.name
     }
   }
