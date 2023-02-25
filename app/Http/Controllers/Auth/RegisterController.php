@@ -21,6 +21,7 @@ class RegisterController extends Controller
         $user = User::create($userData);
         $user->assignRole('contributor');
         $token = $user->createToken('app', ['user'])->plainTextToken;
+        Auth::guard('sanctum')->setUser($user);
 
         return new JsonResponse([
             'message' => 'Successful registration.',

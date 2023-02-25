@@ -26,11 +26,11 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [ //regex not working
-            'email' => 'email|max:255|required|unique:users,email',
-            'login' => 'string|required|max:255|regex:/^[a-zA-Z0-9 ]+$/|unique:users,login',
-            'first_name' => 'string|max:255|required',
-            'last_name' => 'string|max:255|required',
-            'password' => 'string|max:255|required|regex:/^[a-zA-Z0-9 ]+$/'
+            'login' => 'min:3|string|required|max:255|regex:/^[a-zA-Z0-9 ]+$/|unique:users,login',
+            'email' => 'min:3|email|max:255|required|unique:users,email',
+            'first_name' => 'min:2|string|max:255|required',
+            'last_name' => 'min:2|string|max:255|required',
+            'password' => 'min:3|string|max:255|required|regex:/^[a-zA-Z0-9 ]+$/'
         ];
     }
 }
