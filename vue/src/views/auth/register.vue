@@ -95,32 +95,17 @@
 
 <script>
 import axios from "axios";
+import authentication from "../../mixins/authentication.vue";
 
 export default {
   name: "register",
-  data() {
-    return {
-      user: {
-        userName: null,
-        firstName: null,
-        lastName: null,
-        email: null,
-        password: null,
-      },
-      errors: {
-        userName: [],
-        email: [],
-        firstName: [],
-        lastName: [],
-        password: [],
-      },
-    };
-  },
+  mixins: [authentication],
+
   methods: {
     register(e) {
       e.preventDefault();
 
-      const user = {
+      const mappedUser = {
         login: this.user.userName,
         first_name: this.user.firstName,
         last_name: this.user.firstName,
@@ -129,56 +114,17 @@ export default {
       };
 
       axios
-        .post("register", user)
+        .post("register", mappedUser)
         .then((response) => {
           if (response.request.status == 201) {
-            this.$store.commit("updateUser", {
-              ...this.$store.state.user,
-              userName: this.user.userName,
-              firstName: this.user.firstName,
-              lastName: this.user.lastName,
-              email: this.user.email,
-              password: this.user.password,
-              token: response.data.token,
-            });
-
-            axios.defaults.headers.common["Authorization"] = response.data.token;
-
-            this.$router.push({name: 'home'})
+            this.setUser(response.data.user, response.data.token);
+            this.redirect();
+            this.setTokenAsDefault(response.data.token);
           }
         })
         .catch((e) => {
-          this.setErrors(e.response.data.errors);
+          this.errors = this.setErrors(e.response.data.errors);
         });
-    },
-
-    setErrors(errors) {
-      this.errors = {
-        userName: [],
-        email: [],
-        firstName: [],
-        lastName: [],
-        password: [],
-      };
-
-      for (const field in errors) {
-        switch (field) {
-          case "login":
-            this.errors.userName = this.errors.userName.concat(errors[field]);
-            break;
-          case "email":
-            this.errors.email = this.errors.email.concat(errors[field]);
-            break;
-          case "first_name":
-            this.errors.firstName = this.errors.firstName.concat(errors[field]);
-            break;
-          case "last_name":
-            this.errors.lastName = this.errors.lastName.concat(errors[field]);
-          case "password":
-            this.errors.password = this.errors.password.concat(errors[field]);
-            break;
-        }
-      }
     },
   },
 };
