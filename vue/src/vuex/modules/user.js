@@ -1,12 +1,17 @@
 const user = {
   state: () => {
     return {
+      id: null,
       userName: null,
       firstName: null,
       lastName: null,
       email: null,
       avatar: null,
-      token: null
+      token: null,
+      timestamps: {
+        createdAt: null,
+        updatedAt: null,
+      }
     }
   },
   mutations: {

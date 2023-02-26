@@ -1,48 +1,25 @@
 <template>
   <div>
-
     <div class="hero"></div>
     <div class="profile-content container p-4">
-      <div
-        class="row gap-5 flex-lg-nowrap justify-content-center align-items-start"
-      >
+      <div class="row gap-5 flex-lg-nowrap justify-content-center align-items-start">
         <div
-          class="
-            profile-section
-            p-3
-            w-auto
-            bg-white
-            shadow-sm
-            rounded-3
-            d-flex
-            flex-column
-            gap-3
-          "
+          class="profile-section p-3 w-auto bg-white shadow-sm rounded-3 d-flex flex-column gap-3"
         >
           <div
-            class="
-              profile-avatar
-              bg-white
-              overflow-hidden
-              d-flex
-              justify-content-center
-              align-items-center
-              p-0
-              rounded-3
-            "
+            class="profile-avatar bg-white overflow-hidden d-flex justify-content-center align-items-center p-0 rounded-3"
           >
             <img src="/images/pexels-pixabay-220453.jpg" alt="avatar" />
           </div>
-          <div>
-            <h4 class="m-0">User Name</h4>
-            <p class="text-muted m-0">Short text</p>
+          <div style="width: 200px">
+            <h4 class="m-0 text-wrap">{{ user.firstName }} {{ user.lastName }} </h4>
+            <p class="text-muted m-0 text-break text-wrap">
+                {{ user.description }}
+            </p>
           </div>
           <router-link
             :to="{ name: 'user' }"
-            :class="[
-              $route.name == 'user' ? 'btn-primary' : 'bg-body-secondary',
-              'btn',
-            ]"
+            :class="[$route.name == 'user' ? 'btn-primary' : 'bg-body-secondary', 'btn']"
           >
             Profile
           </router-link>
@@ -65,9 +42,8 @@
             Replies
           </router-link>
         </div>
-
         <div class="profile-section col-lg-8">
-          <router-view v-slot="{ Component }">
+          <router-view v-slot="{ Component }" :user="this.user">
             <transition name="route" mode="out-in">
               <component :is="Component" />
             </transition>
@@ -79,8 +55,47 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: "user",
+  mounted() {
+    this.setUser(this.$route.params.id)
+  },
+  data() {
+    return {
+      user: {}
+    }
+  },
+  methods: {
+    setUser(id) {
+      const authUser = this.$store.state.user;
+
+      if (id == authUser.id) {
+        this.user = authUser;
+      } else {
+        this.fetchUser(id)
+      }
+    },
+    fetchUser(id) {
+      axios
+        .get(`users/${id}`)
+        .then(response => {
+          if(response.request.status == 200) {
+            this.user = response.data.user
+          }
+
+          console.log( this.user)
+        })
+    }
+  },
+  watch: {
+    "$route.params.id"() {
+      if (this.$route.name == "user") {
+        this.setUser(this.$route.params.id)
+      }
+    },
+  },
 };
 </script>
 
@@ -103,4 +118,3 @@ export default {
       min-width: 100%
       min-height: 100%
 </style>
-

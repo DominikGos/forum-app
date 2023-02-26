@@ -1,5 +1,7 @@
 <template>
-  <nav class="app-navbar navbar navbar-expand-lg p-2 position-absolute top-0 left-0 w-100">
+  <nav
+    class="app-navbar navbar navbar-expand-lg p-2 position-absolute top-0 left-0 w-100"
+  >
     <div class="container container-fluid p-3">
       <router-link class="navbar-brand" :to="{ name: 'home' }">
         <i class="fa-brands fa-laravel fs-1"></i>
@@ -17,33 +19,52 @@
       </button>
       <div class="collapse navbar-collapse" id="navbar">
         <ul
-          class="
-            navbar-nav
-            me-auto
-            mb-2 mb-lg-0
-            w-100
-            justify-content-end
-            align-items-center
-            gap-2
-          "
+          class="navbar-nav me-auto mb-2 mb-lg-0 w-100 justify-content-end align-items-center gap-2"
         >
           <li class="nav-item">
-            <router-link :class="[$route.name == 'home' ? 'text-primary' : '', 'nav-link active']" :to="{ name: 'home' }"> Home </router-link>
+            <router-link
+              :class="[$route.name == 'home' ? 'text-primary' : '', 'nav-link active']"
+              :to="{ name: 'home' }"
+            >
+              Home
+            </router-link>
           </li>
           <li class="nav-item">
-            <router-link :class="[$route.name == 'forum' ? 'text-primary' : '', 'nav-link active']" :to="{ name: 'forum'}"> Forum </router-link>
+            <router-link
+              :class="[$route.name == 'forum' ? 'text-primary' : '', 'nav-link active']"
+              :to="{ name: 'forum' }"
+            >
+              Forum
+            </router-link>
           </li>
           <li class="nav-item">
-            <router-link :class="[$route.name == 'threads' ? 'text-primary' : '', 'nav-link active']" :to="{ name: 'threads'}"> Threads </router-link>
+            <router-link
+              :class="[$route.name == 'threads' ? 'text-primary' : '', 'nav-link active']"
+              :to="{ name: 'threads' }"
+            >
+              Threads
+            </router-link>
           </li>
           <li class="nav-item">
-            <router-link :class="[$route.name == 'thread' ? 'text-primary' : '', 'nav-link active']" :to="{ name: 'thread', params: {id: 1} }"> Thread </router-link>
+            <router-link
+              :class="[$route.name == 'thread' ? 'text-primary' : '', 'nav-link active']"
+              :to="{ name: 'thread', params: { id: 1 } }"
+            >
+              Thread
+            </router-link>
           </li>
-          <li class="nav-item">
-            <router-link :class="[$route.name == 'user' ? 'text-primary' : '', 'nav-link active']" :to="{ name: 'user', params: {id: 1} }"> User </router-link>
+          <li v-if="$store.state.user.id" class="nav-item">
+            <router-link
+              :class="[$route.name == 'user' ?? 'userReplies' ?? 'userThreads'  ? 'text-primary' : '', 'nav-link active']"
+              :to="{ name: 'user', params: { id: this.$store.state.user.id } }"
+            >
+              Profile
+            </router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="btn btn-primary" :to="{name: 'login'}">Login</router-link>
+          <li v-if="! $store.state.user.id" class="nav-item">
+            <router-link class="btn btn-primary" :to="{ name: 'login' }"
+              >Login</router-link
+            >
           </li>
         </ul>
       </div>

@@ -108,7 +108,7 @@ export default {
       const mappedUser = {
         login: this.user.userName,
         first_name: this.user.firstName,
-        last_name: this.user.firstName,
+        last_name: this.user.lastName,
         email: this.user.email,
         password: this.user.password,
       };
