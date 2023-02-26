@@ -3,9 +3,7 @@
     <div class="d-flex flex-column align-items-center gap-2">
       <h3>Create account.</h3>
       <router-link class="text-decoration-none" :to="{ name: 'login' }">
-        <p class="text-muted">
-          Already have an account? <b class="">Sing in here</b>
-        </p>
+        <p class="text-muted">Already have an account? <b class="">Sing in here</b></p>
       </router-link>
     </div>
     <div class="mt-3">
@@ -13,18 +11,11 @@
       <input
         v-model="user.userName"
         type="text"
-        :class="[
-          errors.userName.length > 0 ? 'is-invalid' : '',
-          'form-control',
-        ]"
+        :class="[errors.userName.length > 0 ? 'is-invalid' : '', 'form-control']"
         id="userName"
         required
       />
-      <div
-        v-if="errors.userName.length > 0"
-        id="userName"
-        class="invalid-feedback"
-      >
+      <div v-if="errors.userName.length > 0" id="userName" class="invalid-feedback">
         <p v-for="error in errors.userName" key="error" class="m-0">
           {{ error }}
         </p>
@@ -55,18 +46,11 @@
         <input
           v-model="user.firstName"
           type="text"
-          :class="[
-            errors.firstName.length > 0 ? 'is-invalid' : '',
-            'form-control',
-          ]"
+          :class="[errors.firstName.length > 0 ? 'is-invalid' : '', 'form-control']"
           id="firstName"
           required
         />
-        <div
-          v-if="errors.firstName.length > 0"
-          id="firstName"
-          class="invalid-feedback"
-        >
+        <div v-if="errors.firstName.length > 0" id="firstName" class="invalid-feedback">
           <p v-for="error in errors.firstName" key="error" class="m-0">
             {{ error }}
           </p>
@@ -77,18 +61,11 @@
         <input
           v-model="user.lastName"
           type="text"
-          :class="[
-            errors.lastName.length > 0 ? 'is-invalid' : '',
-            'form-control',
-          ]"
+          :class="[errors.lastName.length > 0 ? 'is-invalid' : '', 'form-control']"
           id="lastName"
           required
         />
-        <div
-          v-if="errors.lastName.length > 0"
-          id="lastName"
-          class="invalid-feedback"
-        >
+        <div v-if="errors.lastName.length > 0" id="lastName" class="invalid-feedback">
           <p v-for="error in errors.lastName" key="error" class="m-0">
             {{ error }}
           </p>
@@ -100,18 +77,11 @@
       <input
         v-model="user.password"
         type="password"
-        :class="[
-          errors.password.length > 0 ? 'is-invalid' : '',
-          'form-control',
-        ]"
+        :class="[errors.password.length > 0 ? 'is-invalid' : '', 'form-control']"
         id="password"
         required
       />
-      <div
-        v-if="errors.password.length > 0"
-        id="lastName"
-        class="invalid-feedback"
-      >
+      <div v-if="errors.password.length > 0" id="lastName" class="invalid-feedback">
         <p v-for="error in errors.password" key="error" class="m-0">
           {{ error }}
         </p>
@@ -171,6 +141,10 @@ export default {
               password: this.user.password,
               token: response.data.token,
             });
+
+            axios.defaults.headers.common["Authorization"] = response.data.token;
+
+            this.$router.push({name: 'home'})
           }
         })
         .catch((e) => {

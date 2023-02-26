@@ -11,6 +11,7 @@ import user from '../views/user/user.vue'
 import userData from '../views/user/user-data.vue'
 import userReplies from '../views/user/user-replies.vue'
 import userThreads from '../views/user/user-threads.vue'
+import { store } from '../vuex'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -70,7 +71,10 @@ const router = createRouter({
         {
           name: 'login',
           path: '',
-          component: login
+          component: login,
+          meta: {
+            requiresNoAuth: true
+          }
         }
       ]
     },
@@ -81,11 +85,23 @@ const router = createRouter({
         {
           name: 'register',
           path: '',
-          component: register
+          component: register,
+          meta: {
+            requiresNoAuth: true
+          }
         }
       ]
     },
   ]
+})
+
+router.beforeEach((to, from) => {
+  if (to.meta.requiresNoAuth && store.state.user.token) {
+    return {
+      name: 'home',
+      query: { redirect: to.fullPath },
+    }
+  }
 })
 
 export default router
