@@ -1,47 +1,43 @@
 <template>
-  <div class="d-flex flex-column border rounded-3">
-    <div
-      class="
-        d-flex
-        flex-wrap
-        border-bottom
-        gap-2
-        align-items-center
-        justify-content-between
-        p-3
-        bg-body-secondary
-      "
-    >
+  <app-table :items="users" :smallPaddingInItem="true">
+    <template v-slot:header>
       <h6 class="m-0">Most helpful</h6>
       <p class="text-muted m-0">Last 30 days.</p>
-    </div>
-    <div class="d-flex flex-column">
-      <div
-        class="
-          d-flex
-          justify-content-between
-          align-items-center
-          border-bottom
-          w-100
-          ps-2
-          pe-2
-        "
-      >
-        <div class="d-flex align-items-center">
-          <avatar style="transform: scale(0.5)" />
-          <p class="text-muted m-0">User Name</p>
-        </div>
+    </template>
+    <template #item="item">
+      <div class="d-flex align-items-center">
+        <avatar style="transform: scale(0.5)" />
+        <p class="text-muted m-0">{{ item.firstName }} {{ item.lastName }}</p>
       </div>
-    </div>
-  </div>
+    </template>
+  </app-table>
 </template>
 
 <script>
-import avatar from './avatar.vue'
+import appTable from "./table/app-table.vue";
+import avatar from "./avatar.vue";
+
 export default {
-  components: {
-    avatar
-  },
   name: "mostHelpful",
+  components: {
+    avatar,
+    appTable,
+  },
+  data() {
+    return {
+      users: [
+        {
+          firstName: "User",
+          lastName: "Name",
+          avatar: null,
+        },
+        {
+          firstName: "User",
+          lastName: "Name",
+          avatar: null,
+        },
+      ],
+    };
+  },
 };
 </script>

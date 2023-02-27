@@ -1,38 +1,15 @@
 <template>
   <div
-    class="
-      container
-      bg-white
-      shadow-sm
-      gap-3
-      d-flex
-      flex-row
-      justify-content-center
-      align-items-center
-      gap-4
-      p-4
-    "
+    class="container bg-white shadow-sm gap-3 d-flex flex-row justify-content-center align-items-center gap-4 p-4"
   >
     <div class="d-flex justify-content-center">
-      <img src="../../../public/images/conversation.png" alt="question" />
+      <slot name="icon"></slot>
     </div>
     <div class="col">
-      <h3>{{this.header}}</h3>
-      <p
-        class="text-muted m-0"
-        @click="openModal(modalComponentName)"
-      >
-        {{ this.paragraph }}
-      </p>
-
+      <slot name="content"></slot>
     </div>
     <div class="d-none d-lg-flex">
-      <button
-        class="btn btn-primary"
-        @click="openModal(modalComponentName)"
-      >
-        {{ this.buttonText }}
-      </button>
+      <slot name="button"></slot>
     </div>
   </div>
 </template>
@@ -41,17 +18,6 @@
 export default {
   name: "banner",
   props: {
-    imagePath: String,
-    header: String,
-    paragraph: String,
-    buttonText: String,
-    modalComponentName: String
-  },
-  methods: {
-    openModal(componentName) {
-      this.$store.commit('openModal')
-      this.$store.commit('updateComponentName', {name: componentName})
-    }
   },
 };
 </script>

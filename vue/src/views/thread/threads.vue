@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <hero />
     <div class="mt-5 container p-3">
       <div class="row mb-4">
@@ -14,13 +13,25 @@
           <tags />
         </div>
         <div class="col-lg-8 col-xl-7 d-flex flex-column gap-5">
-          <banner
-            :imagePath="'../../../public/images/conversation.png'"
-            :header="'You can not find an answer?'"
-            :paragraph="'Ask question!'"
-            :buttonText="'Create thread'"
-            :modalComponentName="'createThreadForm'"
-          />
+          <banner>
+            <template v-slot:icon>
+              <img src="../../../public/images/conversation.png" alt="question" />
+            </template>
+            <template v-slot:content>
+              <h3>You can not find an answer?</h3>
+              <p class="text-muted m-0" @click="openCreateThreadForm(modalComponentName)">
+                Ask question!
+              </p>
+            </template>
+            <template v-slot:button>
+              <button
+                class="btn btn-primary"
+                @click="openCreateThreadForm(modalComponentName)"
+              >
+                Create thread
+              </button>
+            </template>
+          </banner>
           <threads-component />
           <nav aria-label="...">
             <ul class="pagination">
@@ -51,8 +62,8 @@ import hero from "../../components/hero.vue";
 import avatar from "../../components/avatar.vue";
 import tags from "../../components/tags.vue";
 import mostHelpful from "../../components/most-helpful.vue";
-import threadsComponent from "../../components/thread/threads.vue"
-import Banner from '../../components/banner.vue';
+import threadsComponent from "../../components/thread/threads.vue";
+import Banner from "../../components/banner.vue";
 
 export default {
   name: "threads",
@@ -62,7 +73,7 @@ export default {
     tags,
     mostHelpful,
     threadsComponent,
-    Banner
+    Banner,
   },
 };
 </script>
