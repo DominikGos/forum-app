@@ -11,7 +11,7 @@
           >
             <img src="/images/pexels-pixabay-220453.jpg" alt="avatar" />
           </div>
-          <div style="width: 200px">
+          <div style="width: 200px" v-if="user">
             <h4 class="m-0 text-wrap">{{ user.firstName }} {{ user.lastName }} </h4>
             <p class="text-muted m-0 text-break text-wrap">
                 {{ user.description }}
@@ -43,7 +43,7 @@
           </router-link>
         </div>
         <div class="profile-section col-lg-8">
-          <router-view v-slot="{ Component }" :user="this.user">
+          <router-view v-slot="{ Component }" :propUser="this.user">
             <transition name="route" mode="out-in">
               <component :is="Component" />
             </transition>
@@ -55,39 +55,15 @@
 </template>
 
 <script>
-import axios from 'axios';
+import userMixin from '../../mixins/user.vue';
 
 export default {
   name: "user",
+  mixins: [
+    userMixin
+  ],
   mounted() {
     this.setUser(this.$route.params.id)
-  },
-  data() {
-    return {
-      user: {}
-    }
-  },
-  methods: {
-    setUser(id) {
-      const authUser = this.$store.state.user;
-
-      if (id == authUser.id) {
-        this.user = authUser;
-      } else {
-        this.fetchUser(id)
-      }
-    },
-    fetchUser(id) {
-      axios
-        .get(`users/${id}`)
-        .then(response => {
-          if(response.request.status == 200) {
-            this.user = response.data.user
-          }
-
-          console.log( this.user)
-        })
-    }
   },
   watch: {
     "$route.params.id"() {

@@ -27,5 +27,8 @@ export default {
     items: Array,
     smallPaddingInItem: Boolean
   },
+  mounted() {
+   // console.log(this.items)
+  },
 };
 </script>

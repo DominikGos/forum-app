@@ -4,8 +4,8 @@
       <div
         class="d-flex flex-grow-1 flex-column align-items-center gap-3 p-4 rounded-3 border"
       >
-        <img src="/images/user.png" alt="User role" width="60" />
-        <h5>User Role</h5>
+        <img src="/images/user.png" alt="user role" width="60" />
+        <h5>propUser Role</h5>
         <p class="btn btn-primary">Master</p>
       </div>
       <div
@@ -23,13 +23,13 @@
         <p class="btn btn-primary">144</p>
       </div>
     </div>
-    <div v-if="user" class="d-flex flex-column gap-3">
+    <div v-if="propUser" class="d-flex flex-column gap-3">
       <div class="d-flex flex-row">
         <div class="col-3">
           <p class="fw-bolder">User name:</p>
         </div>
         <div class="col-7">
-          <p class="text-muted">{{ user.login }}</p>
+          <p class="text-muted">{{ propUser.login }}</p>
         </div>
       </div>
       <div class="d-flex flex-row">
@@ -37,15 +37,15 @@
           <p class="fw-bolder">Name:</p>
         </div>
         <div class="col-7">
-          <p class="text-muted">{{ user.firstName }} {{ user.lastName }}</p>
+          <p class="text-muted">{{ propUser.firstName }} {{ propUser.lastName }}</p>
         </div>
       </div>
       <div class="d-flex flex-row">
         <div class="col-3">
           <p class="fw-bolder">Joined at:</p>
         </div>
-        <div class="col-7" v-if="user.timestamps">
-          <p class="text-muted">{{ user.timestamps.createdAt }}</p>
+        <div class="col-7" v-if="propUser.timestamps">
+          <p class="text-muted">{{ propUser.timestamps.createdAt }}</p>
         </div>
       </div>
     </div>
@@ -54,9 +54,9 @@
 
 <script>
 export default {
-  name: "userData",
+  name: "propUserData",
   props: {
-    user: Object,
+    propUser: Object,
   },
 };
 </script>

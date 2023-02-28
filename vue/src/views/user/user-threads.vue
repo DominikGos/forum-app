@@ -8,7 +8,7 @@
         <option value="2">Newest</option>
       </select>
     </div>
-    <threads />
+    <threads :threads="threads" />
     <nav aria-label="...">
       <ul class="pagination">
         <li class="page-item disabled">
@@ -27,8 +27,44 @@
 
 <script>
 import threads from "../../components/thread/threads.vue";
+import userMixin from '../../mixins/user.vue';
+import axios from 'axios';
+
 export default {
-  components: { threads },
   name: "userThreads",
+  mixins: [
+    userMixin,
+  ],
+  props: {
+    propUser: Object
+  },
+  components: { threads },
+  data() {
+    return {
+      threads: []
+    }
+  },
+  async mounted() {
+    console.log('mounte?');
+    this.user = this.propUser
+
+    if(this.user.id == null) {
+      await this.setUser(this.$route.params.id)
+    }
+
+    await this.setThreads(this.user.id)
+    console.log(this.threads)
+  },
+  methods: {
+    async setThreads(id) {
+      this.threads = await this.fetchThreads(id)
+    },
+    async fetchThreads(id) {
+      const response = await axios.get(`users/${id}/threads`)
+
+      return response.data.threads
+    }
+  },
+
 };
 </script>
