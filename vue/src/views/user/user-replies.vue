@@ -8,9 +8,14 @@
         <option value="2">Newest</option>
       </select>
     </div>
-    <comment />
-    <comment />
-    <comment />
+    <app-table :items="replies">
+      <template v-slot:header>
+        <p class="m-0">Number of replies: {{ replies.length }}</p>
+      </template>
+      <template #item="item">
+        <comment :item="item"/>
+      </template>
+    </app-table>
     <nav aria-label="...">
       <ul class="pagination">
         <li class="page-item disabled">
@@ -29,8 +34,43 @@
 
 <script>
 import comment from "../../components/comment/comment.vue";
+import userMixin from "../../mixins/user.vue";
+import axios from "axios";
+import appTable from '../../components/table/app-table.vue';
+
 export default {
-  components: { comment },
   name: "userReplies",
+  mixins: [userMixin],
+  props: {
+    propUser: Object,
+  },
+  components: {
+    comment,
+    appTable
+  },
+  data() {
+    return {
+      replies: [],
+    };
+  },
+  async mounted() {
+    this.user = this.propUser;
+
+    if (this.user.id == null) {
+      await this.setUser(this.$route.params.id);
+    }
+
+    await this.setReplies(this.user.id);
+  },
+  methods: {
+    async setReplies(id) {
+      this.replies = await this.fetchReplies(id);
+    },
+    async fetchReplies(id) {
+      const response = await axios.get(`users/${id}/replies`);
+
+      return response.data.replies;
+    },
+  },
 };
 </script>

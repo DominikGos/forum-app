@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Resources\ReplyResource;
 use App\Http\Resources\ThreadResource;
 use App\Http\Resources\UserResource;
 use App\Models\Forum;
@@ -57,7 +58,7 @@ class UserController extends Controller
             ->get();
 
         return new JsonResponse([
-            'replies' => ThreadResource::collection($replies)
+            'replies' => ReplyResource::collection($replies)
         ]);
     }
 

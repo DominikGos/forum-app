@@ -27,44 +27,39 @@
 
 <script>
 import threads from "../../components/thread/threads.vue";
-import userMixin from '../../mixins/user.vue';
-import axios from 'axios';
+import userMixin from "../../mixins/user.vue";
+import axios from "axios";
 
 export default {
   name: "userThreads",
-  mixins: [
-    userMixin,
-  ],
+  mixins: [userMixin],
   props: {
-    propUser: Object
+    propUser: Object,
   },
   components: { threads },
   data() {
     return {
-      threads: []
-    }
+      threads: [],
+    };
   },
   async mounted() {
-    console.log('mounte?');
-    this.user = this.propUser
+    this.user = this.propUser;
 
-    if(this.user.id == null) {
-      await this.setUser(this.$route.params.id)
+    if (this.user.id == null) {
+      await this.setUser(this.$route.params.id);
     }
 
-    await this.setThreads(this.user.id)
-    console.log(this.threads)
+    await this.setThreads(this.user.id);
   },
   methods: {
     async setThreads(id) {
-      this.threads = await this.fetchThreads(id)
+      this.threads = await this.fetchThreads(id);
     },
     async fetchThreads(id) {
-      const response = await axios.get(`users/${id}/threads`)
+      const response = await axios.get(`users/${id}/threads`);
 
-      return response.data.threads
-    }
+      return response.data.threads;
+    },
   },
-
 };
 </script>
