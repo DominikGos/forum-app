@@ -20,6 +20,7 @@ class ThreadResource extends JsonResource
             'description' => $this->description,
             'likes' => $this->likes,
             'publishedAt' => $this->published_at,
+            'isClosed' => $this->is_closed,
             'timestamps' => new TimestampsResource($this),
             'user' => new UserResource($this->whenLoaded('user')),
             'forum' => new ForumResource($this->whenLoaded('forum')),
