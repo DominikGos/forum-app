@@ -27,19 +27,23 @@ class ThreadController extends Controller
         $relations = ['threads.user'];
 
         if($user?->can('view all threads')) {
-            $forum = Forum::with($relations)->findOrFail($forumId);
-            $threads = $forum->threads;
+            $relations = implode(', ', $relations);
+
+            $forum = Forum::with([$relations, 'threads' => function($query) {
+                $query->withCount('replies');
+            }])->findOrFail($forumId);
+
         } else {
             $relations = implode(', ', $relations);
 
             $forum = Forum::with([$relations, 'threads' => function($query) use ($user) {
-                $query->published($user); 
+                $query->published($user)->withCount('replies');
             }])
                 ->whereNotNull('published_at')
                 ->findOrFail($forumId);
-
-            $threads = $forum->threads;
         }
+
+        $threads = $forum->threads;
 
         return new JsonResponse([
             'threads' => ThreadResource::collection($threads)

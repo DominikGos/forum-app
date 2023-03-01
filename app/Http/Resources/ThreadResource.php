@@ -23,7 +23,8 @@ class ThreadResource extends JsonResource
             'timestamps' => new TimestampsResource($this),
             'user' => new UserResource($this->whenLoaded('user')),
             'forum' => new ForumResource($this->whenLoaded('forum')),
-            'tags' => TagResource::collection($this->whenLoaded('tags'))
+            'tags' => TagResource::collection($this->whenLoaded('tags')),
+            'replyCount' => $this->whenCounted('replies'),
         ];
     }
 }

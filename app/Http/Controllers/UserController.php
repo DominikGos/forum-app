@@ -7,12 +7,9 @@ use App\Http\Resources\ReplyResource;
 use App\Http\Resources\ThreadResource;
 use App\Http\Resources\UserResource;
 use App\Models\Forum;
-use App\Models\Thread;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -21,9 +18,11 @@ class UserController extends Controller
     private const DISK = 'public';
     private const USER_FILES_DIRECTORY = 'user';
 
-    public function show(int $id): JsonResponse {
-        $user = User::findOrFail($id);
-
+    public function show(int $id): JsonResponse
+    {
+        $user = User::withCount(['createdForums', 'threads', 'replies'])->findOrFail($id);
+        $user->load('roles');
+        
         return new JsonResponse([
             'user' => new UserResource($user)
         ]);
@@ -31,15 +30,22 @@ class UserController extends Controller
 
     public function threads(int $userId): JsonResponse
     {
-        $user = User::findOrFail($userId);
+        $user = null;
         $authUser = Auth::guard('sanctum')->user();
 
-        $threads = $user->threads()
-            ->whereHas('forum', function(Builder $query) use ($authUser) {
-                $query->published($authUser);
-            })
-            ->published($authUser)
-            ->get();
+        if ($authUser?->can('view all threads')) {
+            $user = User::with(['threads.user', 'threads' => function ($query) {
+                $query->withCount('replies');
+            }])
+                ->findOrFail($userId);
+        } else {
+            $user = User::with(['threads.user', 'threads' => function ($query) use ($authUser) {
+                $query->published($authUser)->withCount('replies');
+            }])
+                ->findOrFail($userId);
+        }
+
+        $threads = $user?->threads;
 
         return new JsonResponse([
             'threads' => ThreadResource::collection($threads)
@@ -48,21 +54,28 @@ class UserController extends Controller
 
     public function replies(int $userId): JsonResponse
     {
-        $user = User::findOrFail($userId);
+        $user = null;
         $authUser = Auth::guard('sanctum')->user();
 
-        $replies = $user->replies()
-            ->whereHas('thread', function(Builder $query) use ($authUser) {
-                $query->published($authUser);
-            })
-            ->get();
+        if ($authUser?->can('view all threads')) {
+            $user = User::with(['replies', 'replies.thread'])->findOrFail($userId);
+        } else {
+            $user = User::with(['replies.thread', 'replies' => function($query) use ($authUser) {
+                $query->whereHas('thread', function (Builder $query) use ($authUser) {
+                    $query->published($authUser);
+                });
+            }])->findOrFail($userId);
+        }
+
+        $replies = $user?->replies;
 
         return new JsonResponse([
             'replies' => ReplyResource::collection($replies)
         ]);
     }
 
-    public function index(): JsonResponse {
+    public function index(): JsonResponse
+    {
         $users = User::all();
 
         return new JsonResponse([
@@ -78,12 +91,12 @@ class UserController extends Controller
 
         $user->update($request->validated());
 
-        if($request->file('avatar')) {
+        if ($request->file('avatar')) {
             $avatarPath = $request->file('avatar')->store(self::USER_FILES_DIRECTORY, self::DISK);
             $user->avatar_path = $avatarPath;
         }
 
-        if($request->deleteAvatar) {
+        if ($request->deleteAvatar) {
             Storage::disk('public')->delete($user->avatar_path);
         }
 
@@ -114,7 +127,7 @@ class UserController extends Controller
 
         $this->authorize('joinForum', $forum);
 
-        if(Auth::user()->forums->contains($forum)) {
+        if (Auth::user()->forums->contains($forum)) {
             return new JsonResponse([
                 'message' => 'You already belong to the forum.'
             ]);
@@ -133,7 +146,7 @@ class UserController extends Controller
 
         $this->authorize('leaveForum', $forum);
 
-        if( ! Auth::user()->forums->contains($forum)) {
+        if (!Auth::user()->forums->contains($forum)) {
             return new JsonResponse([
                 'message' => "You don't belong to the forum."
             ]);

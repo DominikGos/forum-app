@@ -21,6 +21,7 @@ class ReplyResource extends JsonResource
             'isAccepted' => $this->is_accepted,
             'timestamps' => new TimestampsResource($this),
             'user' => new UserResource($this->whenLoaded('user')),
+            'thread' => new ThreadResource($this->whenLoaded('thread')),
         ];
     }
 }
