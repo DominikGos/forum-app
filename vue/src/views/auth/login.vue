@@ -51,7 +51,7 @@ export default {
     login(e) {
       e.preventDefault();
 
-      const mappedUser = {
+       const mappedUser = {
         email: this.user.email,
         password: this.user.password,
       };

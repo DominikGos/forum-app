@@ -5,7 +5,7 @@
         class="d-flex flex-grow-1 flex-column align-items-center gap-3 p-4 rounded-3 border"
       >
         <img src="/images/user.png" alt="user role" width="60" />
-        <h5>propUser Role</h5>
+        <h5>Role</h5>
         <p class="btn btn-primary">Master</p>
       </div>
       <div

@@ -6,14 +6,14 @@ export default {
   data() {
     return {
       user: {
-        userName: null,
+        login: null,
         firstName: null,
         lastName: null,
         email: null,
         password: null,
       },
       errors: {
-        userName: [],
+        login: [],
         email: [],
         firstName: [],
         lastName: [],
@@ -32,18 +32,18 @@ export default {
 
     setUser(user, token) {
       this.$store.commit("updateUser", {
-        ...this.$store.state.user,
         ...user,
         ...{
-          userName: user.login,
           token: token,
         },
       });
+
+      console.log(this.$store.state.user)
     },
 
     setErrors(errors) {
       let errorStructure = {
-        userName: [],
+        login: [],
         email: [],
         firstName: [],
         lastName: [],
@@ -53,7 +53,7 @@ export default {
       for (const field in errors) {
         switch (field) {
           case "login":
-            errorStructure.userName = errorStructure.userName.concat(errors[field]);
+            errorStructure.login = errorStructure.login.concat(errors[field]);
             break;
           case "email":
             errorStructure.email = errorStructure.email.concat(errors[field]);

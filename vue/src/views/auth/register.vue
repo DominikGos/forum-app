@@ -7,16 +7,16 @@
       </router-link>
     </div>
     <div class="mt-3">
-      <label for="userName" class="form-label">User Name</label>
+      <label for="login" class="form-label">User Name</label>
       <input
-        v-model="user.userName"
+        v-model="user.login"
         type="text"
-        :class="[errors.userName.length > 0 ? 'is-invalid' : '', 'form-control']"
-        id="userName"
+        :class="[errors.login.length > 0 ? 'is-invalid' : '', 'form-control']"
+        id="login"
         required
       />
-      <div v-if="errors.userName.length > 0" id="userName" class="invalid-feedback">
-        <p v-for="error in errors.userName" key="error" class="m-0">
+      <div v-if="errors.login.length > 0" id="login" class="invalid-feedback">
+        <p v-for="error in errors.login" key="error" class="m-0">
           {{ error }}
         </p>
       </div>
@@ -106,7 +106,7 @@ export default {
       e.preventDefault();
 
       const mappedUser = {
-        login: this.user.userName,
+        login: this.user.login,
         first_name: this.user.firstName,
         last_name: this.user.lastName,
         email: this.user.email,
