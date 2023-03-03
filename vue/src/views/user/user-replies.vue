@@ -8,7 +8,7 @@
         <option value="2">Newest</option>
       </select>
     </div>
-    <app-table :items="replies">
+    <app-table v-if="replies.length > 0" :items="replies">
       <template v-slot:header>
         <p class="m-0">Number of replies: {{ replies.length }}</p>
       </template>
@@ -16,7 +16,10 @@
         <comment :item="item"/>
       </template>
     </app-table>
-    <nav aria-label="...">
+    <p v-else class="text-muted">
+      User has no replies.
+    </p>
+    <nav aria-label="..." v-if="replies.length > 0">
       <ul class="pagination">
         <li class="page-item disabled">
           <span class="page-link">Previous</span>

@@ -9,12 +9,13 @@
           <div
             class="profile-avatar bg-white overflow-hidden d-flex justify-content-center align-items-center p-0 rounded-3"
           >
-            <img src="/images/pexels-pixabay-220453.jpg" alt="avatar" />
+            <img v-if="user.avatarPath" :src="user.avatarPath" alt="avatar"/>
+            <img v-else src="/public/images/user.png" alt="avatar"/>
           </div>
           <div style="width: 200px" v-if="user">
-            <h4 class="m-0 text-wrap">{{ user.firstName }} {{ user.lastName }} </h4>
+            <h4 class="m-0 text-wrap">{{ user.firstName }} {{ user.lastName }}</h4>
             <p class="text-muted m-0 text-break text-wrap">
-                {{ user.description }}
+              {{ user.description }}
             </p>
           </div>
           <router-link
@@ -55,20 +56,18 @@
 </template>
 
 <script>
-import userMixin from '../../mixins/user.vue';
+import userMixin from "../../mixins/user.vue";
 
 export default {
   name: "user",
-  mixins: [
-    userMixin
-  ],
+  mixins: [userMixin],
   mounted() {
-    this.setUser(this.$route.params.id)
+    this.setUser(this.$route.params.id);
   },
   watch: {
     "$route.params.id"() {
       if (this.$route.name == "user") {
-        this.setUser(this.$route.params.id)
+        this.setUser(this.$route.params.id);
       }
     },
   },

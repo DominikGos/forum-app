@@ -22,7 +22,7 @@ class UserController extends Controller
     {
         $user = User::withCount(['createdForums', 'threads', 'replies'])->findOrFail($id);
         $user->load('roles');
-        
+
         return new JsonResponse([
             'user' => new UserResource($user)
         ]);
@@ -58,9 +58,9 @@ class UserController extends Controller
         $authUser = Auth::guard('sanctum')->user();
 
         if ($authUser?->can('view all threads')) {
-            $user = User::with(['replies', 'replies.thread'])->findOrFail($userId);
+            $user = User::with(['replies', 'replies.thread', 'replies.user'])->findOrFail($userId);
         } else {
-            $user = User::with(['replies.thread', 'replies' => function($query) use ($authUser) {
+            $user = User::with(['replies.thread', 'replies.user', 'replies' => function($query) use ($authUser) {
                 $query->whereHas('thread', function (Builder $query) use ($authUser) {
                     $query->published($authUser);
                 });

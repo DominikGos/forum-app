@@ -11,7 +11,8 @@
         <div
           class="avatar rounded-circle overflow-hidden d-flex justify-content-center align-items-center"
         >
-          <img src="/public/images/user.png" />
+          <img v-if="item.user.avatarPath" :src="item.user.avatarPath" alt="avatar"/>
+          <img v-else src="/public/images/user.png" alt="avatar"/>
         </div>
         <div>
           <h5>{{ item.title }}</h5>
@@ -19,8 +20,8 @@
         </div>
       </div>
       <div class="d-none d-lg-flex col-lg-5 gap-3 justify-content-end text-muted">
-        <div><i class="fa-regular fa-heart"></i> 23</div>
-        <div><i class="fa-regular fa-comment"></i> 54</div>
+        <div><i class="fa-regular fa-heart"></i> {{ item.likes }} </div>
+        <div><i class="fa-regular fa-comment"></i> {{ item.replyCount }} </div>
       </div>
     </template>
   </app-table>

@@ -15,7 +15,7 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         $avatarPath = null;
-        
+
         if($this->avatar_path) {
             $avatarPath = asset('storage/' . $this->avatar_path);
         }
@@ -33,7 +33,7 @@ class UserResource extends JsonResource
             'timestamps' => new TimestampsResource($this),
             'createdForumCount' => $this->whenCounted('createdForums'),
             'threadCount' => $this->whenCounted('threads'),
-            'replieCount' => $this->whenCounted('replies'),
+            'replyCount' => $this->whenCounted('replies'),
         ];
     }
 }

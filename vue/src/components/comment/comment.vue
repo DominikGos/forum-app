@@ -1,9 +1,12 @@
 <template>
   <div
-    :class="[item.isAccepted ? 'bg-success bg-opacity-10 p-4' : '', 'd-flex gap-2 mt-3 w-100']"
+    :class="[
+      item.isAccepted ? 'bg-success bg-opacity-10 p-4' : '',
+      'd-flex gap-2 mt-3 w-100',
+    ]"
   >
     <div class="d-flex align-items-start gap-2 w-100">
-      <avatar style="transform: scale(0.75)" />
+      <avatar :photo="item.user.avatarPath" style="transform: scale(0.75)" />
       <div :class="[item.isAccepted ? '' : 'border-bottom', ' pb-3 w-100']">
         <div class="d-flex justify-content-between">
           <h6 class="m-0">User Name</h6>
@@ -19,17 +22,12 @@
         </p>
         <div
           v-if="!item.isAccepted"
-          class="d-flex gap-2 justify-content-between align-items-center text-muted"
+          class="d-flex gap-2 justify-content-end align-items-center text-muted"
         >
-          <button class="btn btn-primary">Reply</button>
           <div class="d-flex gap-2 justify-content-between">
             <div>
               <i class="fa-regular fa-heart"></i>
               {{ item.likes }}
-            </div>
-            <div>
-              <i class="fa-regular fa-comment"></i>
-              54
             </div>
           </div>
         </div>
