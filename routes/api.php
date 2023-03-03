@@ -2,14 +2,12 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\ForumController;
+use App\Http\Controllers\Forum\ForumUserController;
+use App\Http\Controllers\Forum\ForumController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\UserController;
-use App\Models\Forum;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,9 +31,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){ // middleware:guard
     Route::group(['as' => 'users', 'prefix' => '/users'], function() {
         Route::put('/{id}', [UserController::class, 'update'])->name('.update');
 
-        Route::post('/forum/{id}/join', [UserController::class, 'joinForum'])->name('.forum.join');
+        Route::post('/forum/{id}/join', [ForumUserController::class, 'joinForum'])->name('.forum.join');
 
-        Route::delete('/forum/{id}/leave', [UserController::class, 'leaveForum'])->name('.forum.leave');
+        Route::delete('/forum/{id}/leave', [ForumUserController::class, 'leaveForum'])->name('.forum.leave');
 
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('.destroty');
     });
@@ -53,9 +51,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){ // middleware:guard
 
         Route::post('/{forumId}/threads', [ThreadController::class, 'store'])->name('.threads.store');
 
-        Route::post('/{forumId}/users/{id}', [ForumController::class, 'addUser'])->name('.users.store');
+        Route::post('/{forumId}/users/{id}', [ForumUserController::class, 'addUser'])->name('.users.store');
 
-        Route::delete('/{forumId}/users/{id}', [ForumController::class, 'removeUser'])->name('.users.destroy');
+        Route::delete('/{forumId}/users/{id}', [ForumUserController::class, 'removeUser'])->name('.users.destroy');
     });
 
     Route::group(['as' => 'threads', 'prefix' => '/threads'], function() {
@@ -108,7 +106,7 @@ Route::group(['as' => 'forums', 'prefix' => '/forums'], function() {
 
     Route::get('/{forumId}/threads/{id}', [ThreadController::class, 'show'])->name('.threads.show');
 
-    Route::get('/{forumId}/users', [ForumController::class, 'users'])->name('.users.index');
+    Route::get('/{forumId}/users', [ForumUserController::class, 'users'])->name('.users.index');
 });
 
 Route::group(['as' => 'tags', 'prefix' => 'tags'], function() {

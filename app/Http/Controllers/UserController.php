@@ -98,6 +98,7 @@ class UserController extends Controller
 
         if ($request->deleteAvatar) {
             Storage::disk('public')->delete($user->avatar_path);
+            $user->avatar_path = null;
         }
 
         $user->save();
@@ -118,44 +119,6 @@ class UserController extends Controller
 
         return new JsonResponse([
             'message' => 'The user has been successfully deleted.'
-        ]);
-    }
-
-    public function joinForum(int $id): JsonResponse
-    {
-        $forum = Forum::findOrFail($id);
-
-        $this->authorize('joinForum', $forum);
-
-        if (Auth::user()->forums->contains($forum)) {
-            return new JsonResponse([
-                'message' => 'You already belong to the forum.'
-            ]);
-        }
-
-        $forum->users()->attach(Auth::user());
-
-        return new JsonResponse([
-            'message' => 'You have successfully joined to the forum.'
-        ], 201);
-    }
-
-    public function leaveForum(int $id): JsonResponse
-    {
-        $forum = Forum::findOrFail($id);
-
-        $this->authorize('leaveForum', $forum);
-
-        if (!Auth::user()->forums->contains($forum)) {
-            return new JsonResponse([
-                'message' => "You don't belong to the forum."
-            ]);
-        }
-
-        $forum->users()->detach(Auth::user());
-
-        return new JsonResponse([
-            'message' => 'You have successfully leaved the forum.'
         ]);
     }
 }

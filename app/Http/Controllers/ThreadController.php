@@ -19,24 +19,24 @@ use Illuminate\Support\Facades\Gate;
 class ThreadController extends Controller
 {
     public function __construct(private ThreadService $threadService)
-    {}
+    {
+    }
 
     public function index(int $forumId): JsonResponse
     {
         $user = Auth::guard('sanctum')->user();
         $relations = ['threads.user'];
 
-        if($user?->can('view all threads')) {
+        if ($user?->can('view all threads')) {
             $relations = implode(', ', $relations);
 
-            $forum = Forum::with([$relations, 'threads' => function($query) {
+            $forum = Forum::with([$relations, 'threads' => function ($query) {
                 $query->withCount('replies');
             }])->findOrFail($forumId);
-
         } else {
             $relations = implode(', ', $relations);
 
-            $forum = Forum::with([$relations, 'threads' => function($query) use ($user) {
+            $forum = Forum::with([$relations, 'threads' => function ($query) use ($user) {
                 $query->published($user)->withCount('replies');
             }])
                 ->whereNotNull('published_at')
@@ -57,11 +57,11 @@ class ThreadController extends Controller
         $forum = Forum::findOrFail($forumId);
         $thread = Thread::with($relations)->findOrFail($threadId);
 
-        if($thread->forum->id != $forum->id) {
+        if ($thread->forum->id != $forum->id) {
             return new JsonResponse(null, 404);
         }
 
-        if( ! $user || $user?->cannot('view', $thread)) {
+        if (!$user || $user?->cannot('view', $thread)) {
             $thread = Thread::with($relations)
                 ->whereNotNull('published_at')
                 ->findOrFail($threadId);
@@ -71,7 +71,6 @@ class ThreadController extends Controller
             'thread' => new ThreadResource($thread)
         ]);
     }
-
 
     public function store(ThreadStoreRequest $request, int $forumId): JsonResponse
     {
