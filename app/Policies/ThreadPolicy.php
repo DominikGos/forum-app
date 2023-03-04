@@ -13,6 +13,10 @@ class ThreadPolicy
 
     public function view(?User $user, Thread $thread): bool
     {
+        if($thread->isPublished()) {
+            return true;
+        }
+        
         if(optional($user)->can('view own threads') && optional($user)->id == $thread->user->id) {
             return true;
         }

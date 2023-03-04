@@ -25,25 +25,26 @@ class ThreadController extends Controller
     public function index(int $forumId): JsonResponse
     {
         $user = Auth::guard('sanctum')->user();
-        $relations = ['threads.user'];
+        $relations = ['user'];
+        $forum = Forum::findOrFail($forumId);
+        $threads = [];
+
+        $this->authorize('view', $forum);
 
         if ($user?->can('view all threads')) {
-            $relations = implode(', ', $relations);
-
-            $forum = Forum::with([$relations, 'threads' => function ($query) {
-                $query->withCount('replies');
-            }])->findOrFail($forumId);
+            $threads = $forum
+                ->threads()
+                ->with($relations)
+                ->withCount('replies')
+                ->get();
         } else {
-            $relations = implode(', ', $relations);
-
-            $forum = Forum::with([$relations, 'threads' => function ($query) use ($user) {
-                $query->published($user)->withCount('replies');
-            }])
-                ->whereNotNull('published_at')
-                ->findOrFail($forumId);
+            $threads = $forum
+                ->threads()
+                ->published($user)
+                ->with($relations)
+                ->withCount('replies')
+                ->get();
         }
-
-        $threads = $forum->threads;
 
         return new JsonResponse([
             'threads' => ThreadResource::collection($threads)
@@ -55,15 +56,20 @@ class ThreadController extends Controller
         $user = Auth::guard('sanctum')->user();
         $relations = ['tags', 'forum', 'user'];
         $forum = Forum::findOrFail($forumId);
-        $thread = Thread::with($relations)->findOrFail($threadId);
+        $thread = null;
 
-        if ($thread->forum->id != $forum->id) {
-            return new JsonResponse(null, 404);
-        }
+        $this->authorize('view', $forum);
 
-        if (!$user || $user?->cannot('view', $thread)) {
-            $thread = Thread::with($relations)
-                ->whereNotNull('published_at')
+        if($user?->can('view all threads')) {
+            $thread = $forum
+                ->threads()
+                ->with($relations)
+                ->findOrFail($threadId);
+        } else {
+            $thread = $forum
+                ->threads()
+                ->with($relations)
+                ->published($user)
                 ->findOrFail($threadId);
         }
 

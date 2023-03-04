@@ -20,7 +20,7 @@ class Thread extends Model
         return (bool) $this->published_at;
     }
 
-    public function scopePublished(Builder $query, ?User $threadAuthor): Builder
+    public function scopePublished(Builder $query, ?User $threadAuthor = null): Builder
     {
         return $query->whereNotNull('published_at')
             ->when($threadAuthor, function($q) use ($threadAuthor) {

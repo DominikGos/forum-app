@@ -43,7 +43,7 @@ class ThreadTest extends TestCase
 
         $response = $this->getJson(route('forums.threads.index', ['forumId' => $forum->id]));
 
-        $response->assertNotFound();
+        $response->assertForbidden();
     }
 
     public function test_authorized_user_can_view_unpublished_threads_from_the_published_forum()
@@ -115,13 +115,13 @@ class ThreadTest extends TestCase
         $thread = Thread::factory()
             ->for($forum)
             ->for(User::factory()->create())
-            ->create(['published_at' => null]);
+            ->create(['published_at' => now()]);
 
         $response = $this->getJson(
             route('forums.threads.show', ['forumId' => $forum->id, 'id' => $thread->id])
         );
 
-        $response->assertNotFound();
+        $response->assertForbidden();
     }
 
     public function test_authorized_user_can_view_unpublished_thread_from_the_published_forum()

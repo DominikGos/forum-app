@@ -20,7 +20,7 @@ class Forum extends Model
         return (bool) $this->published_at;
     }
 
-    public function scopePublished(Builder $query, ?User $forumAuthor): Builder
+    public function scopePublished(Builder $query, ?User $forumAuthor = null): Builder
     {
         return $query->whereNotNull('published_at')
             ->when($forumAuthor, function($q) use ($forumAuthor) {

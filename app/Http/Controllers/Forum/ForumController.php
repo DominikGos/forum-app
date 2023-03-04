@@ -54,7 +54,7 @@ class ForumController extends Controller
 
         if( ! $user || $user->cannot('view', $forum)) {
             $forum = Forum::with($relations)
-                ->whereNotNull('published_at')
+                ->published()
                 ->findOrFail($id);
         }
 

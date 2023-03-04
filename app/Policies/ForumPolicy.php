@@ -12,6 +12,10 @@ class ForumPolicy
 
     public function view(?User $user, Forum $forum): bool
     {
+        if($forum->isPublished()) {
+            return true;
+        }
+        
         if(optional($user)->can('view own forums') && optional($user)->id == $forum->user->id) {
             return true;
         }
