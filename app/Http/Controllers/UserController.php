@@ -20,8 +20,7 @@ class UserController extends Controller
 
     public function show(int $id): JsonResponse
     {
-        $user = User::withCount(['createdForums', 'threads', 'replies'])->findOrFail($id);
-        $user->load('roles');
+        $user = User::withCount(['createdForums', 'threads', 'replies', 'roles'])->findOrFail($id);
 
         return new JsonResponse([
             'user' => new UserResource($user)
@@ -30,22 +29,28 @@ class UserController extends Controller
 
     public function threads(int $userId): JsonResponse
     {
-        $user = null;
+        $user = User::findOrFail($userId);
         $authUser = Auth::guard('sanctum')->user();
+        $threads = [];
+        $relations = ['user'];
 
-        if ($authUser?->can('view all threads')) {
-            $user = User::with(['threads.user', 'threads' => function ($query) {
-                $query->withCount('replies');
-            }])
-                ->findOrFail($userId);
+        if ($authUser?->can('view all threads') && $authUser?->can('view all forums')) {
+            $threads = $user
+                ->threads()
+                ->with($relations)
+                ->withCount('replies')
+                ->get();
         } else {
-            $user = User::with(['threads.user', 'threads' => function ($query) use ($authUser) {
-                $query->published($authUser)->withCount('replies');
-            }])
-                ->findOrFail($userId);
+            $threads = $user
+                ->threads()
+                ->published($authUser)
+                ->whereHas('forum', function(Builder $query) use ($authUser) {
+                    $query->published($authUser);
+                })
+                ->with($relations)
+                ->withCount('replies')
+                ->get();
         }
-
-        $threads = $user?->threads;
 
         return new JsonResponse([
             'threads' => ThreadResource::collection($threads)
@@ -54,20 +59,29 @@ class UserController extends Controller
 
     public function replies(int $userId): JsonResponse
     {
-        $user = null;
+        $user = User::findOrFail($userId);
         $authUser = Auth::guard('sanctum')->user();
+        $replies = [];
+        $relations = ['thread', 'user'];
 
-        if ($authUser?->can('view all threads')) {
-            $user = User::with(['replies', 'replies.thread', 'replies.user'])->findOrFail($userId);
+        if ($authUser?->can('view all threads') && $authUser?->can('view all forums')) {
+            $replies = $user
+                ->replies()
+                ->with($relations)
+                ->get();
         } else {
-            $user = User::with(['replies.thread', 'replies.user', 'replies' => function($query) use ($authUser) {
-                $query->whereHas('thread', function (Builder $query) use ($authUser) {
-                    $query->published($authUser);
-                });
-            }])->findOrFail($userId);
+            $replies = $user
+                ->replies()
+                ->with($relations)
+                ->whereHas('thread', function(Builder $query) use ($authUser) {
+                    $query
+                        ->published($authUser)
+                        ->whereHas('forum', function(Builder $query) use ($authUser) {
+                            $query->published($authUser);
+                        });
+                })
+                ->get();
         }
-
-        $replies = $user?->replies;
 
         return new JsonResponse([
             'replies' => ReplyResource::collection($replies)
