@@ -18,7 +18,6 @@ class ReplyFactory extends Factory
     {
         return [
             'content' => fake()->text(100),
-            'likes' => fake()->randomDigit(),
             'is_accepted' => fake()->randomElement([true, false]),
         ];
     }

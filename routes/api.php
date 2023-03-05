@@ -69,6 +69,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){ // middleware:guard
     });
 
     Route::group(['as' => 'replies', 'prefix' => '/replies'], function() {
+        Route::put('/{id}/like', [ReplyController::class, 'like'])->name('.like');
+
+        Route::delete('/{id}/unlike', [ReplyController::class, 'unlike'])->name('.like');
+
         Route::put('/{id}', [ReplyController::class, 'update'])->name('.update');
 
         Route::delete('/{id}', [ReplyController::class, 'destroy'])->name('.destroy');

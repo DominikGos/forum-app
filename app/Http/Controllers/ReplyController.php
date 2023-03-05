@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ReplyStoreRequest;
 use App\Http\Requests\ReplyUpdateRequest;
 use App\Http\Resources\ReplyResource;
+use App\Models\Like;
 use App\Models\Reply;
 use App\Models\Thread;
 use Illuminate\Database\Eloquent\Builder;
@@ -81,5 +82,42 @@ class ReplyController extends Controller
         return new JsonResponse([
             'message' => 'The reply has been deleted successfully.',
         ]);
+    }
+
+    public function like(int $id): JsonResponse
+    {
+        $reply = Reply::findOrFail($id);
+
+        if($reply->likes()->where('user_id', Auth::id())->exists()) {
+            return new JsonResponse([
+                'message' => 'You already like that reply.',
+            ], 422);
+        }
+
+        $like = new Like();
+        $like->user()->associate(Auth::user());
+        $reply->likes()->save($like);
+
+        return new JsonResponse([
+            'reply' => new ReplyResource($reply)
+        ]);
+    }
+
+    public function unlike(int $id): JsonResponse
+    {
+        $reply = Reply::findOrFail($id);
+
+        if($reply->likes()->where('user_id', Auth::id())->exists()) {
+            $like = $reply->likes()->where('user_id', Auth::id())->first();
+            $reply->likes()->delete($like);
+
+            return new JsonResponse([
+                'reply' => new ReplyResource($reply)
+            ]);
+        }
+
+        return new JsonResponse([
+            'message' => 'You have to like that reply.',
+        ], 422);
     }
 }
