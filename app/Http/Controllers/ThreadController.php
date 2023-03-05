@@ -26,18 +26,20 @@ class ThreadController extends Controller
     {
         $user = Auth::guard('sanctum')->user();
         $relations = ['user'];
-        $forum = Forum::findOrFail($forumId);
+        $forum = null;
         $threads = [];
 
-        $this->authorize('view', $forum);
+        if ($user?->can('view all threads') && $user?->can('view all forums')) {
+            $forum = Forum::findOrFail($forumId);
 
-        if ($user?->can('view all threads')) {
             $threads = $forum
                 ->threads()
                 ->with($relations)
                 ->withCount('replies')
                 ->get();
         } else {
+            $forum = Forum::published($user)->findOrFail($forumId);
+
             $threads = $forum
                 ->threads()
                 ->published($user)
@@ -55,20 +57,25 @@ class ThreadController extends Controller
     {
         $user = Auth::guard('sanctum')->user();
         $relations = ['tags', 'forum', 'user'];
-        $forum = Forum::findOrFail($forumId);
+        $forum = null;
         $thread = null;
 
-        $this->authorize('view', $forum);
+        if($user?->can('view all threads') && $user?->can('view all forums')) {
+            $forum = Forum::findOrFail($forumId);
 
-        if($user?->can('view all threads')) {
             $thread = $forum
                 ->threads()
                 ->with($relations)
                 ->findOrFail($threadId);
         } else {
+            $forum = Forum::published($user)->findOrFail($forumId);
+            
             $thread = $forum
                 ->threads()
                 ->with($relations)
+                ->whereHas('forum', function(Builder $query) use ($user) {
+                    $query->published($user);
+                })
                 ->published($user)
                 ->findOrFail($threadId);
         }

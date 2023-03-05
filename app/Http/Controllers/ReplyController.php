@@ -7,6 +7,7 @@ use App\Http\Requests\ReplyUpdateRequest;
 use App\Http\Resources\ReplyResource;
 use App\Models\Reply;
 use App\Models\Thread;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,16 +18,23 @@ class ReplyController extends Controller
     {
         $user = Auth::guard('sanctum')->user();
         $thread = null;
-        $relations = ['replies.user'];
+        $replies = [];
+        $relations = ['user'];
 
-        if($user?->can('view all threads')) {
-            $thread = Thread::with($relations)->findOrFail($threadId);
+        if($user?->can('view all threads') && $user?->can('view all forums')) {
+            $thread = Thread::findOrFail($threadId);
         } else {
-            $thread = Thread::with($relations)->whereNotNull('published_at')->findOrFail($threadId);
+            $thread = Thread::published($user)
+                ->whereHas('forum', function(Builder $query) use ($user) {
+                    $query->published($user);
+                })
+                ->findOrFail($threadId);
         }
 
+        $replies = $thread->replies()->with($relations)->get();
+
         return new JsonResponse([
-            'replies' => ReplyResource::collection($thread->replies)
+            'replies' => ReplyResource::collection($replies)
         ]);
     }
 
