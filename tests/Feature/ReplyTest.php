@@ -188,4 +188,85 @@ class ReplyTest extends TestCase
 
         $response->assertOk();
     }
+
+    public function test_user_can_like_a_reply()
+    {
+        $user = $this->contributor;
+        $thread = $this->publishedThread;
+        $reply = Reply::factory()
+            ->for($thread)
+            ->for($user)
+            ->create();
+
+        $replyLikeCount = $reply->likes()->count();
+        Sanctum::actingAs($user);
+
+        $response = $this->putJson(route('replies.like', ['id' => $reply->id]));
+
+        $responseContent = json_decode($response->content());
+
+        $response->assertOk();
+
+        $this->assertGreaterThan($replyLikeCount, $responseContent->reply->likes);
+    }
+
+    public function test_user_can_unlike_a_reply()
+    {
+        $user = $this->contributor;
+        $thread = $this->publishedThread;
+        $reply = Reply::factory()
+            ->for($thread)
+            ->for($user)
+            ->create();
+
+        Sanctum::actingAs($user);
+
+        $this->putJson(route('replies.like', ['id' => $reply->id]));
+
+        $replyLikeCount = $reply->likes()->count();
+
+        $response = $this->deleteJson(route('replies.unlike', ['id' => $reply->id]));
+
+        $responseContent = json_decode($response->content());
+
+        $response->assertOk();
+
+        $this->assertLessThan($replyLikeCount, $responseContent->reply->likes);
+    }
+
+    public function test_user_cannot_like_a_reply_twice()
+    {
+        $user = $this->contributor;
+        $thread = $this->publishedThread;
+        $reply = Reply::factory()
+            ->for($thread)
+            ->for($user)
+            ->create();
+
+        Sanctum::actingAs($user);
+
+        $this->putJson(route('replies.like', ['id' => $reply->id]));
+
+        $response = $this->putJson(route('replies.like', ['id' => $reply->id]));
+
+        $response->assertUnprocessable();
+    }
+
+    public function test_user_cannot_unlike_a_reply_twice()
+    {
+        $user = $this->contributor;
+        $thread = $this->publishedThread;
+        $reply = Reply::factory()
+            ->for($thread)
+            ->for($user)
+            ->create();
+
+        Sanctum::actingAs($user);
+
+        $this->deleteJson(route('replies.unlike', ['id' => $reply->id]));
+
+        $response = $this->deleteJson(route('replies.unlike', ['id' => $reply->id]));
+
+        $response->assertUnprocessable();
+    }
 }
