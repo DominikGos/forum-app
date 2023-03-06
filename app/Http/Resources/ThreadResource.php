@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class ThreadResource extends JsonResource
 {
@@ -14,11 +15,14 @@ class ThreadResource extends JsonResource
      */
     public function toArray($request)
     {
+        $isLikedByUser = $this->likes()->where('user_id', Auth::guard('sanctum')->id())->exists();
+
         return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'likes' => $this->likes,
+            'likes' => $this->likes()->count(),
+            'isLikedByUser' => $isLikedByUser,
             'publishedAt' => $this->published_at,
             'isClosed' => $this->is_closed,
             'timestamps' => new TimestampsResource($this),

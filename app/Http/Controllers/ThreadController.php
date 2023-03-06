@@ -6,6 +6,7 @@ use App\Http\Requests\ThreadStoreRequest;
 use App\Http\Requests\ThreadUpdateRequest;
 use App\Http\Resources\ThreadResource;
 use App\Models\Forum;
+use App\Models\Like;
 use App\Models\Thread;
 use App\Models\User;
 use App\Services\ThreadService;
@@ -69,7 +70,7 @@ class ThreadController extends Controller
                 ->findOrFail($threadId);
         } else {
             $forum = Forum::published($user)->findOrFail($forumId);
-            
+
             $thread = $forum
                 ->threads()
                 ->with($relations)
@@ -153,5 +154,42 @@ class ThreadController extends Controller
             'message' => 'The thread has been successfully unpublished.',
             'thread' => new ThreadResource($thread)
         ]);
+    }
+
+    public function like(int $id): JsonResponse
+    {
+        $thread = Thread::findOrFail($id);
+
+        if($thread->likes()->where('user_id', Auth::id())->exists()) {
+            return new JsonResponse([
+                'message' => 'You already like that thread.',
+            ], 422);
+        }
+
+        $like = new Like();
+        $like->user()->associate(Auth::user());
+        $thread->likes()->save($like);
+
+        return new JsonResponse([
+            'reply' => new ThreadResource($thread)
+        ]);
+    }
+
+    public function unlike(int $id): JsonResponse
+    {
+        $thread = Thread::findOrFail($id);
+
+        if($thread->likes()->where('user_id', Auth::id())->exists()) {
+            $like = $thread->likes()->where('user_id', Auth::id())->first();
+            $thread->likes()->delete($like);
+
+            return new JsonResponse([
+                'reply' => new ThreadResource($thread)
+            ]);
+        }
+
+        return new JsonResponse([
+            'message' => 'You have to like that thread.',
+        ], 422);
     }
 }

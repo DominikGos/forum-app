@@ -66,12 +66,16 @@ Route::group(['middleware' => 'auth:sanctum'], function(){ // middleware:guard
         Route::put('/{id}/publish', [ThreadController::class, 'publish'])->name('.publish');
 
         Route::put('/{id}/unpublish', [ThreadController::class, 'unpublish'])->name('.unpublish');
+
+        Route::put('/{id}/like', [ThreadController::class, 'like'])->name('.like');
+
+        Route::delete('/{id}/unlike', [ThreadController::class, 'unlike'])->name('.unlike');
     });
 
     Route::group(['as' => 'replies', 'prefix' => '/replies'], function() {
         Route::put('/{id}/like', [ReplyController::class, 'like'])->name('.like');
 
-        Route::delete('/{id}/unlike', [ReplyController::class, 'unlike'])->name('.like');
+        Route::delete('/{id}/unlike', [ReplyController::class, 'unlike'])->name('.unlike');
 
         Route::put('/{id}', [ReplyController::class, 'update'])->name('.update');
 
