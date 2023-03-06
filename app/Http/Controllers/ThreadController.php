@@ -9,6 +9,7 @@ use App\Models\Forum;
 use App\Models\Like;
 use App\Models\Thread;
 use App\Models\User;
+use App\Services\LikeService;
 use App\Services\ThreadService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Gate;
 
 class ThreadController extends Controller
 {
-    public function __construct(private ThreadService $threadService)
+    public function __construct(private ThreadService $threadService, private LikeService $likeService)
     {
     }
 
@@ -166,9 +167,7 @@ class ThreadController extends Controller
             ], 422);
         }
 
-        $like = new Like();
-        $like->user()->associate(Auth::user());
-        $thread->likes()->save($like);
+        $thread = $this->likeService->like($thread, Auth::user());
 
         return new JsonResponse([
             'reply' => new ThreadResource($thread)
@@ -180,8 +179,7 @@ class ThreadController extends Controller
         $thread = Thread::findOrFail($id);
 
         if($thread->likes()->where('user_id', Auth::id())->exists()) {
-            $like = $thread->likes()->where('user_id', Auth::id())->first();
-            $thread->likes()->delete($like);
+            $thread = $this->likeService->unlike($thread, Auth::user());
 
             return new JsonResponse([
                 'reply' => new ThreadResource($thread)

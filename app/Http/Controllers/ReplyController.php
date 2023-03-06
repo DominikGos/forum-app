@@ -8,6 +8,7 @@ use App\Http\Resources\ReplyResource;
 use App\Models\Like;
 use App\Models\Reply;
 use App\Models\Thread;
+use App\Services\LikeService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,6 +16,10 @@ use Illuminate\Support\Facades\Auth;
 
 class ReplyController extends Controller
 {
+    public function __construct(private LikeService $likeService)
+    {
+
+    }
     public function index(int $threadId): JsonResponse
     {
         $user = Auth::guard('sanctum')->user();
@@ -94,9 +99,7 @@ class ReplyController extends Controller
             ], 422);
         }
 
-        $like = new Like();
-        $like->user()->associate(Auth::user());
-        $reply->likes()->save($like);
+        $reply = $this->likeService->like($reply, Auth::user());
 
         return new JsonResponse([
             'reply' => new ReplyResource($reply)
@@ -108,8 +111,7 @@ class ReplyController extends Controller
         $reply = Reply::findOrFail($id);
 
         if($reply->likes()->where('user_id', Auth::id())->exists()) {
-            $like = $reply->likes()->where('user_id', Auth::id())->first();
-            $reply->likes()->delete($like);
+            $reply = $this->likeService->unlike($reply, Auth::user());
 
             return new JsonResponse([
                 'reply' => new ReplyResource($reply)
