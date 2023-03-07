@@ -15,15 +15,18 @@
               </p>
             </template>
             <template v-slot:button>
-              <button class="btn btn-primary" @click="openCreateThreadForm(modalComponentName)">
+              <button
+                class="btn btn-primary"
+                @click="openCreateThreadForm(modalComponentName)"
+              >
                 Create thread
               </button>
             </template>
           </banner>
-          <forums-table />
+          <forums-table :forums="forums" />
         </div>
         <div class="d-none col-xl-3 d-xl-flex flex-column gap-5">
-          <forums />
+          <forums-small-table :forums="forums" />
           <tags />
         </div>
       </div>
@@ -32,27 +35,45 @@
 </template>
 
 <script>
-import hero from "../components/hero.vue";
-import banner from "../components/banner.vue";
-import tags from "../components/tags.vue";
-import forums from "../components/forum/forums.vue";
-import modal from "../components/modal.vue";
-import forumsTable from "../components/forum/forums-table.vue";
+import axios from "axios";
+import hero from "../../components/hero.vue";
+import banner from "../../components/banner.vue";
+import tags from "../../components/tags.vue";
+import forumsSmallTable from "../../components/forum/forums.vue";
+import modal from "../../components/modal.vue";
+import forumsTable from "../../components/forum/forums-table.vue";
 
 export default {
-  name: "forum",
+  name: "forums",
   components: {
     hero,
     banner,
     tags,
-    forums,
+    forumsSmallTable,
     modal,
     forumsTable,
   },
+  data() {
+    return {
+      forums: [],
+    };
+  },
+  async mounted() {
+    this.forums = await this.fetchForums();
+  },
   methods: {
+    async fetchForums() {
+      try {
+        const response = await axios.get("forums");
+
+        return response.data.forums;
+      } catch (error) {
+        return [];
+      }
+    },
     openCreateThreadForm() {
       this.$store.commit("openModal");
-      this.$store.commit("updateComponentName", { name: 'createThreadForm' });
+      this.$store.commit("updateComponentName", { name: "createThreadForm" });
     },
   },
 };

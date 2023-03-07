@@ -1,67 +1,23 @@
 <template>
   <div class="d-flex flex-column gap-2">
     <h3>Forums</h3>
+
     <div
-      class="
-        d-flex
-        border-bottom
-        gap-2
-        align-items-center
-        justify-content-between
-        p-2
-      "
+      v-for="forum in forums"
+      class="d-flex border-bottom gap-2 align-items-center justify-content-between p-2"
     >
-      <img src="/public/images/musical-notes.png" width="25" />
-      <p class="m-0">music</p>
+      <img :src="forum.image" width="25" alt="forum" />
+      <p class="m-0">{{ forum.name }}</p>
       <div class="rounded-circle ps-2 pe-2 p-1 bg-body-secondary">24</div>
-    </div>
-    <div
-      class="
-        d-flex
-        border-bottom
-        gap-2
-        align-items-center
-        justify-content-between
-        p-2
-      "
-    >
-      <img src="/public/images/game-console.png" width="25" />
-      <p class="m-0">games</p>
-      <div class="rounded-circle ps-2 pe-2 p-1 bg-body-secondary">14</div>
-    </div>
-    <div
-      class="
-        d-flex
-        border-bottom
-        gap-2
-        align-items-center
-        justify-content-between
-        p-2
-      "
-    >
-      <img src="/public/images/workplace.png" width="25" />
-      <p class="m-0">programming</p>
-      <div class="rounded-circle ps-2 pe-2 p-1 bg-body-secondary">14</div>
-    </div>
-    <div
-      class="
-        d-flex
-        border-bottom
-        gap-2
-        align-items-center
-        justify-content-between
-        p-2
-      "
-    >
-      <img src="/public/images/game-console.png" width="25" />
-      <p class="m-0">games</p>
-      <div class="rounded-circle ps-2 pe-2 p-1 bg-body-secondary">14</div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'forums'
-}
+  name: "forums",
+  props: {
+    forums: Array,
+  },
+};
 </script>

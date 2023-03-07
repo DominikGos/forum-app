@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import appLayout from '../layouts/app-layout.vue'
 import authLayout from '../layouts/auth-layout.vue'
 import home from '../views/home.vue'
-import forum from '../views/forum.vue'
-import threads from '../views/thread/threads.vue'
+import forums from '../views/forum/forums.vue'
+import forum from '../views/forum/forum.vue'
 import thread from '../views/thread/thread.vue'
 import login from '../views/auth/login.vue'
 import register from '../views/auth/register.vue'
@@ -27,14 +27,14 @@ const router = createRouter({
 
         },
         {
-          path: 'forum',
+          path: 'forums/:id',
           name: 'forum',
           component: forum
         },
         {
-          path: 'threads',
-          name: 'threads',
-          component: threads
+          path: 'forums',
+          name: 'forums',
+          component: forums
         },
         {
           path: 'threads/:id',

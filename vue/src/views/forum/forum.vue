@@ -4,8 +4,8 @@
     <div class="mt-5 container p-3">
       <div class="row mb-4">
         <div class="col-12">
-          <h3>Category name</h3>
-          <p class="text-muted">Short description of category.</p>
+          <h3>{{ forum.name }}</h3>
+          <p class="text-muted">{{ forum.description }}</p>
         </div>
       </div>
       <div class="row justify-content-between">
@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import hero from "../../components/hero.vue";
 import avatar from "../../components/avatar.vue";
 import tags from "../../components/tags.vue";
@@ -66,7 +67,7 @@ import threadsComponent from "../../components/thread/threads.vue";
 import Banner from "../../components/banner.vue";
 
 export default {
-  name: "threads",
+  name: "forum",
   components: {
     hero,
     avatar,
@@ -74,6 +75,27 @@ export default {
     mostHelpful,
     threadsComponent,
     Banner,
+  },
+  data() {
+    return {
+      forum: {},
+      threads: []
+    }
+  },
+  async mounted() {
+
+    this.forum = await this.fetchForum(this.$route.params.id)
+  },
+  methods: {
+    async fetchForum(id) {
+      try {
+        const response = await axios.get(`forums/${id}`);
+
+        return response.data.forum;
+      } catch (error) {
+        return null;
+      }
+    },
   },
 };
 </script>

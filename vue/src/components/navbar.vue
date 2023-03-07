@@ -31,18 +31,10 @@
           </li>
           <li class="nav-item">
             <router-link
-              :class="[$route.name == 'forum' ? 'text-primary' : '', 'nav-link active']"
-              :to="{ name: 'forum' }"
+              :class="[$route.name == 'forums' ? 'text-primary' : '', 'nav-link active']"
+              :to="{ name: 'forums' }"
             >
-              Forum
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link
-              :class="[$route.name == 'threads' ? 'text-primary' : '', 'nav-link active']"
-              :to="{ name: 'threads' }"
-            >
-              Threads
+              Forums
             </router-link>
           </li>
           <li class="nav-item">

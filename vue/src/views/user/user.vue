@@ -64,13 +64,6 @@ export default {
   mounted() {
     this.setUser(this.$route.params.id);
   },
-  watch: {
-    "$route.params.id"() {
-      if (this.$route.name == "user") {
-        this.setUser(this.$route.params.id);
-      }
-    },
-  },
 };
 </script>
 
