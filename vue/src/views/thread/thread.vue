@@ -50,10 +50,10 @@
             <hr class="w-100" />
             <button class="btn btn-primary">Reply</button>
           </div>
-          <comment :isAccepted="true" />
+          <!-- <comment :isAccepted="true" /> -->
           <h4 class="mt-5">Replies</h4>
-          <comment-form />
-          <comment :isAccepted="false" />
+          <!-- <comment-form />
+          <comment :isAccepted="false" /> -->
         </div>
         <div class="col-lg-3 d-none d-lg-flex flex-column gap-5">
           <forums />

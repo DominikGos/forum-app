@@ -32,22 +32,7 @@
               </button>
             </template>
           </banner>
-          <threads-component />
-          <nav aria-label="...">
-            <ul class="pagination">
-              <li class="page-item disabled">
-                <span class="page-link">Previous</span>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item active" aria-current="page">
-                <span class="page-link">2</span>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-              </li>
-            </ul>
-          </nav>
+          <threads-component :threads="threads" />
         </div>
         <div class="col-xl-3 d-none d-xl-flex align-items-start">
           <most-helpful />
@@ -65,6 +50,7 @@ import tags from "../../components/tags.vue";
 import mostHelpful from "../../components/most-helpful.vue";
 import threadsComponent from "../../components/thread/threads.vue";
 import Banner from "../../components/banner.vue";
+import threadMixin from '../../mixins/thread.vue'
 
 export default {
   name: "forum",
@@ -76,15 +62,18 @@ export default {
     threadsComponent,
     Banner,
   },
+  mixins: [
+    threadMixin,
+  ],
   data() {
     return {
       forum: {},
-      threads: []
+      threads: [],
     }
   },
   async mounted() {
-
     this.forum = await this.fetchForum(this.$route.params.id)
+    this.threads = await this.fetchThreads()
   },
   methods: {
     async fetchForum(id) {
@@ -94,6 +83,15 @@ export default {
         return response.data.forum;
       } catch (error) {
         return null;
+      }
+    },
+    async fetchThreads() {
+      try {
+        const response = await axios.get(`forums/${this.forum.id}/threads`);
+
+        return response.data.threads;
+      } catch (error) {
+        return [];
       }
     },
   },
