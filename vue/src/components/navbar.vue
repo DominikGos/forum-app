@@ -37,14 +37,6 @@
               Forums
             </router-link>
           </li>
-          <li class="nav-item">
-            <router-link
-              :class="[$route.name == 'thread' ? 'text-primary' : '', 'nav-link active']"
-              :to="{ name: 'thread', params: { id: 1 } }"
-            >
-              Thread
-            </router-link>
-          </li>
           <li v-if="$store.state.user.token" class="nav-item">
             <router-link
               :class="[$route.name == 'user' ?? 'userReplies' ?? 'userThreads'  ? 'text-primary' : '', 'nav-link active']"
