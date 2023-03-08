@@ -16,7 +16,7 @@
       <router-link
         :to="{
           name: 'thread',
-          params: { id: this.$route.params.id, threadId: item.id },
+          params: { threadId: item.id },
         }"
         class="col-lg-7 d-flex gap-3 text-decoration-none"
       >

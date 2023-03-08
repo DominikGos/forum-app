@@ -4,11 +4,7 @@
       <label for="exampleFormControlTextarea1" class="form-label"
         >Write the answer.</label
       >
-      <textarea
-        class="form-control"
-        id="exampleFormControlTextarea1"
-        rows="3"
-      ></textarea>
+      <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
@@ -16,6 +12,6 @@
 
 <script>
 export default {
-  name: 'commentForm'
-}
+  name: "commentForm",
+};
 </script>

@@ -30,10 +30,12 @@
             <hr class="w-100" />
             <button class="btn btn-primary">Reply</button>
           </div>
-          <!-- <comment :isAccepted="true" /> -->
+          <reply v-if="acceptedReply && acceptedReply.user" :reply="acceptedReply" />
           <h4 class="mt-5">Replies</h4>
-          <!-- <comment-form />
-          <comment :isAccepted="false" /> -->
+          <reply-form />
+          <div v-for="reply in replies">
+            <reply :reply="reply" />
+          </div>
         </div>
         <div class="col-lg-3 d-none d-lg-flex flex-column gap-5">
           <forums />
@@ -47,22 +49,27 @@
 <script>
 import avatar from "../../components/avatar.vue";
 import forums from "../../components/forum/forums.vue";
-import CommentForm from '../../components/comment/comment-form.vue';
-import comment from "../../components/comment/comment.vue";
+import replyForm from '../../components/reply/reply-form.vue';
+import reply from "../../components/reply/reply.vue";
 import hero from "../../components/hero.vue";
 import tags from "../../components/tags.vue";
 import axios from 'axios';
 
 export default {
-  components: { hero, avatar, tags, comment, forums, CommentForm },
+  components: { hero, avatar, tags, reply, forums, replyForm },
   name: "thread",
   data() {
     return {
-      thread: {}
+      thread: {},
+      replies: [],
+      acceptedReply: {},
     }
   },
   async mounted() {
     this.thread = await this.fetchThread(this.$route.params.id, this.$route.params.threadId)
+    this.replies = await this.fetchReplies(this.$route.params.threadId)
+    this.acceptedReply = this.getAcceptedReply(this.replies)
+    console.log(this.acceptedReply)
   },
   methods: {
     async fetchThread(forumId, threadId) {
@@ -71,9 +78,24 @@ export default {
 
         return response.data.thread
       } catch (error) {
-        console.log('xdd', error)
         return null
       }
+    },
+    async fetchReplies(threadId) {
+      try {
+        const response = await axios.get(`/threads/${threadId}/replies`)
+
+        return response.data.replies
+      } catch (error) {
+        return null
+      }
+    },
+    getAcceptedReply(replies) {
+      let acceptedReplies = replies.filter(reply => {
+        return reply.isAccepted
+      })
+
+      return acceptedReplies[0]
     }
   },
 };

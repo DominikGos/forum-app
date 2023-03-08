@@ -13,7 +13,7 @@
         <p class="m-0">Number of replies: {{ replies.length }}</p>
       </template>
       <template #item="item">
-        <comment :item="item"/>
+        <reply :reply="item"/>
       </template>
     </app-table>
     <p v-else class="text-muted">
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import comment from "../../components/comment/comment.vue";
+import reply from "../../components/reply/reply.vue";
 import userMixin from "../../mixins/user.vue";
 import axios from "axios";
 import appTable from '../../components/table/app-table.vue';
@@ -48,7 +48,7 @@ export default {
     propUser: Object,
   },
   components: {
-    comment,
+    reply,
     appTable
   },
   data() {
