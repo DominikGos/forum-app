@@ -39,13 +39,21 @@
           </li>
           <li v-if="$store.state.user.token" class="nav-item">
             <router-link
-              :class="[$route.name == 'user' ?? 'userReplies' ?? 'userThreads'  ? 'text-primary' : '', 'nav-link active']"
+              :class="[
+                $route.name == 'user' ?? 'userReplies' ?? 'userThreads'
+                  ? 'text-primary'
+                  : '',
+                'nav-link active',
+              ]"
               :to="{ name: 'user', params: { id: this.$store.state.user.id } }"
             >
               Profile
             </router-link>
           </li>
-          <li v-if="! $store.state.user.token" class="nav-item">
+          <li v-if="$store.state.user.token" class="nav-item">
+            <button class="btn btn-primary" @click="logout()">Logout</button>
+          </li>
+          <li v-if="!$store.state.user.token" class="nav-item">
             <router-link class="btn btn-primary" :to="{ name: 'login' }"
               >Login</router-link
             >
@@ -57,8 +65,11 @@
 </template>
 
 <script>
+import authentication from "../mixins/authentication.vue";
+
 export default {
   name: "navbar",
+  mixins: [authentication],
 };
 </script>
 

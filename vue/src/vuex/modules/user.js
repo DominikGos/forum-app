@@ -27,6 +27,13 @@ const user = {
       for (const property in state) {
         state[property] = user[property]
       }
+    },
+    resetUser(state, user) {
+      Object.keys(state).forEach(function(property) {
+        state[property] = null
+      });
+
+      console.log(state)
     }
   }
 }

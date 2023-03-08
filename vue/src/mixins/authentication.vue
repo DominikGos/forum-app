@@ -27,7 +27,20 @@ export default {
     },
 
     setTokenAsDefault(token) {
-      axios.defaults.headers.common["Authorization"] = token;
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    },
+
+    logout() {
+      axios
+        .post("logout")
+        .then(response => {
+          if(response.status == 200) {
+            this.setTokenAsDefault(null)
+            this.$store.commit('resetUser')
+            this.$router.push({name: 'login'})
+          }
+        })
+        .catch((e) => {});
     },
 
     setUser(user, token) {
@@ -37,8 +50,6 @@ export default {
           token: token,
         },
       });
-
-      console.log(this.$store.state.user)
     },
 
     setErrors(errors) {
