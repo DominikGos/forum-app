@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="[this.photo ? 'background-gray-300' : '', 'avatar rounded-circle overflow-hidden d-flex justify-content-center align-items-center']"
+    :class="[this.photo ? 'bg-body-secondary' : '', 'avatar rounded-circle overflow-hidden d-flex justify-content-center align-items-center']"
   >
     <img v-if="this.photo" :src="this.photo"/>
     <img v-else :src="this.defaultPhoto"/>

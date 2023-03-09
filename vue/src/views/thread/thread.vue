@@ -6,8 +6,10 @@
       <div class="row justify-content-center gap-3">
         <div class="col-lg-8 d-flex flex-column gap-4">
           <div class="d-flex align-items-center">
-            <div style="width: 70px">
-              <avatar style="transform: scale(0.75)" />
+            <div v-if="thread && thread.user" style="width: 70px">
+              <router-link :to="{ name: 'user', params: {id: thread.user.id} }">
+                <avatar style="transform: scale(0.75)" :photo="thread.user.avatarPath" />
+              </router-link>
             </div>
             <div v-if="thread.user">
               <h6 class="m-0">{{ thread.user.firstName }} {{ thread.user.lastName }}</h6>
