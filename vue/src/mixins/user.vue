@@ -10,13 +10,7 @@ export default {
   },
   methods: {
     async setUser(id) {
-      const authUser = this.$store.state.user;
-
-      if (id == authUser.id) {
-        this.user = authUser;
-      } else {
-        this.user = await this.fetchUser(id)
-      }
+      this.user = await this.fetchUser(id)
     },
     async fetchUser(id) {
       try {

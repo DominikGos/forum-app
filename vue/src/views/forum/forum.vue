@@ -32,7 +32,7 @@
               </button>
             </template>
           </banner>
-          <threads-component :threads="threads" />
+          <thread-list :threads="threads" />
         </div>
         <div class="col-xl-3 d-none d-xl-flex align-items-start">
           <most-helpful />
@@ -48,7 +48,7 @@ import hero from "../../components/hero.vue";
 import avatar from "../../components/avatar.vue";
 import tags from "../../components/tags.vue";
 import mostHelpful from "../../components/most-helpful.vue";
-import threadsComponent from "../../components/thread/threads.vue";
+import threadList from "../../components/thread/threads.vue";
 import Banner from "../../components/banner.vue";
 import threadMixin from '../../mixins/thread.vue'
 
@@ -59,7 +59,7 @@ export default {
     avatar,
     tags,
     mostHelpful,
-    threadsComponent,
+    threadList,
     Banner,
   },
   mixins: [

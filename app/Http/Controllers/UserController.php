@@ -32,7 +32,7 @@ class UserController extends Controller
         $user = User::findOrFail($userId);
         $authUser = Auth::guard('sanctum')->user();
         $threads = [];
-        $relations = ['user'];
+        $relations = ['user', 'forum'];
 
         if ($authUser?->can('view all threads') && $authUser?->can('view all forums')) {
             $threads = $user

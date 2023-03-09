@@ -27,7 +27,7 @@ class ThreadController extends Controller
     public function index(int $forumId): JsonResponse
     {
         $user = Auth::guard('sanctum')->user();
-        $relations = ['user'];
+        $relations = ['user', 'forum'];
         $forum = null;
         $threads = [];
 
