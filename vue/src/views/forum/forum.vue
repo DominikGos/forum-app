@@ -10,7 +10,7 @@
       </div>
       <div class="row justify-content-between">
         <div class="col-lg-3 col-xl-2 d-none d-lg-flex">
-          <tags />
+          <tags :tags="tags" />
         </div>
         <div class="col-lg-8 col-xl-7 d-flex flex-column gap-5">
           <banner>
@@ -51,6 +51,7 @@ import mostHelpful from "../../components/most-helpful.vue";
 import threadList from "../../components/thread/threads.vue";
 import Banner from "../../components/banner.vue";
 import threadMixin from '../../mixins/thread.vue'
+import tagMixin from '../../mixins/tag.vue'
 
 export default {
   name: "forum",
@@ -64,6 +65,7 @@ export default {
   },
   mixins: [
     threadMixin,
+    tagMixin
   ],
   data() {
     return {
@@ -74,6 +76,7 @@ export default {
   async mounted() {
     this.forum = await this.fetchForum(this.$route.params.id)
     this.threads = await this.fetchThreads()
+    this.setTags()
   },
   methods: {
     async fetchForum(id) {

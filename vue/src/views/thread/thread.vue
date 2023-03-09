@@ -39,7 +39,7 @@
         </div>
         <div class="col-lg-3 d-none d-lg-flex flex-column gap-5">
           <forums />
-          <tags />
+          <tags :tags="thread.tags" />
         </div>
       </div>
     </div>
@@ -69,7 +69,6 @@ export default {
     this.thread = await this.fetchThread(this.$route.params.id, this.$route.params.threadId)
     this.replies = await this.fetchReplies(this.$route.params.threadId)
     this.acceptedReply = this.getAcceptedReply(this.replies)
-    console.log(this.acceptedReply)
   },
   methods: {
     async fetchThread(forumId, threadId) {

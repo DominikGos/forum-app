@@ -27,7 +27,7 @@
         </div>
         <div class="d-none col-xl-3 d-xl-flex flex-column gap-5">
           <forums-small-table :forums="forums" />
-          <tags />
+          <tags :tags="tags" />
         </div>
       </div>
     </div>
@@ -42,9 +42,13 @@ import tags from "../../components/tags.vue";
 import forumsSmallTable from "../../components/forum/forums.vue";
 import modal from "../../components/modal.vue";
 import forumsTable from "../../components/forum/forums-table.vue";
+import tagMixin from '../../mixins/tag.vue'
 
 export default {
   name: "forums",
+  mixins: [
+    tagMixin
+  ],
   components: {
     hero,
     banner,
@@ -60,6 +64,7 @@ export default {
   },
   async mounted() {
     this.forums = await this.fetchForums();
+    this.setTags()
   },
   methods: {
     async fetchForums() {
