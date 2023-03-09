@@ -21,7 +21,8 @@ class ForumResource extends JsonResource
             'image' => asset('storage/' . $this->image_path),
             'publishedAt' => $this->published_at,
             'timestamps' => new TimestampsResource($this),
-            'user' => new UserResource($this->whenLoaded('user'))
+            'user' => new UserResource($this->whenLoaded('user')),
+            'threadCount' => $this->whenCounted('threads'),
         ];
     }
 }

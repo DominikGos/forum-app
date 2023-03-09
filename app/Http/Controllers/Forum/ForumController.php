@@ -6,15 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ForumStoreRequest;
 use App\Http\Requests\ForumUpdateRequest;
 use App\Http\Resources\ForumResource;
-use App\Http\Resources\UserResource;
 use App\Models\Forum;
-use App\Models\User;
 use App\Services\ForumService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class ForumController extends Controller
 {
@@ -34,9 +30,12 @@ class ForumController extends Controller
         $forums = [];
 
         if($user?->can('view all forums')) {
-            $forums = Forum::with($relations)->get();
+            $forums = Forum::with($relations)
+                ->withCount('threads')
+                ->get();
         } else {
             $forums = Forum::with($relations)
+                ->withCount('threads')
                 ->published($user)
                 ->get();
         }
