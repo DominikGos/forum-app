@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import avatar from "../avatar.vue";
+import avatar from "../user/avatar.vue";
 export default {
   components: { avatar },
   name: "comment",

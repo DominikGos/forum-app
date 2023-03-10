@@ -15,7 +15,7 @@
 
 <script>
 import appTable from "./table/app-table.vue";
-import avatar from "./avatar.vue";
+import avatar from "./user/avatar.vue";
 
 export default {
   name: "mostHelpful",

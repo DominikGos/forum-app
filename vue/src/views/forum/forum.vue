@@ -45,7 +45,7 @@
 <script>
 import axios from 'axios'
 import hero from "../../components/hero.vue";
-import avatar from "../../components/avatar.vue";
+import avatar from "../../components/user/avatar.vue";
 import tags from "../../components/tags.vue";
 import mostHelpful from "../../components/most-helpful.vue";
 import threadList from "../../components/thread/threads.vue";

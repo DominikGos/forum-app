@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import avatar from "../../components/avatar.vue";
+import avatar from "../../components/user/avatar.vue";
 import forums from "../../components/forum/forums.vue";
 import replyForm from '../../components/reply/reply-form.vue';
 import reply from "../../components/reply/reply.vue";
