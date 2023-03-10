@@ -8,24 +8,18 @@
         >
           <square-avatar :photo="user.avatarPath" />
           <div style="width: 200px" v-if="user">
-            <h4 class="m-0 text-wrap">{{ user.firstName }} {{ user.lastName }}</h4>
+            <h4 class="m-0 text-wrap">{{ user.login }}</h4>
             <p class="text-muted m-0 text-break text-wrap">
               {{ user.description }}
             </p>
           </div>
           <router-link
-            :to="{ name: 'userEdit' }"
-            :class="[$route.name == 'userEdit' ? 'btn-primary' : 'bg-body-secondary', 'btn']"
-          >
-            Edit
-          </router-link>
-          <!-- <router-link
             v-if="$store.state.user.id == user.id"
             :to="{ name: 'userEdit' }"
             :class="[$route.name == 'userEdit' ? 'btn-primary' : 'bg-body-secondary', 'btn']"
           >
             Edit
-          </router-link> -->
+          </router-link>
           <router-link
             :to="{ name: 'user' }"
             :class="[$route.name == 'user' ? 'btn-primary' : 'bg-body-secondary', 'btn']"

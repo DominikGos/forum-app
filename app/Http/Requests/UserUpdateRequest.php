@@ -29,15 +29,15 @@ class UserUpdateRequest extends FormRequest
     {
         return [//regex not working
             'email' => [
-                'email', 'max:255', Rule::unique('users')->ignore(Auth::id())
+                'email', 'max:255', Rule::unique('users')->ignore(Auth::id()), 'nullable'
             ],
             'login' => [
-                'max:255', Rule::unique('users')->ignore(Auth::id())
+                'min:2', 'max:255', Rule::unique('users')->ignore(Auth::id()), 'nullable'
             ],
-            'first_name' => 'string|max:255',
-            'last_name' => 'string|max:255',
-            'description' => 'string|max:255',
-            'deleteAvatar' => 'boolean',
+            'first_name' => 'min:2|string|max:255|nullable',
+            'last_name' => 'min:2|string|max:255|nullable',
+            'description' => 'min:3|string|max:255|nullable',
+            'deleteAvatar' => 'boolean|nullable',
             'avatar' => [
                 File::image()->types(['image/jpeg', 'image/png'])
             ]

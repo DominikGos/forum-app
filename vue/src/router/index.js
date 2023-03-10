@@ -67,7 +67,7 @@ const router = createRouter({
               name: 'userEdit',
               component: userEdit,
               meta: {
-                //requiresAuth: true
+                requiresAuth: true
               }
             },
           ]
