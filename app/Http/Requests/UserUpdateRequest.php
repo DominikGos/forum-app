@@ -37,7 +37,7 @@ class UserUpdateRequest extends FormRequest
             'first_name' => 'string|max:255',
             'last_name' => 'string|max:255',
             'description' => 'string|max:255',
-            'deletePath' => 'boolean',
+            'deleteAvatar' => 'boolean',
             'avatar' => [
                 File::image()->types(['image/jpeg', 'image/png'])
             ]

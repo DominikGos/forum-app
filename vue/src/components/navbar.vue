@@ -40,7 +40,7 @@
           <li v-if="$store.state.user.token" class="nav-item">
             <router-link
               :class="[
-                $route.name == 'user' ?? 'userReplies' ?? 'userThreads'
+                $route.name == 'user' && $store.state.user.id  == $route.params.id
                   ? 'text-primary'
                   : '',
                 'nav-link active',

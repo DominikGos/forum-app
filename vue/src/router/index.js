@@ -11,6 +11,8 @@ import user from '../views/user/user.vue'
 import userData from '../views/user/user-data.vue'
 import userReplies from '../views/user/user-replies.vue'
 import userThreads from '../views/user/user-threads.vue'
+import userEdit from '../views/user/user-edit.vue'
+
 import { store } from '../vuex'
 
 const router = createRouter({
@@ -60,6 +62,14 @@ const router = createRouter({
               name: 'userThreads',
               component: userThreads
             },
+            {
+              path: 'edit',
+              name: 'userEdit',
+              component: userEdit,
+              meta: {
+                //requiresAuth: true
+              }
+            },
           ]
         },
       ]
@@ -99,6 +109,12 @@ router.beforeEach((to, from) => {
   if (to.meta.requiresNoAuth && store.state.user.token) {
     return {
       name: 'home',
+      query: { redirect: to.fullPath },
+    }
+  }
+  else if (to.meta.requiresAuth && store.state.user.token == null) {
+    return {
+      name: 'login',
       query: { redirect: to.fullPath },
     }
   }

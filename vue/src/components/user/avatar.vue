@@ -1,23 +1,23 @@
 <template>
   <div
-    :class="[this.photo ? 'bg-body-secondary' : '', 'avatar rounded-circle overflow-hidden d-flex justify-content-center align-items-center']"
+    :class="[photo ? 'bg-body-secondary' : '', 'avatar rounded-circle overflow-hidden d-flex justify-content-center align-items-center']"
   >
-    <img v-if="this.photo" :src="this.photo"/>
-    <img v-else :src="this.defaultPhoto"/>
+    <img v-if="photo" :src="photo"/>
+    <img v-else :src="defaultPhoto"/>
   </div>
 </template>
 
 <script>
+import userMixin from '../../mixins/user.vue'
+
 export default {
   name: "avatar",
   props: {
     photo: String,
   },
-  data() {
-    return {
-      defaultPhoto: '/public/images/user.png'
-    }
-  },
+  mixins: [
+    userMixin
+  ]
 };
 </script>
 

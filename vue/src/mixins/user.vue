@@ -5,7 +5,8 @@ export default {
   name: 'user',
   data() {
     return {
-      user: {}
+      user: {},
+      defaultPhoto: '/public/images/user.png',
     }
   },
   methods: {
