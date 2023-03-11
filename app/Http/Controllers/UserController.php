@@ -144,7 +144,7 @@ class UserController extends Controller
         $avatarPath = $request->file('avatar')->store(self::USER_FILES_DIRECTORY, self::DISK);
 
         return new JsonResponse([
-            'avatarPath' => $avatarPath,
+            'avatarPath' => asset('storage/' . $avatarPath),
         ], 201);
     }
 

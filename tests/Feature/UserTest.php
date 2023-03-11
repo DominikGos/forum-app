@@ -45,16 +45,12 @@ class UserTest extends TestCase
         $user = User::role('contributor')->first();
         $updatedUser = User::factory()->make();
 
-        Storage::fake('public');
         Sanctum::actingAs($user);
-
-        $avatar = UploadedFile::fake()->image('avatar.jpg');
 
         $response = $this->putJson(route('users.update', ['id' => $user->id]), [
             'first_name' => $updatedUser->first_name,
             'last_name' => $updatedUser->last_name,
             'description' => $updatedUser->description,
-            'avatar' => $avatar,
         ]);
 
         $responseContent = $response->content();
@@ -62,8 +58,6 @@ class UserTest extends TestCase
 
         $response->assertOk()
             ->assertJsonPath('user.firstName', $updatedUser->first_name);
-
-        Storage::disk('public')->assertExists('user/' . $avatar->hashName());
     }
 
     public function test_user_cannot_update_someone_profile()
@@ -167,5 +161,47 @@ class UserTest extends TestCase
         $response = $this->deleteJson(route('users.forum.leave', ['id' => $forum->id]));
 
         $response->assertForbidden();
+    }
+
+    public function test_authenticated_user_can_store_avatar()
+    {
+        $user = $this->contributor;
+
+        Storage::fake('public');
+        Sanctum::actingAs($user);
+
+        $avatar = UploadedFile::fake()->image('avatar.jpg');
+
+        $response = $this->postJson(route('users.avatar.store'), [
+            'avatar' => $avatar
+        ]);
+
+        $response->assertCreated();
+        Storage::disk('public')->assertExists('user/' . $avatar->hashName());
+    }
+
+    public function test_authenticated_user_can_destroy_avatar()
+    {
+        $user = $this->contributor;
+
+        Storage::fake('public');
+        Sanctum::actingAs($user);
+
+        $avatar = UploadedFile::fake()->image('avatar.jpg');
+
+        $response = $this->postJson(route('users.avatar.store'), [
+            'avatar' => $avatar
+        ]);
+
+        $responseContent = json_decode($response->content());
+
+        $avatarPath = $responseContent->avatarPath;
+
+        $response = $this->deleteJson(route('users.avatar.destroy'), [
+            'avatarPath' => $avatarPath
+        ]);
+
+        $response->assertOk();
+        Storage::disk('public')->assertMissing($avatar->hashName());
     }
 }
