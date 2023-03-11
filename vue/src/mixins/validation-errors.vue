@@ -13,9 +13,9 @@ export default {
       this.errors = this.resetErrors(this.errors)
 
       for (let field in errors) {
-        field = camelCase(field)
-        
-        this.errors[field] = errors[field];
+        Array.isArray(errors[field])
+          ? this.errors[camelCase(field)] = errors[field]
+          : this.errors[camelCase(field)] = [errors[field]];
       }
     },
 

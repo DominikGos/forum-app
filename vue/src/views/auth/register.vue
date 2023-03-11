@@ -1,5 +1,5 @@
 <template>
-  <form @submit="register($event)" class="d-flex flex-column gap-3 w-100 p-2">
+  <form v-if="errors" @submit="register($event)" class="d-flex flex-column gap-3 w-100 p-2">
     <div class="d-flex flex-column align-items-center gap-2">
       <h3>Create account.</h3>
       <router-link class="text-decoration-none" :to="{ name: 'login' }">
@@ -96,11 +96,20 @@
 <script>
 import axios from "axios";
 import authentication from "../../mixins/authentication.vue";
+import validationErrors from "../../mixins/validation-errors.vue";
 
 export default {
   name: "register",
-  mixins: [authentication],
-
+  mixins: [authentication, validationErrors],
+  mounted() {
+    this.errors = {
+      login: [],
+      email: [],
+      firstName: [],
+      lastName: [],
+      password: [],
+    };
+  },
   methods: {
     register(e) {
       e.preventDefault();
@@ -123,7 +132,7 @@ export default {
           }
         })
         .catch((e) => {
-          this.errors = this.setErrors(e.response.data.errors);
+          this.setErrors(e.response.data.errors);
         });
     },
   },

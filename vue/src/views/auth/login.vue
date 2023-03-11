@@ -13,6 +13,7 @@
         type="email"
         :class="[errors.email.length > 0 ? 'is-invalid' : '', 'form-control']"
         id="email"
+        required
       />
       <div v-if="errors.email.length > 0" id="email" class="invalid-feedback">
         <p v-for="error in errors.email" key="error" class="m-0">
@@ -27,6 +28,7 @@
         type="password"
         :class="[errors.password.length > 0 ? 'is-invalid' : '', 'form-control']"
         id="password"
+        required
       />
       <div v-if="errors.password.length > 0" id="password" class="invalid-feedback">
         <p v-for="error in errors.password" key="error" class="m-0">
