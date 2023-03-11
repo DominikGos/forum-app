@@ -10,8 +10,10 @@ use App\Models\Forum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\File;
 
 class UserController extends Controller
 {
@@ -105,13 +107,8 @@ class UserController extends Controller
 
         $user->update($request->validated());
 
-        if ($request->file('avatar')) {
-            $avatarPath = $request->file('avatar')->store(self::USER_FILES_DIRECTORY, self::DISK);
-            $user->avatar_path = $avatarPath;
-        }
-
         if ($request->deleteAvatar) {
-            Storage::disk('public')->delete($user->avatar_path);
+            Storage::disk(self::DISK)->delete($user->avatar_path);
             $user->avatar_path = null;
         }
 
@@ -133,6 +130,34 @@ class UserController extends Controller
 
         return new JsonResponse([
             'message' => 'The user has been successfully deleted.'
+        ]);
+    }
+
+    public function storeAvatar(Request $request): JsonResponse
+    {
+        $request->validate([
+            'avatar' => [
+                'required', File::image()->types(['image/jpeg', 'image/png'])
+            ]
+        ]);
+
+        $avatarPath = $request->file('avatar')->store(self::USER_FILES_DIRECTORY, self::DISK);
+
+        return new JsonResponse([
+            'avatarPath' => $avatarPath,
+        ], 201);
+    }
+
+    public function destroyAvatar(Request $request): JsonResponse
+    {
+        $request->validate([
+            'avatarPath' => 'string|required'
+        ]);
+
+        Storage::disk(self::DISK)->delete($request->avatarPath);
+
+        return new JsonResponse([
+            'message' => 'Avatar has been successfully removed.'
         ]);
     }
 }

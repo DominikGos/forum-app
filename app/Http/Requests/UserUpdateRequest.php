@@ -38,9 +38,7 @@ class UserUpdateRequest extends FormRequest
             'last_name' => 'min:2|string|max:255|nullable',
             'description' => 'min:3|string|max:255|nullable',
             'deleteAvatar' => 'boolean|nullable',
-            'avatar' => [
-                File::image()->types(['image/jpeg', 'image/png'])
-            ]
+            'avatarPath' => 'string'
         ];
     }
 }

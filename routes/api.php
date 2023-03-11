@@ -29,6 +29,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){ // middleware:guard
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::group(['as' => 'users', 'prefix' => '/users'], function() {
+        Route::post('/avatar', [UserController::class, 'storeAvatar'])->name('users.avatar.store');
+
+        Route::delete('/avatar', [UserController::class, 'destroyAvatar'])->name('users.avatar.destroy');
+
         Route::put('/{id}', [UserController::class, 'update'])->name('.update');
 
         Route::post('/forum/{id}/join', [ForumUserController::class, 'joinForum'])->name('.forum.join');
