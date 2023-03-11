@@ -1,7 +1,7 @@
 <template>
   <profile-content>
     <template v-slot:body>
-      <form @submit="update($event)">
+      <form v-if="errors" @submit="update($event)">
         <div class="d-flex justify-content-center mb-5">
           <div class="w-auto position-relative">
             <square-avatar :photo="user.avatarPath" />
@@ -102,16 +102,18 @@
           </div>
         </div>
         <div class="mb-3">
-          <label for="description" class="form-label"
-            >Example textarea</label
-          >
+          <label for="description" class="form-label">Example textarea</label>
           <textarea
             :class="[errors.description.length > 0 ? 'is-invalid' : '', 'form-control']"
             id="description"
             rows="3"
             v-model="user.description"
           ></textarea>
-          <div v-if="errors.description.length > 0" id="description" class="invalid-feedback">
+          <div
+            v-if="errors.description.length > 0"
+            id="description"
+            class="invalid-feedback"
+          >
             <p v-for="error in errors.description" key="error" class="m-0">
               {{ error }}
             </p>
@@ -128,10 +130,11 @@ import profileContent from "../../components/user/profile-content.vue";
 import userMixin from "../../mixins/user.vue";
 import squareAvatar from "../../components/user/square-avatar.vue";
 import axios from "axios";
+import validationErrors from "../../mixins/validation-errors.vue";
 
 export default {
   name: "userEdit",
-  mixins: [userMixin],
+  mixins: [userMixin, validationErrors],
   props: {
     propUser: Object,
   },
@@ -143,16 +146,17 @@ export default {
     return {
       avatar: null,
       deleteAvatar: null,
-      errors: {
-        login: [],
-        email: [],
-        firstName: [],
-        lastName: [],
-        description: [],
-      },
     };
   },
   async mounted() {
+    this.errors = {
+      login: [],
+      email: [],
+      firstName: [],
+      lastName: [],
+      description: [],
+    };
+
     this.user = this.propUser;
 
     if (this.user.id == null) {
@@ -184,45 +188,12 @@ export default {
           }
         })
         .catch((e) => {
-          this.errors = this.setErrors(e.response.data.errors);
-
-          console.log(this.errors);
+          this.setErrors(e.response.data.errors);
         });
     },
 
     async sendAvatar(e) {
       const avatar = this.$refs.avatar.files[0];
-    },
-
-    setErrors(errors) {
-      let errorStructure = {
-        login: [],
-        email: [],
-        firstName: [],
-        lastName: [],
-        description: [],
-      };
-
-      for (const field in errors) {
-        switch (field) {
-          case "login":
-            errorStructure.login = errorStructure.login.concat(errors[field]);
-            break;
-          case "email":
-            errorStructure.email = errorStructure.email.concat(errors[field]);
-            break;
-          case "first_name":
-            errorStructure.firstName = errorStructure.firstName.concat(errors[field]);
-            break;
-          case "last_name":
-            errorStructure.lastName = errorStructure.lastName.concat(errors[field]);
-          case "description":
-            errorStructure.description = errorStructure.description.concat(errors[field]);
-            break;
-        }
-      }
-
-      return errorStructure;
     },
   },
 };

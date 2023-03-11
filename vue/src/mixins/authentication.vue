@@ -12,13 +12,6 @@ export default {
         email: null,
         password: null,
       },
-      errors: {
-        login: [],
-        email: [],
-        firstName: [],
-        lastName: [],
-        password: [],
-      },
     };
   },
   methods: {
@@ -50,37 +43,6 @@ export default {
           token: token,
         },
       });
-    },
-
-    setErrors(errors) {
-      let errorStructure = {
-        login: [],
-        email: [],
-        firstName: [],
-        lastName: [],
-        password: [],
-      };
-
-      for (const field in errors) {
-        switch (field) {
-          case "login":
-            errorStructure.login = errorStructure.login.concat(errors[field]);
-            break;
-          case "email":
-            errorStructure.email = errorStructure.email.concat(errors[field]);
-            break;
-          case "first_name":
-            errorStructure.firstName = errorStructure.firstName.concat(errors[field]);
-            break;
-          case "last_name":
-            errorStructure.lastName = errorStructure.lastName.concat(errors[field]);
-          case "password":
-            errorStructure.password = errorStructure.password.concat(errors[field]);
-            break;
-        }
-      }
-
-      return errorStructure;
     },
   },
 };
