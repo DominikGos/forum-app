@@ -107,11 +107,6 @@ class UserController extends Controller
 
         $user->update($request->validated());
 
-        if ($request->deleteAvatar) {
-            Storage::disk(self::DISK)->delete($user->avatar_path);
-            $user->avatar_path = null;
-        }
-
         $user->save();
 
         return new JsonResponse([

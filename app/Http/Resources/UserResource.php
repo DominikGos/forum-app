@@ -14,17 +14,11 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        $avatarPath = null;
-
-        if($this->avatar_path) {
-            $avatarPath = asset('storage/' . $this->avatar_path);
-        }
-
         return [
             'id' => $this->id,
             'email' => $this->email,
             'login' => $this->login,
-            'avatarPath' => $avatarPath,
+            'avatarPath' => $this->avatar_path,
             'firstName' => $this->first_name,
             'lastName' => $this->last_name,
             'description' => $this->description,

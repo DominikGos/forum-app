@@ -15,18 +15,17 @@
                 <i class="fa-solid fa-camera"></i>
               </button>
               <ul class="dropdown-menu">
-                <li>
-                  <label for="avatar" class="dropdown-item btn"> Change avatar </label>
+                <li class="dropdown-item">
+                  <label for="avatar" class="btn btn-primary"> Change avatar </label>
                 </li>
-                <li>
-                  <div class="dropdown-item">
-                    Delete avatar
-                    <input type="checkbox" v-model="deleteAvatar" />
-                  </div>
+                <li v-if="user.avatarPath" class="dropdown-item">
+                  <button type="button" class="btn btn-outline-danger" @click="destroyAvatar()">
+                    Remove avatar
+                  </button>
                 </li>
                 <input
                   type="file"
-                  @change="sendAvatar($event)"
+                  @change="storeAvatar($event)"
                   name="avatar"
                   class="d-none"
                   id="avatar"
@@ -173,6 +172,7 @@ export default {
         last_name: this.user.lastName,
         email: this.user.email,
         description: this.user.description,
+        avatar_path: this.user.avatarPath,
       };
 
       axios
@@ -192,8 +192,37 @@ export default {
         });
     },
 
-    async sendAvatar(e) {
+    async storeAvatar(e) {
       const avatar = this.$refs.avatar.files[0];
+      let formData = new FormData();
+
+      formData.append("avatar", avatar);
+
+      axios
+        .post("/users/avatar", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          if (response.status == 201) {
+            this.user.avatarPath = response.data.avatarPath;
+          }
+        })
+        .catch((error) => {});
+    },
+
+    async destroyAvatar(e) {
+      const avatarPath = this.user.avatarPath;
+
+      axios
+        .delete(`/users/avatar?avatarPath=${avatarPath}`)
+        .then((response) => {
+          if (response.status == 200) {
+            this.user.avatarPath = null;
+          }
+        })
+        .catch((error) => {});
     },
   },
 };

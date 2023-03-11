@@ -37,8 +37,7 @@ class UserUpdateRequest extends FormRequest
             'first_name' => 'min:2|string|max:255|nullable',
             'last_name' => 'min:2|string|max:255|nullable',
             'description' => 'min:3|string|max:255|nullable',
-            'deleteAvatar' => 'boolean|nullable',
-            'avatarPath' => 'string'
+            'avatar_path' => 'string|nullable'
         ];
     }
 }
