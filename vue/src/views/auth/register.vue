@@ -126,9 +126,10 @@ export default {
         .post("register", mappedUser)
         .then((response) => {
           if (response.request.status == 201) {
-            this.setUser(response.data.user, response.data.token);
+            this.saveUserInVuex(response.data.user, response.data.token);
             this.redirect();
             this.setTokenAsDefault(response.data.token);
+            this.saveUserInStorage()
           }
         })
         .catch((e) => {

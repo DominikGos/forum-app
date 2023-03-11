@@ -21,7 +21,20 @@ export default {
       } catch (error) {
         return null
       }
-    }
+    },
+    saveUserInStorage() {
+      const user = JSON.stringify(this.$store.state.user)
+
+      localStorage.setItem('user', user)
+    },
+    saveUserInVuex(user, token) {
+      this.$store.commit("updateUser", {
+        ...user,
+        ...{
+          token: token,
+        },
+      });
+    },
   },
 }
 </script>

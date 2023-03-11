@@ -46,16 +46,14 @@
 import axios from "axios";
 import authentication from "../../mixins/authentication.vue";
 import validationErrors from "../../mixins/validation-errors.vue";
+import userMixin from '../../mixins/user.vue';
 
 export default {
   name: "login",
-  mixins: [authentication, validationErrors],
+  mixins: [authentication, validationErrors, userMixin],
   mounted() {
     this.errors = {
-      login: [],
       email: [],
-      firstName: [],
-      lastName: [],
       password: [],
     };
   },
@@ -72,9 +70,10 @@ export default {
         .post("login", mappedUser)
         .then((response) => {
           if (response.request.status == 200) {
-            this.setUser(response.data.user, response.data.token);
+            this.saveUserInVuex(response.data.user, response.data.token);
             this.redirect();
             this.setTokenAsDefault(response.data.token);
+            this.saveUserInStorage()
           }
         })
         .catch((e) => {
@@ -84,3 +83,4 @@ export default {
   },
 };
 </script>
+

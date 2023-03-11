@@ -31,18 +31,10 @@ export default {
             this.setTokenAsDefault(null)
             this.$store.commit('resetUser')
             this.$router.push({name: 'login'})
+            localStorage.removeItem('user')
           }
         })
         .catch((e) => {});
-    },
-
-    setUser(user, token) {
-      this.$store.commit("updateUser", {
-        ...user,
-        ...{
-          token: token,
-        },
-      });
     },
   },
 };
