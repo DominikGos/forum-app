@@ -35,8 +35,8 @@ class ForumController extends Controller
                 ->get();
         } else {
             $forums = Forum::with($relations)
-                ->withCount('threads')
-                ->published($user)
+                ->withCount('publishedThreads')
+                ->published()
                 ->get();
         }
 
@@ -53,8 +53,11 @@ class ForumController extends Controller
 
         if( ! $user || $user->cannot('view', $forum)) {
             $forum = Forum::with($relations)
+                ->withCount('publishedThreads')
                 ->published()
                 ->findOrFail($id);
+        } else if($user?->can('view all forums')) {
+            $forum->loadCount('threads');
         }
 
         return new JsonResponse([

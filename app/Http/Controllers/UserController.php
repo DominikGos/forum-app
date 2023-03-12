@@ -44,10 +44,9 @@ class UserController extends Controller
                 ->get();
         } else {
             $threads = $user
-                ->threads()
-                ->published($authUser)
-                ->whereHas('forum', function(Builder $query) use ($authUser) {
-                    $query->published($authUser);
+                ->publishedThreads()
+                ->whereHas('forum', function(Builder $query) {
+                    $query->published();
                 })
                 ->with($relations)
                 ->withCount('replies')
@@ -75,11 +74,11 @@ class UserController extends Controller
             $replies = $user
                 ->replies()
                 ->with($relations)
-                ->whereHas('thread', function(Builder $query) use ($authUser) {
+                ->whereHas('thread', function(Builder $query) {
                     $query
-                        ->published($authUser)
-                        ->whereHas('forum', function(Builder $query) use ($authUser) {
-                            $query->published($authUser);
+                        ->published()
+                        ->whereHas('forum', function(Builder $query) {
+                            $query->published();
                         });
                 })
                 ->get();

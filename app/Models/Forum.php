@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Relations\HasPublishedThreads;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Forum extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublishedThreads;
 
     protected $fillable = [
         'name',
@@ -20,8 +22,10 @@ class Forum extends Model
         return (bool) $this->published_at;
     }
 
-    public function scopePublished(Builder $query, ?User $forumAuthor = null): Builder
+    public function scopePublished(Builder $query): Builder
     {
+        $forumAuthor = Auth::guard('sanctum')->user();
+
         return $query->whereNotNull('published_at')
             ->when($forumAuthor, function($q) use ($forumAuthor) {
                 $q->orWhere('user_id', $forumAuthor->id);

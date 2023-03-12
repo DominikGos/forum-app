@@ -6,17 +6,13 @@ use App\Http\Requests\ThreadStoreRequest;
 use App\Http\Requests\ThreadUpdateRequest;
 use App\Http\Resources\ThreadResource;
 use App\Models\Forum;
-use App\Models\Like;
 use App\Models\Thread;
-use App\Models\User;
 use App\Services\LikeService;
 use App\Services\ThreadService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 
 class ThreadController extends Controller
 {
@@ -40,11 +36,10 @@ class ThreadController extends Controller
                 ->withCount('replies')
                 ->get();
         } else {
-            $forum = Forum::published($user)->findOrFail($forumId);
+            $forum = Forum::published()->findOrFail($forumId);
 
             $threads = $forum
-                ->threads()
-                ->published($user)
+                ->publishedThreads($user)
                 ->with($relations)
                 ->withCount('replies')
                 ->get();
@@ -70,15 +65,14 @@ class ThreadController extends Controller
                 ->with($relations)
                 ->findOrFail($threadId);
         } else {
-            $forum = Forum::published($user)->findOrFail($forumId);
+            $forum = Forum::published()->findOrFail($forumId);
 
             $thread = $forum
-                ->threads()
+                ->publishedThreads($user)
                 ->with($relations)
                 ->whereHas('forum', function(Builder $query) use ($user) {
-                    $query->published($user);
+                    $query->published();
                 })
-                ->published($user)
                 ->findOrFail($threadId);
         }
 

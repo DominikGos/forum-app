@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\MissingValue;
 
 class ForumResource extends JsonResource
 {
@@ -14,6 +15,12 @@ class ForumResource extends JsonResource
      */
     public function toArray($request)
     {
+        $threadCount = $this->whenCounted('publishedThreads');
+
+        if( ! is_numeric($threadCount) && get_class($threadCount) === MissingValue::class) {
+            $threadCount = $this->whenCounted('threads');
+        }
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -22,7 +29,7 @@ class ForumResource extends JsonResource
             'publishedAt' => $this->published_at,
             'timestamps' => new TimestampsResource($this),
             'user' => new UserResource($this->whenLoaded('user')),
-            'threadCount' => $this->whenCounted('threads'),
+            'threadCount' => $threadCount,
         ];
     }
 }

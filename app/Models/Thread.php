@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\Auth;
 
 class Thread extends Model
 {
@@ -21,8 +22,10 @@ class Thread extends Model
         return (bool) $this->published_at;
     }
 
-    public function scopePublished(Builder $query, ?User $threadAuthor = null): Builder
+    public function scopePublished(Builder $query): Builder
     {
+        $threadAuthor = Auth::guard('sanctum')->user();
+
         return $query->whereNotNull('published_at')
             ->when($threadAuthor, function($q) use ($threadAuthor) {
                 $q->orWhere('user_id', $threadAuthor->id);
