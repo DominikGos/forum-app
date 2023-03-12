@@ -9,18 +9,12 @@
               <img src="../../../public/images/conversation.png" alt="question" />
             </template>
             <template v-slot:content>
-              <h3>You can not find an answer?</h3>
-              <p class="text-muted m-0" @click="openCreateThreadForm(modalComponentName)">
-                Ask question!
-              </p>
+              <h3>Create your own forum!</h3>
             </template>
             <template v-slot:button>
-              <button
-                class="btn btn-primary"
-                @click="openCreateThreadForm(modalComponentName)"
-              >
-                Create thread
-              </button>
+              <router-link :to="{name: 'forumCreate'}" class="btn btn-primary">
+                Create forum
+              </router-link>
             </template>
           </banner>
           <forums-table :forums="forums" />

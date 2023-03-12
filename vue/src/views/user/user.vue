@@ -4,7 +4,7 @@
     <div class="profile-content container p-4">
       <div class="row gap-5 flex-lg-nowrap justify-content-center align-items-start">
         <div
-          class="profile-section p-3 w-auto bg-white shadow-sm rounded-3 d-flex flex-column gap-3"
+          class="p-3 w-auto bg-white shadow-sm rounded-3 d-flex flex-column gap-3"
         >
           <square-avatar :photo="user.avatarPath" />
           <div style="width: 200px" v-if="user">
@@ -45,7 +45,7 @@
             Replies
           </router-link>
         </div>
-        <div class="profile-section col-lg-8">
+        <div class="col-lg-8">
           <router-view v-slot="{ Component }" :propUser="this.user">
             <transition name="route" mode="out-in">
               <component :is="Component" />
@@ -83,19 +83,4 @@ export default {
 <style lang="sass">
 .profile-content
   transform: translate(0, -150px)
-
-  .profile-section
-    z-index: 1000
-
-  .profile-avatar
-    min-width: 200px
-    max-width: 200px
-    width: 200px !important
-    height: 200px
-    position: relative
-    z-index: 1000
-
-    img
-      min-width: 100%
-      min-height: 100%
 </style>
