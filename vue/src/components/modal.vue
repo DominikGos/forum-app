@@ -14,20 +14,21 @@
       bottom-0
       w-100
       h-100
-      overflow-y-auto`
+      overflow-y-auto`,
     ]"
   >
     <div
       :class="[
-        $store.state.modal.open
-          ? 'app-modal-body-visible'
-          : 'app-modal-body-invisible',
+        $store.state.modal.open ? 'app-modal-body-visible' : 'app-modal-body-invisible',
         'app-modal-body d-flex flex-column bg-white p-3 rounded-3 shadow m-auto',
       ]"
     >
       <div class="w-100 d-flex justify-content-end">
-        <button class="btn-close" @click="closeModal($event)" data-is-close-button="true">
-        </button>
+        <button
+          class="btn-close"
+          @click="closeModal($event)"
+          data-is-close-button="true"
+        ></button>
       </div>
       <create-thread-form v-if="$store.state.modal.componentName == 'createThreadForm'" />
     </div>
@@ -35,16 +36,17 @@
 </template>
 
 <script>
-import createThreadForm from './thread/create-thread-form.vue';
+import createThreadForm from "./thread/create-thread-form.vue";
 
 export default {
   components: { createThreadForm },
   name: "modal",
   methods: {
     closeModal(e) {
-      const isCloseButton = (e.target.dataset.isCloseButton && e.target.dataset.isCloseButton == 'true')
+      const isCloseButton =
+        e.target.dataset.isCloseButton && e.target.dataset.isCloseButton == "true";
 
-      if(isCloseButton) {
+      if (isCloseButton) {
         this.$store.commit("closeModal");
       }
     },

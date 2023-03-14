@@ -4,7 +4,41 @@
     <div class="profile-content container p-4">
       <profile-content>
         <template v-slot:body>
-          <form v-if="errors" @submit="create($event)">
+          <form v-if="errors" @submit="update($event)">
+            <h3>Edit forum</h3>
+            <div class="d-flex justify-content-center mb-5">
+              <div class="w-auto position-relative">
+                <square-avatar :photo="forum.image" />
+                <div class="dropdown avatar-edit-button position-absolute">
+                  <button
+                    class="btn btn-secondary dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa-solid fa-camera"></i>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li class="dropdown-item">
+                      <label for="avatar" class="btn btn-primary"> Change image </label>
+                    </li>
+                    <li v-if="forum.image" class="dropdown-item">
+                      <button type="button" class="btn btn-outline-danger">
+                        Remove image
+                      </button>
+                    </li>
+                    <input
+                      type="file"
+                      name="image"
+                      class="d-none"
+                      id="image"
+                      ref="image"
+                    />
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="w-auto position-relative"></div>
             <div class="mb-3">
               <label for="name" class="form-label">Name</label>
               <input
@@ -19,7 +53,7 @@
                 </p>
               </div>
             </div>
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <label for="image" class="form-label">Choose forum image</label>
               <input
                 :class="[errors.image.length > 0 ? 'is-invalid' : '', 'form-control']"
@@ -33,7 +67,7 @@
                   {{ error }}
                 </p>
               </div>
-            </div>
+            </div> -->
             <div class="mb-3">
               <label for="description" class="form-label">Forum description</label>
               <textarea
@@ -68,17 +102,20 @@ import hero from "../../components/hero.vue";
 import profileContent from "../../components/user/profile-content.vue";
 import axios from "axios";
 import validationErrors from "../../mixins/validation-errors.vue";
+import squareAvatar from "../../components/user/square-avatar.vue";
 
 export default {
-  name: "forumCreate",
+  name: "forumEdit",
   components: {
     hero,
     profileContent,
+    squareAvatar,
   },
   mixins: [validationErrors],
   data() {
     return {
       forum: {
+        id: null,
         name: null,
         image: null,
         description: null,
@@ -91,19 +128,25 @@ export default {
       image: [],
       description: [],
     };
+
+    this.setForum(JSON.parse(this.$route.params.forum));
   },
   methods: {
-    create(e) {
+    update(e) {
       e.preventDefault();
 
       axios
-        .post("/forums", this.forum, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        .post(
+          `/forums/${this.forum.id}`,
+          { ...this.forum, ...{ _method: "PUT" } },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
         .then((response) => {
-          if(response.status == 200) {
+          if (response.status == 200) {
             this.$router.push({ name: "forum", params: { id: response.data.forum.id } });
           }
         })
@@ -111,10 +154,13 @@ export default {
           this.setErrors(e.response.data.errors);
         });
     },
-    setImage() {
-      const image = this.$refs.image.files[0];
+    setForum(forumData) {
+      for (const property in this.forum) {
+        this.forum[property] = forumData[property];
+      }
 
-      this.forum.image = image;
+      this.forum.image = null; //temporarily
+      console.log(this.forum);
     },
   },
 };

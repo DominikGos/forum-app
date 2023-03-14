@@ -14,7 +14,7 @@
         <p class="m-0 tex-muted">{{ item.description }}</p>
       </div>
       <div class="col-lg-2 d-none d-lg-block">
-        <p class="m-0">121</p>
+        <p class="m-0">{{ item.threadCount }}</p>
       </div>
       <div class="col-lg-2 d-none d-lg-block">
         <p class="m-0">1 year ago</p>

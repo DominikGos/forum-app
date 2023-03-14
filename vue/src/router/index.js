@@ -5,6 +5,7 @@ import home from '../views/home.vue'
 import forums from '../views/forum/forums.vue'
 import forum from '../views/forum/forum.vue'
 import forumCreate from '../views/forum/forum-create.vue';
+import forumEdit from '../views/forum/forum-edit.vue';
 import thread from '../views/thread/thread.vue'
 import login from '../views/auth/login.vue'
 import register from '../views/auth/register.vue'
@@ -43,6 +44,14 @@ const router = createRouter({
           path: 'forums/create',
           name: 'forumCreate',
           component: forumCreate,
+          meta: {
+            requiresAuth: true,
+          }
+        },
+        {
+          path: 'forums/:forum/edit',
+          name: 'forumEdit',
+          component: forumEdit,
           meta: {
             requiresAuth: true,
           }

@@ -228,7 +228,7 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
 .avatar-edit-button
   bottom: -10px
   right: -10px
